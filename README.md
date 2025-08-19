@@ -34,21 +34,21 @@
 ## 설치 및 실행
 
 ### 1. 의존성 설치
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 ### 2. 개발 서버 시작
-\`\`\`bash
+```bash
 npm start
-\`\`\`
+```
 
 브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 확인하세요.
 
 ### 3. 빌드
-\`\`\`bash
+```bash
 npm run build
-\`\`\`
+```
 
 ## 기술 스택
 
@@ -59,7 +59,7 @@ npm run build
 
 ## 프로젝트 구조
 
-\`\`\`
+```
 src/
 ├── components/
 │   ├── Dashboard.js     # 메인 대시보드
@@ -72,4 +72,4 @@ src/
 ├── App.css
 ├── index.js            # 엔트리 포인트
 └── index.css           # 글로벌 스타일
-\`\`\`
+```
