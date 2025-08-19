@@ -1,0 +1,432 @@
+.dashboard {
+  width: 100%;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #8370FE;
+  margin: 0 0 8px 0;
+}
+
+.dashboard-subtitle {
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Kanban Board */
+.kanban-board {
+  margin-bottom: 48px;
+}
+
+.board-header {
+  margin-bottom: 24px;
+}
+
+.board-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #343a40;
+  margin: 0;
+}
+
+.kanban-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.kanban-column {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 20px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.kanban-column:hover {
+  border-color: #C0B7FF;
+  box-shadow: 0 4px 20px rgba(192, 183, 255, 0.15);
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.column-icon {
+  font-size: 1.5rem;
+}
+
+.column-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #8370FE;
+  margin: 0;
+  flex: 1;
+}
+
+.item-count {
+  background: linear-gradient(135deg, #8370FE 0%, #C0B7FF 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.column-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Kanban Cards */
+.kanban-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(131, 112, 254, 0.1);
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.kanban-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(131, 112, 254, 0.15);
+  border-color: #C0B7FF;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #343a40;
+  margin: 0;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.card-badges {
+  display: flex;
+  gap: 6px;
+}
+
+.feedback-badge {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.card-description {
+  color: #6c757d;
+  font-size: 0.95rem;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-footer-spacer {
+  flex: 1;
+}
+
+.status-badge {
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn.approve {
+  background: linear-gradient(135deg, #8370FE 0%, #C0B7FF 100%);
+  color: white;
+}
+
+.action-btn.approve:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(131, 112, 254, 0.3);
+}
+
+.action-btn.review {
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.action-btn.review:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+
+
+/* 작업 중인 아이템들 */
+.working-board {
+  margin-bottom: 48px;
+}
+
+.board-subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 8px 0 0 0;
+  font-weight: 400;
+}
+
+.working-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.working-column {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+  border-radius: 16px;
+  padding: 20px;
+  border: 2px solid #ffeaa7;
+  transition: all 0.3s ease;
+}
+
+.working-column:hover {
+  border-color: #fdcb6e;
+  box-shadow: 0 4px 20px rgba(253, 203, 110, 0.2);
+}
+
+.working-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(253, 203, 110, 0.15);
+  border: 1px solid #ffeaa7;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.working-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(253, 203, 110, 0.25);
+  border-color: #fdcb6e;
+}
+
+.work-status-badge {
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* 승인된 아이템들 */
+.approved-items {
+  margin-top: 48px;
+}
+
+.approved-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.approved-main-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #28a745;
+  margin: 0;
+}
+
+.approved-sections {
+  display: grid;
+  gap: 32px;
+}
+
+.approved-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 24px;
+  border: 2px solid #e9ecef;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.section-icon {
+  font-size: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #28a745;
+  margin: 0;
+  flex: 1;
+}
+
+.approved-count {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.approved-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.approved-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.1);
+  border: 1px solid #d4edda;
+  transition: all 0.3s ease;
+}
+
+.approved-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(40, 167, 69, 0.15);
+}
+
+.approved-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #343a40;
+  margin: 0 0 8px 0;
+}
+
+.approved-description {
+  color: #6c757d;
+  font-size: 0.95rem;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.approved-status {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.approved-badge {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-title {
+    font-size: 1.75rem;
+  }
+
+  .dashboard-subtitle {
+    font-size: 1rem;
+  }
+
+  .kanban-columns {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .kanban-column {
+    padding: 16px;
+  }
+
+  .kanban-card {
+    padding: 16px;
+  }
+
+  .card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .card-actions {
+    justify-content: center;
+  }
+
+  .approved-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .approved-card {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .column-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+
+}
