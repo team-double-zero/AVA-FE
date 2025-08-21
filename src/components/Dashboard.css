@@ -39,14 +39,14 @@
 
 .kanban-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
 }
 
 .kanban-column {
   background: #f8f9fa;
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
   border: 2px solid #e9ecef;
   transition: all 0.3s ease;
 }
@@ -96,7 +96,7 @@
 .kanban-card {
   background: white;
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
   box-shadow: 0 2px 8px rgba(131, 112, 254, 0.1);
   border: 1px solid #e9ecef;
   transition: all 0.3s ease;
@@ -218,14 +218,14 @@
 
 .working-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
 }
 
 .working-column {
   background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
   border: 2px solid #ffeaa7;
   transition: all 0.3s ease;
 }
@@ -238,7 +238,7 @@
 .working-card {
   background: white;
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
   box-shadow: 0 2px 8px rgba(253, 203, 110, 0.15);
   border: 1px solid #ffeaa7;
   transition: all 0.3s ease;
@@ -377,16 +377,29 @@
   }
 
   .kanban-columns {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
   .kanban-column {
-    padding: 16px;
+    padding: 12px;
   }
 
   .kanban-card {
-    padding: 16px;
+    padding: 12px;
+  }
+  
+  .working-columns {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .working-column {
+    padding: 12px;
+  }
+
+  .working-card {
+    padding: 12px;
   }
 
   .card-footer {
@@ -410,6 +423,16 @@
 }
 
 @media (max-width: 480px) {
+  .kanban-columns {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .working-columns {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
   .column-header {
     flex-direction: column;
     align-items: flex-start;
@@ -427,6 +450,4 @@
     align-items: flex-start;
     gap: 8px;
   }
-
-
 }
