@@ -34,7 +34,20 @@ function App() {
           status: 'pending',
           feedbackCount: 0,
           createdAt: '2024-01-15',
-          aiGenerated: true
+          aiGenerated: true,
+          content: {
+            text: `# 사이버펑크 2077 세계관
+
+## 배경 설정
+2077년, 기술이 극도로 발달한 미래 도시 나이트 시티. 거대 기업들이 정부를 대신해 세상을 지배하며, 사이버네틱 임플란트가 일상화된 세상입니다.
+
+## 주요 특징
+- **메가코퍼레이션 지배**: 아라사카, 밀리테크 등 거대 기업들이 실질적 권력을 가짐
+- **사이버네틱 기술**: 신체 개조와 뇌-컴퓨터 인터페이스가 보편화
+- **계급 사회**: 상류층과 하층민 간의 극심한 격차
+- **네트워킹**: 가상 현실 네트워크를 통한 정보 접근과 해킹`
+          },
+          feedbacks: []
         },
         { 
           id: 2, 
@@ -44,7 +57,32 @@ function App() {
           status: 'review', 
           feedbackCount: 2,
           createdAt: '2024-01-14',
-          aiGenerated: true
+          aiGenerated: true,
+          content: {
+            text: `# 판타지 왕국 설정
+
+## 왕국 개요
+아르카디아 왕국은 마법과 기사도가 공존하는 중세 판타지 세계입니다.
+
+## 주요 지역
+- **왕도 아르카디아**: 왕궁과 마법 학원이 위치한 중심지
+- **용의 산맥**: 고대 용들이 잠들어 있는 신비로운 산맥
+- **어둠의 숲**: 마물들이 서식하는 위험한 숲`
+          },
+          feedbacks: [
+            {
+              id: 1,
+              text: "용의 산맥 설정을 더 자세히 해주세요",
+              createdAt: "2024-01-14",
+              user: "사용자1"
+            },
+            {
+              id: 2,
+              text: "왕국의 정치 체계에 대한 설명이 부족합니다",
+              createdAt: "2024-01-15",
+              user: "사용자2"
+            }
+          ]
         }
       ],
       character: [
@@ -57,7 +95,33 @@ function App() {
           feedbackCount: 1,
           createdAt: '2024-01-16',
           aiGenerated: true,
-          worldviewId: 1
+          worldviewId: 1,
+          content: {
+            image: 'https://via.placeholder.com/400x500/333/fff?text=Alex+Character',
+            text: `# 알렉스 "고스트" 첸
+
+## 기본 정보
+- **이름**: 알렉스 "고스트" 첸
+- **나이**: 28세
+- **직업**: 프리랜서 넷러너 (해커)
+- **출신**: 나이트 시티 언더시티
+
+## 외모
+키 175cm의 마른 체형. 왼쪽 눈에 사이버네틱 임플란트가 설치되어 있어 푸른 빛이 돈다.
+
+## 성격
+- **냉철함**: 감정을 잘 드러내지 않고 논리적으로 사고
+- **의리**: 동료를 위해서라면 위험을 감수
+- **반체제**: 메가코퍼레이션에 대한 강한 불신`
+          },
+          feedbacks: [
+            {
+              id: 1,
+              text: "캐릭터의 배경 스토리를 더 구체적으로 설명해주세요",
+              createdAt: "2024-01-16",
+              user: "사용자1"
+            }
+          ]
         }
       ],
       scenario: [
@@ -71,7 +135,32 @@ function App() {
           createdAt: '2024-01-17',
           aiGenerated: true,
           worldviewId: 1,
-          characterId: 1
+          characterId: 1,
+          content: {
+            text: `# 1막 오프닝 시나리오
+
+## 장면 설정
+**위치**: 나이트 시티 중심가 - 아라사카 타워 지하 50층  
+**시간**: 2077년 11월 15일, 오전 3:24  
+**날씨**: 산성비가 내리는 어둠 속
+
+## 상황
+알렉스가 아라사카의 극비 데이터베이스에 침투하기 위해 건물 지하 깊숙한 서버룸에 잠입했다.
+
+---
+
+## 대화
+
+**[시스템 알림]**  
+*"경고: 무단 침입자 감지. 보안 프로토콜 레벨 5 가동."*
+
+**알렉스** *(중얼거리며)*  
+"젠장... 이건 예상보다 훨씬 까다로운데."
+
+**알렉스** *(집중하며)*  
+"좋아, 차근차근 해보자. ICE 방벽이... 3중으로 되어 있군."`
+          },
+          feedbacks: []
         }
       ],
       video: [
@@ -85,7 +174,25 @@ function App() {
           createdAt: '2024-01-18',
           aiGenerated: true,
           worldviewId: 1,
-          scenarioId: 1
+          scenarioId: 1,
+          content: {
+            videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+            text: `# 오프닝 영상
+
+## 영상 개요
+게임의 첫 인상을 결정하는 중요한 오프닝 시퀀스입니다.
+
+## 주요 장면
+1. **도시 전경**: 나이트 시티의 네온사인이 빛나는 야경
+2. **캐릭터 소개**: 알렉스가 해킹하는 모습
+3. **액션 시퀀스**: 긴장감 넘치는 추격전
+
+## 영상 스펙
+- **해상도**: 1920x1080 (Full HD)
+- **길이**: 약 2분 30초
+- **스타일**: 다크 사이버펑크`
+          },
+          feedbacks: []
         }
       ]
     },
@@ -208,9 +315,16 @@ function App() {
       y: touch.clientY
     });
     
-    // 화면 최상단에 있는지 확인
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    setCanPull(scrollTop === 0);
+    // 화면 최상단에 있는지 확인 (더 정확한 방법)
+    const scrollTop = Math.max(
+      window.pageYOffset || 0,
+      document.documentElement.scrollTop || 0,
+      document.body.scrollTop || 0
+    );
+    const isAtTop = scrollTop <= 5; // 5px 이하면 최상단으로 간주
+    setCanPull(isAtTop && currentView.type === 'tab'); // 탭 페이지에서만 pull-to-refresh 허용
+    
+
   };
 
   const handleTouchMove = (e) => {
@@ -222,24 +336,29 @@ function App() {
       y: touch.clientY
     });
     
-    if (canPull && !isRefreshing && touchStart.y > 0) {
-      const deltaY = touch.clientY - touchStart.y;
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = touch.clientY - touchStart.y;
+    
+    // Pull-to-refresh 처리 - 세로 드래그가 가로 드래그보다 크고 아래로 드래그할 때
+    if (canPull && !isRefreshing && touchStart.y > 0 && Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 20) {
       if (deltaY > 0) {
         // 아래로 드래그 중
         e.preventDefault(); // 기본 스크롤 방지
-        const distance = Math.min(deltaY * 0.5, 100); // 최대 100px까지
+        const distance = Math.min(deltaY * 0.5, 120); // 최대 120px까지
         setPullDistance(distance);
+
         return;
       }
     }
     
     // 상세 페이지가 아닌 경우에만 탭 슬라이드 처리
     if (currentView.type === 'tab' && touchStart.x > 0) {
-      const deltaX = touch.clientX - touchStart.x;
-      const deltaY = touch.clientY - touchStart.y;
-      
       // 가로 드래그가 세로 드래그보다 큰 경우에만 처리
       if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+        // 가로 스와이프가 더 큰 경우 pull-to-refresh 비활성화
+        setCanPull(false);
+        setPullDistance(0);
+        
         e.preventDefault(); // 기본 스크롤 방지
         setIsSliding(true);
         
@@ -247,6 +366,7 @@ function App() {
         const screenWidth = window.innerWidth;
         const dragPercent = (deltaX / screenWidth) * 100;
         setDragOffset(dragPercent);
+
       }
     }
   };
@@ -266,21 +386,25 @@ function App() {
     // 슬라이딩 상태 리셋
     setIsSliding(false);
 
-    if (!touchStart.x || !touchEnd.x) {
-      // 터치 상태 리셋
+    // 터치 좌표가 없으면 리셋하고 종료
+    if (touchStart.x === 0 && touchStart.y === 0) {
       setTouchStart({ x: 0, y: 0 });
       setTouchEnd({ x: 0, y: 0 });
       setDragOffset(0);
       return;
     }
 
-    const deltaX = touchStart.x - touchEnd.x;
-    const deltaY = touchStart.y - touchEnd.y;
+    const deltaX = touchEnd.x - touchStart.x; // 수정: 올바른 방향 계산
+    const deltaY = touchEnd.y - touchStart.y;
     const minSwipeDistance = 50;
+
+
 
     // Pull-to-refresh가 활성화된 상태에서는 가로 스와이프 무시
     if (canPull || isRefreshing) {
       setDragOffset(0);
+      setTouchStart({ x: 0, y: 0 });
+      setTouchEnd({ x: 0, y: 0 });
       return;
     }
 
@@ -288,7 +412,7 @@ function App() {
     if (currentView.type === 'detail') {
       if (Math.abs(deltaX) > minSwipeDistance && Math.abs(deltaX) > Math.abs(deltaY)) {
         if (deltaX > 0) {
-          // 왼쪽 스와이프 - 뒤로 가기
+          // 오른쪽 스와이프 - 뒤로 가기
           handleBack();
         }
       }
@@ -305,14 +429,18 @@ function App() {
     const swipeThreshold = 30; // 화면의 30% 이상 드래그하면 전환
     const shouldSwitch = Math.abs(dragOffset) > swipeThreshold || Math.abs(deltaX) > minSwipeDistance;
     
+
+    
     if (shouldSwitch && Math.abs(deltaX) > Math.abs(deltaY)) {
-      if (deltaX > 0) {
-        // 왼쪽 스와이프 - 다음 탭 (오른쪽으로 이동)
+      if (deltaX < 0) {
+        // 왼쪽 스와이프 - 다음 탭으로 이동
         const nextIndex = currentTabIndex < tabs.length - 1 ? currentTabIndex + 1 : 0;
+
         setActiveTab(tabs[nextIndex].id);
       } else {
-        // 오른쪽 스와이프 - 이전 탭 (왼쪽으로 이동)
+        // 오른쪽 스와이프 - 이전 탭으로 이동
         const prevIndex = currentTabIndex > 0 ? currentTabIndex - 1 : tabs.length - 1;
+
         setActiveTab(tabs[prevIndex].id);
       }
     }
@@ -374,6 +502,14 @@ function App() {
     setItemsData(prevData => {
       const newData = { ...prevData };
       
+      // 새 피드백 생성
+      const newFeedback = {
+        id: Date.now(),
+        text: feedbackText,
+        createdAt: new Date().toISOString().split('T')[0],
+        user: "사용자"
+      };
+      
       // 승인 대기에서 제거
       if (prevData.pending[item.type]) {
         newData.pending[item.type] = prevData.pending[item.type].filter(i => i.id !== item.id);
@@ -389,7 +525,8 @@ function App() {
         feedbackCount: item.feedbackCount + 1,
         workStatus: 'revision_requested',
         lastFeedback: feedbackText,
-        feedbackAt: new Date().toISOString().split('T')[0]
+        feedbackAt: new Date().toISOString().split('T')[0],
+        feedbacks: [...(item.feedbacks || []), newFeedback]
       });
 
       return newData;

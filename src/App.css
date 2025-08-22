@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   position: relative;
-  touch-action: pan-y; /* 세로 스크롤만 허용, 가로 스와이프는 JavaScript에서 처리 */
+  touch-action: manipulation; /* 터치 이벤트 최적화 */
   user-select: none; /* 텍스트 선택 방지 */
   -webkit-user-select: none;
   -moz-user-select: none;
