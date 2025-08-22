@@ -22,6 +22,15 @@ const Signup = ({ onSwitchToLogin }) => {
   };
 
   const validateForm = () => {
+    // 개발 모드가 아닐 때만 이메일 형식 검사
+    if (process.env.REACT_APP_DEV_MODE !== 'true') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setError('올바른 이메일 형식을 입력해주세요.');
+        return false;
+      }
+    }
+    
     if (formData.password !== formData.confirmPassword) {
       setError('비밀번호가 일치하지 않습니다.');
       return false;
@@ -158,12 +167,12 @@ const Signup = ({ onSwitchToLogin }) => {
           <div className="form-group">
             <label htmlFor="email">이메일</label>
             <input
-              type="email"
+              type={process.env.REACT_APP_DEV_MODE === 'true' ? 'text' : 'email'}
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="이메일을 입력하세요"
+              placeholder={process.env.REACT_APP_DEV_MODE === 'true' ? 'test@example.com 또는 이메일을 입력하세요' : '이메일을 입력하세요'}
               required
             />
           </div>

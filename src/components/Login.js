@@ -22,6 +22,30 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
     setLoading(true);
     setError('');
 
+    // ========== 개발 모드 테스트 로그인 ==========
+    // .env에서 REACT_APP_DEV_MODE=true로 설정하면 admin/admin으로 테스트 로그인 가능
+    if (process.env.REACT_APP_DEV_MODE === 'true' && formData.email === 'admin' && formData.password === 'admin') {
+      const dummyUser = {
+        id: 1,
+        email: 'admin@test.com',
+        username: '관리자 (개발모드)',
+        is_active: true,
+        is_verified: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      const dummyToken = 'dev_token_' + Date.now();
+      
+      localStorage.setItem('authToken', dummyToken);
+      localStorage.setItem('refreshToken', 'dev_refresh_' + Date.now());
+      localStorage.setItem('userData', JSON.stringify(dummyUser));
+      
+      onLoginSuccess(dummyToken, dummyUser);
+      setLoading(false);
+      return;
+    }
+    // ========== 개발 모드 테스트 로그인 끝 ==========
+
     try {
       // 실제 API 요청
       const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/v1/auth/login`, {
@@ -57,7 +81,32 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+      
+      // ========== 서버 연결 실패 시 개발 모드 폴백 ==========
+      if (process.env.REACT_APP_DEV_MODE === 'true' && formData.email === 'admin' && formData.password === 'admin') {
+        const dummyUser = {
+          id: 1,
+          email: 'admin@test.com',
+          username: '관리자 (오프라인)',
+          is_active: true,
+          is_verified: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        const dummyToken = 'offline_token_' + Date.now();
+        
+        localStorage.setItem('authToken', dummyToken);
+        localStorage.setItem('refreshToken', 'offline_refresh_' + Date.now());
+        localStorage.setItem('userData', JSON.stringify(dummyUser));
+        
+        onLoginSuccess(dummyToken, dummyUser);
+      } else {
+        const devModeHint = process.env.REACT_APP_DEV_MODE === 'true' 
+          ? ' 개발모드에서는 admin/admin으로 로그인 가능합니다.' 
+          : '';
+        setError(`서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.${devModeHint}`);
+      }
+      // ========== 서버 연결 실패 시 개발 모드 폴백 끝 ==========
     } finally {
       setLoading(false);
     }
@@ -73,14 +122,16 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="email">이메일</label>
+            <label htmlFor="email">
+              {process.env.REACT_APP_DEV_MODE === 'true' ? '이메일 또는 아이디' : '이메일'}
+            </label>
             <input
-              type="email"
+              type={process.env.REACT_APP_DEV_MODE === 'true' ? 'text' : 'email'}
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="이메일을 입력하세요"
+              placeholder={process.env.REACT_APP_DEV_MODE === 'true' ? "이메일 또는 아이디를 입력하세요" : "이메일을 입력하세요"}
               required
             />
           </div>
@@ -99,6 +150,19 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           </div>
 
           {error && <div className="error-message">{error}</div>}
+
+          {process.env.REACT_APP_DEV_MODE === 'true' && (
+            <div className="info-message" style={{
+              background: '#e3f2fd',
+              color: '#1976d2',
+              padding: '8px 12px',
+              borderRadius: '4px',
+              fontSize: '0.875rem',
+              marginBottom: '16px'
+            }}>
+              💡 개발모드: admin / admin으로 테스트 로그인 가능
+            </div>
+          )}
 
           <button
             type="submit"
