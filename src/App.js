@@ -7,6 +7,7 @@ import Setting from './components/Setting';
 import ItemDetail from './components/ItemDetail';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import { getRefreshToken, refreshAccessToken, clearAllTokens } from './utils/tokenUtils';
 
 function AppContent() {
   const navigate = useNavigate();
@@ -146,19 +147,40 @@ function AppContent() {
 
   // useEffect는 hooks 중에서 useState 다음에 배치
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    const userData = localStorage.getItem('userData');
-    
-    if (token && userData) {
-      try {
-        const parsedUserData = JSON.parse(userData);
-        setUser(parsedUserData);
-      } catch (error) {
-        console.error('Invalid user data in localStorage:', error);
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userData');
+    const initializeAuth = async () => {
+      // 개발 모드에서는 토큰 복원을 스킵
+      if (process.env.REACT_APP_DEV_MODE === 'true') {
+        console.log('개발 모드: 토큰 복원 스킵');
+        return;
       }
-    }
+
+      const userData = localStorage.getItem('userData');
+      const refreshToken = getRefreshToken();
+      
+      if (userData && refreshToken) {
+        try {
+          const parsedUserData = JSON.parse(userData);
+          
+          // Refresh Token으로 새로운 Access Token 요청
+          await refreshAccessToken();
+          
+          // 성공하면 사용자 상태 설정
+          setUser(parsedUserData);
+          console.log('Authentication restored with new access token');
+          
+        } catch (error) {
+          console.error('Failed to restore authentication:', error);
+          // 토큰 갱신 실패 시 모든 데이터 정리
+          clearAllTokens();
+        }
+      } else if (userData || refreshToken) {
+        // 일부 데이터만 있는 경우 정리
+        console.log('Incomplete authentication data, clearing...');
+        clearAllTokens();
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   // URL 경로에 따라 activeTab 설정
@@ -199,8 +221,9 @@ function AppContent() {
   ];
 
   // 로그인 성공 핸들러
-  const handleLoginSuccess = (token, userData) => {
-    localStorage.setItem('authToken', token);
+  const handleLoginSuccess = (accessToken, userData) => {
+    // Access Token은 이미 tokenUtils에서 설정됨
+    // userData만 localStorage에 저장
     localStorage.setItem('userData', JSON.stringify(userData));
     setUser(userData);
   };
@@ -212,9 +235,7 @@ function AppContent() {
 
   // 로그아웃 핸들러
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userData');
+    clearAllTokens();
     setUser(null);
   };
 
