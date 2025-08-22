@@ -1,7 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Dashboard.css';
+import { apiRequest } from '../utils/tokenUtils';
 
 const Dashboard = ({ itemsData, onItemClick }) => {
+  // React Hooks는 항상 컴포넌트 최상단에서 호출되어야 함
+  // API 요청 예시 (컴포넌트 마운트 시 실행)
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // 개발 모드에서는 API 요청을 스킵
+        if (process.env.REACT_APP_DEV_MODE === 'true') {
+          console.log('개발 모드: API 요청 스킵');
+          return;
+        }
+
+        // apiRequest는 자동으로 Access Token을 헤더에 추가하고
+        // 401 에러 시 토큰을 갱신한 후 재시도합니다
+        const response = await apiRequest(`${process.env.REACT_APP_API_DOMAIN}/api/v1/user/profile`);
+        
+        if (response.ok) {
+          const userData = await response.json();
+          console.log('User profile data:', userData);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        // 인증 실패 시 로그인 페이지로 리디렉션 등의 처리를 여기서 할 수 있습니다
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  // 조건부 렌더링은 Hooks 다음에 위치
   if (!itemsData) return <div>로딩 중...</div>;
 
   const pendingItems = itemsData.pending;
