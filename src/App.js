@@ -1,25 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import Dashboard from './components/Dashboard';
 import Analysis from './components/Analysis';
 import Setting from './components/Setting';
 import ItemDetail from './components/ItemDetail';
+import Login from './components/Login';
+import Signup from './components/Signup';
 
-function App() {
+function AppContent() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // 모든 useState hooks를 최상단에 배치 (React Hooks 규칙 준수)
+  const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentView, setCurrentView] = useState({ type: 'tab', data: null });
-  
-  // 스와이프 관련 상태
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
   const [touchEnd, setTouchEnd] = useState({ x: 0, y: 0 });
+  const [showAuthModal, setShowAuthModal] = useState('login');
   const [itemsData, setItemsData] = useState({
     pending: {
       worldview: [
         { 
           id: 1, 
           type: 'worldview',
-          title: '사이버펑크 2077 세계관', 
+          title: '미래형 도시 배경', 
           description: '미래형 디스토피아 설정', 
           status: 'pending',
           feedbackCount: 0,
@@ -137,11 +144,79 @@ function App() {
     }
   });
 
+  // useEffect는 hooks 중에서 useState 다음에 배치
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    const userData = localStorage.getItem('userData');
+    
+    if (token && userData) {
+      try {
+        const parsedUserData = JSON.parse(userData);
+        setUser(parsedUserData);
+      } catch (error) {
+        console.error('Invalid user data in localStorage:', error);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+      }
+    }
+  }, []);
+
+  // URL 경로에 따라 activeTab 설정
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/' || path === '/dashboard') {
+      setActiveTab('dashboard');
+    } else if (path === '/analysis') {
+      setActiveTab('analysis');
+    } else if (path === '/setting') {
+      setActiveTab('setting');
+    }
+  }, [location.pathname]);
+
+  // 탭 전환 함수
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    switch (tabId) {
+      case 'dashboard':
+        navigate('/dashboard');
+        break;
+      case 'analysis':
+        navigate('/analysis');
+        break;
+      case 'setting':
+        navigate('/setting');
+        break;
+      default:
+        navigate('/dashboard');
+    }
+  };
+
+  // 탭 정의
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'analysis', label: 'Analysis', icon: '📈' },
     { id: 'setting', label: 'Setting', icon: '⚙️' }
   ];
+
+  // 로그인 성공 핸들러
+  const handleLoginSuccess = (token, userData) => {
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('userData', JSON.stringify(userData));
+    setUser(userData);
+  };
+
+  // 인증 모드 전환
+  const handleAuthSwitch = (authType) => {
+    setShowAuthModal(authType);
+  };
+
+  // 로그아웃 핸들러
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userData');
+    setUser(null);
+  };
 
   // 스와이프 이벤트 핸들러
   const handleTouchStart = (e) => {
@@ -186,11 +261,11 @@ function App() {
     if (deltaX > 0) {
       // 왼쪽 스와이프 - 이전 탭
       const prevIndex = currentTabIndex > 0 ? currentTabIndex - 1 : tabs.length - 1;
-      setActiveTab(tabs[prevIndex].id);
+      handleTabChange(tabs[prevIndex].id);
     } else {
       // 오른쪽 스와이프 - 다음 탭
       const nextIndex = currentTabIndex < tabs.length - 1 ? currentTabIndex + 1 : 0;
-      setActiveTab(tabs[nextIndex].id);
+      handleTabChange(tabs[nextIndex].id);
     }
 
     // 터치 상태 리셋
@@ -322,41 +397,24 @@ function App() {
     }
   };
 
-  const renderContent = () => {
-    // 상세 페이지 표시
-    if (currentView.type === 'detail') {
-      return (
-        <ItemDetail
-          item={currentView.data}
-          onBack={handleBack}
-          onApprove={handleApprove}
-          onFeedback={handleFeedback}
-        />
-      );
-    }
-
-    // 탭 페이지 표시
-    switch (activeTab) {
-      case 'dashboard':
-        return (
-          <Dashboard 
-            itemsData={itemsData}
-            onItemClick={handleItemClick}
+  // 로그인 상태 체크 - 모든 hooks와 함수 정의 이후에 배치
+  if (!user) {
+    return (
+      <div className="app">
+        {showAuthModal === 'login' ? (
+          <Login 
+            onLoginSuccess={handleLoginSuccess}
+            onSwitchToSignup={() => handleAuthSwitch('signup')}
           />
-        );
-      case 'analysis':
-        return <Analysis />;
-      case 'setting':
-        return <Setting />;
-      default:
-        return (
-          <Dashboard 
-            itemsData={itemsData}
-            onItemClick={handleItemClick}
+        ) : (
+          <Signup 
+            onSignupSuccess={() => handleAuthSwitch('login')}
+            onSwitchToLogin={() => handleAuthSwitch('login')}
           />
-        );
-    }
-  };
+        )}
+      </div>
+    );
+  }
 
   return (
     <div 
@@ -375,13 +433,19 @@ function App() {
         </button>
         <h1 
           className="app-title"
-          onClick={() => setActiveTab('dashboard')}
+          onClick={() => handleTabChange('dashboard')}
         >
           Avazon
         </h1>
-        <button className="settings-button">
-          ⚙️
-        </button>
+        <div className="header-right">
+          <span className="user-name">{user?.nickname || user?.email}</span>
+          <button 
+            className="logout-button"
+            onClick={handleLogout}
+          >
+            로그아웃
+          </button>
+        </div>
       </header>
 
       {/* Sidebar */}
@@ -401,7 +465,7 @@ function App() {
               key={tab.id}
               className={`sidebar-button ${activeTab === tab.id ? 'active' : ''}`}
               onClick={() => {
-                setActiveTab(tab.id);
+                handleTabChange(tab.id);
                 setSidebarOpen(false);
               }}
             >
@@ -423,10 +487,42 @@ function App() {
       {/* Main Content */}
       <div className="app-container">
         <main className="main-content">
-          {renderContent()}
+          {currentView.type === 'detail' ? (
+            <ItemDetail
+              item={currentView.data}
+              onBack={handleBack}
+              onApprove={handleApprove}
+              onFeedback={handleFeedback}
+            />
+          ) : (
+            <Routes>
+              <Route path="/" element={
+                <Dashboard 
+                  itemsData={itemsData}
+                  onItemClick={handleItemClick}
+                />
+              } />
+              <Route path="/dashboard" element={
+                <Dashboard 
+                  itemsData={itemsData}
+                  onItemClick={handleItemClick}
+                />
+              } />
+              <Route path="/analysis" element={<Analysis />} />
+              <Route path="/setting" element={<Setting />} />
+            </Routes>
+          )}
         </main>
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 

@@ -55,6 +55,36 @@
   text-shadow: 0 2px 8px rgba(131, 112, 254, 0.3);
 }
 
+/* Header Right */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-name {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.logout-button {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  background: #ee5a52;
+  transform: translateY(-1px);
+}
+
 /* Sidebar */
 .sidebar {
   position: fixed;
