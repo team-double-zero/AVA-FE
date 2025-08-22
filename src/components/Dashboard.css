@@ -39,8 +39,8 @@
 
 .kanban-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
 }
 
 .kanban-column {
@@ -96,11 +96,12 @@
 .kanban-card {
   background: white;
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
   box-shadow: 0 2px 8px rgba(131, 112, 254, 0.1);
   border: 1px solid #e9ecef;
   transition: all 0.3s ease;
   cursor: pointer;
+  min-height: 120px;
 }
 
 .kanban-card:hover {
@@ -142,9 +143,14 @@
 
 .card-description {
   color: #6c757d;
-  font-size: 0.95rem;
-  margin: 0 0 16px 0;
-  line-height: 1.5;
+  font-size: 0.9rem;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .card-footer {
@@ -218,14 +224,14 @@
 
 .working-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
 }
 
 .working-column {
   background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
   border: 2px solid #ffeaa7;
   transition: all 0.3s ease;
 }
@@ -238,10 +244,11 @@
 .working-card {
   background: white;
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
   box-shadow: 0 2px 8px rgba(253, 203, 110, 0.15);
   border: 1px solid #ffeaa7;
   transition: all 0.3s ease;
+  min-height: 120px;
   cursor: pointer;
 }
 

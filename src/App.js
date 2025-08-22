@@ -32,7 +32,9 @@ function AppContent() {
           status: 'pending',
           feedbackCount: 0,
           createdAt: '2024-01-15',
-          aiGenerated: true
+          aiGenerated: true,
+          content: '# 네오 시티 2087\n\n2087년, 기술과 자본이 지배하는 거대 도시입니다...',
+          feedbackHistory: []
         },
         { 
           id: 2, 
@@ -42,20 +44,93 @@ function AppContent() {
           status: 'review', 
           feedbackCount: 2,
           createdAt: '2024-01-14',
-          aiGenerated: true
+          aiGenerated: true,
+          content: '# 아르카나 왕국\n\n마법이 존재하는 중세 판타지 세계...',
+          feedbackHistory: []
+        },
+        { 
+          id: 3, 
+          type: 'worldview',
+          title: '우주 정거장 배경', 
+          description: 'SF 우주 정거장 설정', 
+          status: 'pending',
+          feedbackCount: 0,
+          createdAt: '2024-01-13',
+          aiGenerated: true,
+          content: '# 오메가 스테이션\n\n지구 궤도상의 거대한 우주 정거장...',
+          feedbackHistory: []
         }
       ],
       character: [
         { 
           id: 1, 
           type: 'character',
-          title: '주인공 캐릭터 - 알렉스', 
+          title: '주인공 - 알렉스', 
           description: '사이버 해커 캐릭터', 
           status: 'pending',
           feedbackCount: 1,
           createdAt: '2024-01-16',
           aiGenerated: true,
-          worldviewId: 1
+          worldviewId: 1,
+          imageUrl: '/images/alex-character.jpg',
+          content: '## 캐릭터 프로필\n\n**이름**: 알렉스 첸\n**나이**: 28세\n**직업**: 사이버 해커...',
+          feedbackHistory: []
+        },
+        { 
+          id: 2, 
+          type: 'character',
+          title: '조력자 - 미라', 
+          description: '마법사 캐릭터', 
+          status: 'pending',
+          feedbackCount: 0,
+          createdAt: '2024-01-15',
+          aiGenerated: true,
+          worldviewId: 2,
+          imageUrl: '/images/mira-character.jpg',
+          content: '## 캐릭터 프로필\n\n**이름**: 미라 스톰\n**나이**: 25세\n**직업**: 궁정 마법사...',
+          feedbackHistory: []
+        },
+        { 
+          id: 3, 
+          type: 'character',
+          title: '빌런 - 다크로드', 
+          description: '최종 보스 캐릭터', 
+          status: 'pending',
+          feedbackCount: 0,
+          createdAt: '2024-01-18',
+          aiGenerated: true,
+          worldviewId: 2,
+          imageUrl: '/images/darklord-character.jpg',
+          content: '## 캐릭터 프로필\n\n**이름**: 다크로드 바론\n**나이**: 불명\n**직업**: 어둠의 군주...',
+          feedbackHistory: []
+        }
+      ],
+      episode: [
+        { 
+          id: 1, 
+          type: 'episode',
+          title: '첫 번째 만남', 
+          description: '주인공과 조력자의 첫 만남', 
+          status: 'pending',
+          feedbackCount: 0,
+          createdAt: '2024-01-20',
+          aiGenerated: true,
+          worldviewId: 1,
+          content: '# 에피소드 1: 첫 번째 만남\n\n알렉스가 미라를 처음 만나는 순간...',
+          feedbackHistory: []
+        },
+        { 
+          id: 2, 
+          type: 'episode',
+          title: '비밀 임무', 
+          description: '극비 해킹 임무', 
+          status: 'pending',
+          feedbackCount: 1,
+          createdAt: '2024-01-19',
+          aiGenerated: true,
+          worldviewId: 1,
+          content: '# 에피소드 2: 비밀 임무\n\n기업의 서버에 침투하는 위험한 임무...',
+          feedbackHistory: []
         }
       ],
       scenario: [
@@ -69,14 +144,85 @@ function AppContent() {
           createdAt: '2024-01-17',
           aiGenerated: true,
           worldviewId: 1,
-          characterId: 1
+          characterId: 1,
+          content: '# 시나리오: 게임 시작\n\n**장면**: 네오 시티의 뒷골목\n\n알렉스: "이번 일만 성공하면..."',
+          feedbackHistory: []
+        },
+        { 
+          id: 2, 
+          type: 'scenario',
+          title: '중간 보스전 대본', 
+          description: '중간 보스 대화', 
+          status: 'pending',
+          feedbackCount: 2,
+          createdAt: '2024-01-16',
+          aiGenerated: true,
+          worldviewId: 1,
+          characterId: 2,
+          content: '# 시나리오: 중간 보스전\n\n**장면**: 폐허가 된 공장\n\n보스: "네가 그 해커로군..."',
+          feedbackHistory: []
+        },
+        { 
+          id: 3, 
+          type: 'scenario',
+          title: '최종 결전 시나리오', 
+          description: '클라이맥스 장면', 
+          status: 'pending',
+          feedbackCount: 0,
+          createdAt: '2024-01-21',
+          aiGenerated: true,
+          worldviewId: 1,
+          characterId: 3,
+          content: '# 시나리오: 최종 결전\n\n**장면**: 네오 시티 중앙 타워 옥상\n\n다크로드: "마침내 만났군..."',
+          feedbackHistory: []
+        }
+      ],
+      video: [
+        { 
+          id: 1, 
+          type: 'video',
+          title: '오프닝 영상', 
+          description: '게임 인트로 영상', 
+          status: 'pending',
+          feedbackCount: 0,
+          createdAt: '2024-01-22',
+          aiGenerated: true,
+          videoUrl: '/videos/opening-intro.mp4',
+          duration: '00:02:30',
+          feedbackHistory: []
+        },
+        { 
+          id: 2, 
+          type: 'video',
+          title: '캐릭터 소개 영상', 
+          description: '주요 캐릭터 소개', 
+          status: 'pending',
+          feedbackCount: 1,
+          createdAt: '2024-01-21',
+          aiGenerated: true,
+          videoUrl: '/videos/character-intro.mp4',
+          duration: '00:01:45',
+          feedbackHistory: []
+        },
+        { 
+          id: 3, 
+          type: 'video',
+          title: '게임플레이 트레일러', 
+          description: '게임 플레이 영상', 
+          status: 'pending',
+          feedbackCount: 0,
+          createdAt: '2024-01-20',
+          aiGenerated: true,
+          videoUrl: '/videos/gameplay-trailer.mp4',
+          duration: '00:03:15',
+          feedbackHistory: []
         }
       ]
     },
     working: {
       worldview: [
         { 
-          id: 3, 
+          id: 4, 
           type: 'worldview',
           title: '우주 전쟁 배경', 
           description: 'SF 우주 배경 설정', 
@@ -84,63 +230,98 @@ function AppContent() {
           feedbackCount: 3,
           createdAt: '2024-01-13',
           aiGenerated: true,
-          workStatus: 'revision_requested'
+          workStatus: 'revision_requested',
+          content: '# 은하계 전쟁\n\n서기 3021년, 은하계를 뒤흔드는 대전쟁...',
+          feedbackHistory: []
         }
       ],
       character: [
         { 
-          id: 2, 
+          id: 4, 
           type: 'character',
-          title: '조력자 - 미라', 
-          description: '마법사 캐릭터', 
+          title: '사령관 - 라이더', 
+          description: '우주 함대 사령관', 
           status: 'generating',
           feedbackCount: 1,
           createdAt: '2024-01-15',
           aiGenerated: true,
-          worldviewId: 2,
-          workStatus: 'revision_requested'
-        },
+          worldviewId: 3,
+          workStatus: 'revision_requested',
+          imageUrl: '/images/rider-character.jpg',
+          content: '## 캐릭터 프로필\n\n**이름**: 라이더 스카이\n**나이**: 35세\n**직업**: 함대 사령관...',
+          feedbackHistory: []
+        }
+      ],
+      episode: [
         { 
           id: 3, 
-          type: 'character',
-          title: '빌런 - 다크로드', 
-          description: '최종 보스 캐릭터', 
+          type: 'episode',
+          title: '첫 번째 전투', 
+          description: '초기 전투 시퀀스', 
           status: 'generating',
           feedbackCount: 0,
           createdAt: '2024-01-18',
           aiGenerated: true,
-          worldviewId: 1,
-          workStatus: 'generating'
+          worldviewId: 3,
+          workStatus: 'generating',
+          content: '# 에피소드 3: 첫 번째 전투\n\n함대가 적과 조우하는 순간...',
+          feedbackHistory: []
         }
       ],
       scenario: [
         { 
-          id: 2, 
+          id: 4, 
           type: 'scenario',
-          title: '중간 보스전 대본', 
-          description: '중간 보스 대화', 
+          title: '작전 회의 시나리오', 
+          description: '전략 회의 장면', 
           status: 'generating',
           feedbackCount: 2,
           createdAt: '2024-01-16',
           aiGenerated: true,
-          worldviewId: 1,
-          characterId: 2,
-          workStatus: 'revision_requested'
+          worldviewId: 3,
+          characterId: 4,
+          workStatus: 'revision_requested',
+          content: '# 시나리오: 작전 회의\n\n**장면**: 사령부 회의실\n\n라이더: "이번 작전은 매우 중요하다..."',
+          feedbackHistory: []
+        }
+      ],
+      video: [
+        { 
+          id: 4, 
+          type: 'video',
+          title: '전투 시퀀스 영상', 
+          description: '우주 전투 장면', 
+          status: 'generating',
+          feedbackCount: 1,
+          createdAt: '2024-01-17',
+          aiGenerated: true,
+          videoUrl: '/videos/space-battle.mp4',
+          duration: '00:04:20',
+          workStatus: 'generating',
+          feedbackHistory: []
         }
       ]
     },
     approved: {
       worldview: [
-        { id: 1, type: 'worldview', title: '메인 도시 설정', description: '중앙 도시 배경' },
-        { id: 2, type: 'worldview', title: '던전 설정', description: '지하 던전 배경' }
+        { id: 5, type: 'worldview', title: '메인 도시 설정', description: '중앙 도시 배경' },
+        { id: 6, type: 'worldview', title: '던전 설정', description: '지하 던전 배경' }
       ],
       character: [
-        { id: 1, type: 'character', title: '상점 NPC', description: '아이템 판매 캐릭터' },
-        { id: 2, type: 'character', title: '가이드 NPC', description: '튜토리얼 가이드' }
+        { id: 5, type: 'character', title: '상점 NPC', description: '아이템 판매 캐릭터' },
+        { id: 6, type: 'character', title: '가이드 NPC', description: '튜토리얼 가이드' }
+      ],
+      episode: [
+        { id: 4, type: 'episode', title: '프롤로그', description: '이야기의 시작' },
+        { id: 5, type: 'episode', title: '튜토리얼', description: '게임 사용법 안내' }
       ],
       scenario: [
-        { id: 1, type: 'scenario', title: '튜토리얼 시나리오', description: '초기 학습 과정' },
-        { id: 2, type: 'scenario', title: '첫 번째 퀘스트', description: '첫 임무 대본' }
+        { id: 5, type: 'scenario', title: '튜토리얼 시나리오', description: '초기 학습 과정' },
+        { id: 6, type: 'scenario', title: '첫 번째 퀘스트', description: '첫 임무 대본' }
+      ],
+      video: [
+        { id: 5, type: 'video', title: '튜토리얼 영상', description: '게임 가이드 영상' },
+        { id: 6, type: 'video', title: '엔딩 영상', description: '게임 엔딩 시퀀스' }
       ]
     }
   });

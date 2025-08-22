@@ -192,7 +192,9 @@ const Dashboard = ({ itemsData, onItemClick }) => {
         <div className="kanban-columns">
           {renderKanbanColumn('세계관', pendingItems.worldview, '🌍')}
           {renderKanbanColumn('캐릭터', pendingItems.character, '👤')}
+          {renderKanbanColumn('에피소드', pendingItems.episode, '📖')}
           {renderKanbanColumn('시나리오', pendingItems.scenario, '📝')}
+          {renderKanbanColumn('영상', pendingItems.video, '🎬')}
         </div>
       </div>
 
@@ -205,7 +207,9 @@ const Dashboard = ({ itemsData, onItemClick }) => {
         <div className="working-columns">
           {renderWorkingColumn('세계관', workingItems.worldview, '🔄 🌍')}
           {renderWorkingColumn('캐릭터', workingItems.character, '🔄 👤')}
+          {renderWorkingColumn('에피소드', workingItems.episode, '🔄 📖')}
           {renderWorkingColumn('시나리오', workingItems.scenario, '🔄 📝')}
+          {renderWorkingColumn('영상', workingItems.video, '🔄 🎬')}
         </div>
       </div>
 
@@ -217,7 +221,9 @@ const Dashboard = ({ itemsData, onItemClick }) => {
         <div className="approved-sections">
           {renderApprovedSection('승인된 세계관', approvedItems.worldview, '✅ 🌍')}
           {renderApprovedSection('승인된 캐릭터', approvedItems.character, '✅ 👤')}
+          {renderApprovedSection('승인된 에피소드', approvedItems.episode, '✅ 📖')}
           {renderApprovedSection('승인된 시나리오', approvedItems.scenario, '✅ 📝')}
+          {renderApprovedSection('승인된 영상', approvedItems.video, '✅ 🎬')}
         </div>
       </div>
     </div>
