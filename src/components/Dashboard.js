@@ -165,7 +165,11 @@ const Dashboard = ({ itemsData, onItemClick }) => {
       </div>
       <div className="approved-grid">
         {items.map((item) => (
-          <div key={item.id} className="approved-card">
+          <div 
+            key={item.id} 
+            className="approved-card"
+            onClick={() => onItemClick && onItemClick(item)}
+          >
             <h4 className="approved-title">{item.title}</h4>
             <p className="approved-description">{item.description}</p>
             <div className="approved-status">

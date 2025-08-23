@@ -23,8 +23,9 @@ const CharacterDetail = ({ item, onBack, onApprove, onFeedback }) => {
   };
 
   return (
-    <div className="item-detail">
-      <div className="detail-header">
+    <div className="detail-container">
+      <div className="detail-wrapper">
+        <div className="detail-header">
         <button className="back-button" onClick={onBack}>
           ← 뒤로 가기
         </button>
@@ -137,6 +138,7 @@ const CharacterDetail = ({ item, onBack, onApprove, onFeedback }) => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

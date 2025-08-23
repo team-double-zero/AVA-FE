@@ -304,24 +304,146 @@ function AppContent() {
     },
     approved: {
       worldview: [
-        { id: 5, type: 'worldview', title: '메인 도시 설정', description: '중앙 도시 배경' },
-        { id: 6, type: 'worldview', title: '던전 설정', description: '지하 던전 배경' }
+        { 
+          id: 5, 
+          type: 'worldview', 
+          title: '메인 도시 설정', 
+          description: '중앙 도시 배경',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-10',
+          aiGenerated: true,
+          content: '# 메인 도시 - 아르카디아\n\n게임의 중심이 되는 번화한 도시입니다. 상점들과 여관, 그리고 모험가 길드가 위치해 있습니다...',
+          feedbackHistory: []
+        },
+        { 
+          id: 6, 
+          type: 'worldview', 
+          title: '던전 설정', 
+          description: '지하 던전 배경',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-09',
+          aiGenerated: true,
+          content: '# 고대 유적 던전\n\n오래된 마법사들의 탑 지하에 숨겨진 던전입니다. 다양한 몬스터들과 보물이 기다리고 있습니다...',
+          feedbackHistory: []
+        }
       ],
       character: [
-        { id: 5, type: 'character', title: '상점 NPC', description: '아이템 판매 캐릭터' },
-        { id: 6, type: 'character', title: '가이드 NPC', description: '튜토리얼 가이드' }
+        { 
+          id: 5, 
+          type: 'character', 
+          title: '상점 NPC', 
+          description: '아이템 판매 캐릭터',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-08',
+          aiGenerated: true,
+          worldviewId: 5,
+          imageUrl: '/images/shop-keeper.jpg',
+          content: '## 캐릭터 프로필\n\n**이름**: 머로우 상인\n**나이**: 45세\n**직업**: 잡화점 주인\n\n친절하고 정직한 상인으로 모험가들에게 필요한 아이템들을 판매합니다...',
+          feedbackHistory: []
+        },
+        { 
+          id: 6, 
+          type: 'character', 
+          title: '가이드 NPC', 
+          description: '튜토리얼 가이드',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-07',
+          aiGenerated: true,
+          worldviewId: 5,
+          imageUrl: '/images/guide-npc.jpg',
+          content: '## 캐릭터 프로필\n\n**이름**: 엘라 가이드\n**나이**: 28세\n**직업**: 신규 모험가 안내원\n\n새로운 모험가들을 도와주는 친절한 가이드입니다...',
+          feedbackHistory: []
+        }
       ],
       episode: [
-        { id: 4, type: 'episode', title: '프롤로그', description: '이야기의 시작' },
-        { id: 5, type: 'episode', title: '튜토리얼', description: '게임 사용법 안내' }
+        { 
+          id: 4, 
+          type: 'episode', 
+          title: '프롤로그', 
+          description: '이야기의 시작',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-06',
+          aiGenerated: true,
+          worldviewId: 5,
+          content: '# 에피소드 1: 프롤로그\n\n새로운 모험가가 아르카디아 도시에 도착하는 순간부터 이야기가 시작됩니다...',
+          feedbackHistory: []
+        },
+        { 
+          id: 5, 
+          type: 'episode', 
+          title: '튜토리얼', 
+          description: '게임 사용법 안내',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-05',
+          aiGenerated: true,
+          worldviewId: 5,
+          content: '# 에피소드 2: 튜토리얼\n\n플레이어가 게임의 기본 조작법과 시스템을 배우는 에피소드입니다...',
+          feedbackHistory: []
+        }
       ],
       scenario: [
-        { id: 5, type: 'scenario', title: '튜토리얼 시나리오', description: '초기 학습 과정' },
-        { id: 6, type: 'scenario', title: '첫 번째 퀘스트', description: '첫 임무 대본' }
+        { 
+          id: 5, 
+          type: 'scenario', 
+          title: '튜토리얼 시나리오', 
+          description: '초기 학습 과정',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-04',
+          aiGenerated: true,
+          worldviewId: 5,
+          characterId: 6,
+          content: '# 시나리오: 튜토리얼\n\n**장면**: 아르카디아 도시 광장\n\n엘라: "안녕하세요! 새로운 모험가시군요. 제가 도움을 드리겠습니다..."',
+          feedbackHistory: []
+        },
+        { 
+          id: 6, 
+          type: 'scenario', 
+          title: '첫 번째 퀘스트', 
+          description: '첫 임무 대본',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-03',
+          aiGenerated: true,
+          worldviewId: 5,
+          characterId: 5,
+          content: '# 시나리오: 첫 번째 퀘스트\n\n**장면**: 머로우의 잡화점\n\n머로우: "이런, 창고에서 물건이 좀 없어졌어요. 도와주실 수 있나요?"',
+          feedbackHistory: []
+        }
       ],
       video: [
-        { id: 5, type: 'video', title: '튜토리얼 영상', description: '게임 가이드 영상' },
-        { id: 6, type: 'video', title: '엔딩 영상', description: '게임 엔딩 시퀀스' }
+        { 
+          id: 5, 
+          type: 'video', 
+          title: '튜토리얼 영상', 
+          description: '게임 가이드 영상',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-02',
+          aiGenerated: true,
+          videoUrl: '/videos/tutorial-guide.mp4',
+          duration: '00:02:30',
+          feedbackHistory: []
+        },
+        { 
+          id: 6, 
+          type: 'video', 
+          title: '엔딩 영상', 
+          description: '게임 엔딩 시퀀스',
+          status: 'approved',
+          feedbackCount: 0,
+          createdAt: '2024-01-01',
+          aiGenerated: true,
+          videoUrl: '/videos/ending-sequence.mp4',
+          duration: '00:05:45',
+          feedbackHistory: []
+        }
       ]
     }
   });
@@ -688,15 +810,15 @@ function AppContent() {
 
       {/* Main Content */}
       <div className="app-container">
-        <main className="main-content">
-          {currentView.type === 'detail' ? (
-            <ItemDetail
-              item={currentView.data}
-              onBack={handleBack}
-              onApprove={handleApprove}
-              onFeedback={handleFeedback}
-            />
-          ) : (
+        {currentView.type === 'detail' ? (
+          <ItemDetail
+            item={currentView.data}
+            onBack={handleBack}
+            onApprove={handleApprove}
+            onFeedback={handleFeedback}
+          />
+        ) : (
+          <main className="main-content">
             <Routes>
               <Route path="/" element={
                 <Dashboard 
@@ -713,8 +835,8 @@ function AppContent() {
               <Route path="/analysis" element={<Analysis />} />
               <Route path="/setting" element={<Setting />} />
             </Routes>
-          )}
-        </main>
+          </main>
+        )}
       </div>
     </div>
   );
