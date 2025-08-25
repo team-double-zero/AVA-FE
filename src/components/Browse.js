@@ -1,198 +1,186 @@
 import React, { useState } from 'react';
 import './Browse.css';
 
+// 아이콘 imports
+import iconWorldview from '../assets/icons/icon_worldview.svg';
+import iconCharacter from '../assets/icons/icon_character.svg';
+import iconEpisode from '../assets/icons/icon_episode.svg';
+import iconScenario from '../assets/icons/icon_scenario.svg';
+import iconVideo from '../assets/icons/icon_video.svg';
+
 const Browse = ({ itemsData, onItemClick }) => {
   const [selectedWorldview, setSelectedWorldview] = useState(null);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
   
   const approvedItems = itemsData?.approved || {};
   
-  // 월드뷰 선택 핸들러
+  // 현재 경로 표시를 위한 breadcrumb
+  const getBreadcrumb = () => {
+    const breadcrumb = ['세계관'];
+    if (selectedWorldview) {
+      breadcrumb.push(selectedWorldview.title);
+    }
+    if (selectedEpisode) {
+      breadcrumb.push(selectedEpisode.title);
+    }
+    return breadcrumb;
+  };
+  
+  // 세계관 선택
   const handleWorldviewSelect = (worldview) => {
     setSelectedWorldview(worldview);
     setSelectedEpisode(null);
   };
   
-  // 에피소드 선택 핸들러
+  // 에피소드 선택
   const handleEpisodeSelect = (episode) => {
     setSelectedEpisode(episode);
   };
-
-  // 에피소드에 연결된 캐릭터 찾기
-  const getEpisodeCharacters = (episodeId) => {
-    return approvedItems.character.filter(character => 
-      character.worldviewId === selectedWorldview.id
-    );
+  
+  // 해당 세계관의 에피소드들 가져오기
+  const getWorldviewEpisodes = (worldviewId) => {
+    return approvedItems.episode?.filter(episode => 
+      episode.worldviewId === worldviewId
+    ) || [];
   };
-
-  // 에피소드에 연결된 시나리오 찾기
+  
+  // 해당 에피소드의 시나리오들 가져오기
   const getEpisodeScenarios = (episodeId) => {
-    return approvedItems.scenario.filter(scenario => 
-      scenario.worldviewId === selectedWorldview.id
-    );
+    return approvedItems.scenario?.filter(scenario => 
+      scenario.episodeId === episodeId || 
+      (scenario.worldviewId === selectedWorldview?.id && !scenario.episodeId)
+    ) || [];
   };
-
-  // 에피소드에 연결된 영상 찾기
-  const getEpisodeVideos = (episodeId) => {
-    return approvedItems.video.filter(video => 
-      video.worldviewId === selectedWorldview?.id
-    );
-  };
-
-  // 승인된 세계관 목록 렌더링
-  const renderWorldviewList = () => (
-    <div className="browse-worldview-list">
-      <h3 className="browse-section-title">세계관</h3>
-      <div className="browse-grid">
-        {approvedItems.worldview?.map(worldview => (
-          <div
-            key={worldview.id}
-            className={`browse-card ${selectedWorldview?.id === worldview.id ? 'selected' : ''}`}
-            onClick={() => handleWorldviewSelect(worldview)}
-          >
-            <h4 className="browse-card-title">{worldview.title}</h4>
-            <p className="browse-card-description">{worldview.description}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  // 선택된 세계관의 에피소드 목록 렌더링
-  const renderEpisodeList = () => {
-    if (!selectedWorldview) return null;
-    
-    const worldviewEpisodes = approvedItems.episode.filter(
-      episode => episode.worldviewId === selectedWorldview.id
-    );
-    
-    if (worldviewEpisodes.length === 0) {
-      return (
-        <div className="browse-empty-state">
-          <p>이 세계관에 연결된 에피소드가 없습니다.</p>
-        </div>
-      );
+  
+  // 파일 아이콘 결정
+  const getFileIcon = (type) => {
+    switch(type) {
+      case 'worldview': return iconWorldview;
+      case 'episode': return iconEpisode;
+      case 'scenario': return iconScenario;
+      case 'character': return iconCharacter;
+      case 'video': return iconVideo;
+      default: return iconScenario;
     }
-    
-    return (
-      <div className="browse-episode-list">
-        <h3 className="browse-section-title">
-          <span className="browse-section-back" onClick={() => setSelectedWorldview(null)}>
-            ← 
-          </span>
-          {selectedWorldview.title} - 에피소드
-        </h3>
-        <div className="browse-grid">
-          {worldviewEpisodes.map(episode => (
-            <div
-              key={episode.id}
-              className={`browse-card ${selectedEpisode?.id === episode.id ? 'selected' : ''}`}
-              onClick={() => handleEpisodeSelect(episode)}
-            >
-              <h4 className="browse-card-title">{episode.title}</h4>
-              <p className="browse-card-description">{episode.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
   };
 
-  // 선택된 에피소드의 상세 정보 렌더링
-  const renderEpisodeDetail = () => {
-    if (!selectedEpisode) return null;
-    
-    const characters = getEpisodeCharacters(selectedEpisode.id);
-    const scenarios = getEpisodeScenarios(selectedEpisode.id);
-    const videos = getEpisodeVideos(selectedEpisode.id);
-    
-    return (
-      <div className="browse-episode-detail">
-        <div className="browse-detail-header">
-          <span className="browse-section-back" onClick={() => setSelectedEpisode(null)}>
-            ←
-          </span>
-          <h3 className="browse-detail-title">{selectedEpisode.title}</h3>
-        </div>
-        
-        <div className="browse-detail-content">
-          <div className="browse-detail-description">
-            <h4>에피소드 설명</h4>
-            <p>{selectedEpisode.description}</p>
-          </div>
-          
-          {characters.length > 0 && (
-            <div className="browse-detail-section">
-              <h4>관련 캐릭터</h4>
-              <div className="browse-mini-grid">
-                {characters.map(character => (
-                  <div 
-                    key={character.id} 
-                    className="browse-mini-card"
-                    onClick={() => onItemClick && onItemClick(character)}
-                  >
-                    <h5>{character.title}</h5>
-                    <p>{character.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {scenarios.length > 0 && (
-            <div className="browse-detail-section">
-              <h4>관련 시나리오</h4>
-              <div className="browse-mini-grid">
-                {scenarios.map(scenario => (
-                  <div 
-                    key={scenario.id} 
-                    className="browse-mini-card"
-                    onClick={() => onItemClick && onItemClick(scenario)}
-                  >
-                    <h5>{scenario.title}</h5>
-                    <p>{scenario.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {videos.length > 0 && (
-            <div className="browse-detail-section">
-              <h4>관련 영상</h4>
-              <div className="browse-mini-grid">
-                {videos.map(video => (
-                  <div 
-                    key={video.id} 
-                    className="browse-mini-card"
-                    onClick={() => onItemClick && onItemClick(video)}
-                  >
-                    <h5>{video.title}</h5>
-                    <p>{video.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
+  // 폴더 아이콘 결정
+  const getFolderIcon = (type) => {
+    switch(type) {
+      case 'worldview': return iconWorldview;
+      case 'episode': return iconEpisode;
+      default: return iconWorldview;
+    }
   };
 
   return (
     <div className="browse-container">
-      <div className="browse-header">
-        <h2 className="browse-title">콘텐츠 브라우저</h2>
-        <p className="browse-subtitle">승인된 콘텐츠를 탐색하고 조회할 수 있습니다</p>
+      <div className="explorer-header">
+        <div className="breadcrumb">
+          {getBreadcrumb().map((item, index) => (
+            <span key={index} className="breadcrumb-item">
+              {index > 0 && ' > '}
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
       
-      <div className="browse-content">
-        {selectedEpisode 
-          ? renderEpisodeDetail()
-          : selectedWorldview 
-            ? renderEpisodeList() 
-            : renderWorldviewList()
-        }
+      <div className="explorer-panels">
+        {/* 세계관 패널 */}
+        <div className="explorer-panel">
+          <div className="panel-header">
+            <h3>세계관</h3>
+          </div>
+          <div className="panel-content">
+            {approvedItems.worldview?.map(worldview => (
+              <div
+                key={worldview.id}
+                className={`explorer-item folder ${selectedWorldview?.id === worldview.id ? 'selected' : ''}`}
+                onClick={() => handleWorldviewSelect(worldview)}
+              >
+                <img src={getFolderIcon('worldview')} alt="세계관" className="item-icon" />
+                <span className="item-name">{worldview.title}</span>
+                <span className="item-arrow">▶</span>
+              </div>
+            ))}
+            {(!approvedItems.worldview || approvedItems.worldview.length === 0) && (
+              <div className="empty-state">
+                <img src={iconWorldview} alt="세계관" className="empty-icon" />
+                <div className="empty-text">등록된 세계관이 없습니다</div>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* 에피소드 패널 */}
+        <div className="explorer-panel">
+          <div className="panel-header">
+            <h3>에피소드</h3>
+          </div>
+          <div className="panel-content">
+            {selectedWorldview ? (
+              <>
+                {getWorldviewEpisodes(selectedWorldview.id).map(episode => (
+                  <div
+                    key={episode.id}
+                    className={`explorer-item folder ${selectedEpisode?.id === episode.id ? 'selected' : ''}`}
+                    onClick={() => handleEpisodeSelect(episode)}
+                  >
+                    <img src={getFolderIcon('episode')} alt="에피소드" className="item-icon" />
+                    <span className="item-name">{episode.title}</span>
+                    <span className="item-arrow">▶</span>
+                  </div>
+                ))}
+                {getWorldviewEpisodes(selectedWorldview.id).length === 0 && (
+                  <div className="empty-state">
+                    <img src={iconEpisode} alt="에피소드" className="empty-icon" />
+                    <div className="empty-text">등록된 에피소드가 없습니다</div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="empty-state">
+                <img src={iconEpisode} alt="에피소드" className="empty-icon" />
+                <div className="empty-text">세계관을 선택해주세요</div>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* 시나리오 패널 */}
+        <div className="explorer-panel">
+          <div className="panel-header">
+            <h3>시나리오</h3>
+          </div>
+          <div className="panel-content">
+            {selectedWorldview && selectedEpisode ? (
+              <>
+                {getEpisodeScenarios(selectedEpisode.id).map(scenario => (
+                  <div
+                    key={scenario.id}
+                    className="explorer-item file"
+                    onClick={() => onItemClick(scenario)}
+                  >
+                    <img src={getFileIcon('scenario')} alt="시나리오" className="item-icon" />
+                    <span className="item-name">{scenario.title}</span>
+                  </div>
+                ))}
+                {getEpisodeScenarios(selectedEpisode.id).length === 0 && (
+                  <div className="empty-state">
+                    <img src={iconScenario} alt="시나리오" className="empty-icon" />
+                    <div className="empty-text">등록된 시나리오가 없습니다</div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="empty-state">
+                <img src={iconScenario} alt="시나리오" className="empty-icon" />
+                <div className="empty-text">에피소드를 선택해주세요</div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

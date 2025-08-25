@@ -2,6 +2,13 @@ import React, { useEffect } from 'react';
 import './Dashboard.css';
 import { apiRequest } from '../utils/tokenUtils';
 
+// 아이콘 imports
+import iconWorldview from '../assets/icons/icon_worldview.svg';
+import iconCharacter from '../assets/icons/icon_character.svg';
+import iconEpisode from '../assets/icons/icon_episode.svg';
+import iconScenario from '../assets/icons/icon_scenario.svg';
+import iconVideo from '../assets/icons/icon_video.svg';
+
 const Dashboard = ({ itemsData, onItemClick }) => {
   // React Hooks는 항상 컴포넌트 최상단에서 호출되어야 함
   // API 요청 예시 (컴포넌트 마운트 시 실행)
@@ -77,10 +84,21 @@ const Dashboard = ({ itemsData, onItemClick }) => {
 
 
 
-  const renderWorkingColumn = (title, items, icon) => (
+  const getItemIcon = (type) => {
+    switch (type) {
+      case 'worldview': return iconWorldview;
+      case 'character': return iconCharacter;
+      case 'episode': return iconEpisode;
+      case 'scenario': return iconScenario;
+      case 'video': return iconVideo;
+      default: return iconWorldview;
+    }
+  };
+
+  const renderWorkingColumn = (title, items, type) => (
     <div className="working-column">
       <div className="column-header">
-        <span className="column-icon">{icon}</span>
+        <img src={getItemIcon(type)} alt={title} className="column-icon" />
         <h3 className="column-title">{title}</h3>
         <span className="item-count">{items.length}</span>
       </div>
@@ -116,10 +134,10 @@ const Dashboard = ({ itemsData, onItemClick }) => {
     </div>
   );
 
-  const renderKanbanColumn = (title, items, icon) => (
+  const renderKanbanColumn = (title, items, type) => (
     <div className="kanban-column">
       <div className="column-header">
-        <span className="column-icon">{icon}</span>
+        <img src={getItemIcon(type)} alt={title} className="column-icon" />
         <h3 className="column-title">{title}</h3>
         <span className="item-count">{items.length}</span>
       </div>
@@ -169,11 +187,11 @@ const Dashboard = ({ itemsData, onItemClick }) => {
           <h3 className="board-title">승인 대기 중인 아이템들</h3>
         </div>
         <div className="kanban-columns">
-          {renderKanbanColumn('세계관', pendingItems.worldview, '🌍')}
-          {renderKanbanColumn('캐릭터', pendingItems.character, '👤')}
-          {renderKanbanColumn('에피소드', pendingItems.episode, '📖')}
-          {renderKanbanColumn('시나리오', pendingItems.scenario, '📝')}
-          {renderKanbanColumn('영상', pendingItems.video, '🎬')}
+          {renderKanbanColumn('세계관', pendingItems.worldview, 'worldview')}
+          {renderKanbanColumn('캐릭터', pendingItems.character, 'character')}
+          {renderKanbanColumn('에피소드', pendingItems.episode, 'episode')}
+          {renderKanbanColumn('시나리오', pendingItems.scenario, 'scenario')}
+          {renderKanbanColumn('영상', pendingItems.video, 'video')}
         </div>
       </div>
 
@@ -184,11 +202,11 @@ const Dashboard = ({ itemsData, onItemClick }) => {
           <p className="board-subtitle">AI가 수정 중이거나 새로 생성 중인 아이템들</p>
         </div>
         <div className="working-columns">
-          {renderWorkingColumn('세계관', workingItems.worldview, '🔄 🌍')}
-          {renderWorkingColumn('캐릭터', workingItems.character, '🔄 👤')}
-          {renderWorkingColumn('에피소드', workingItems.episode, '🔄 📖')}
-          {renderWorkingColumn('시나리오', workingItems.scenario, '🔄 📝')}
-          {renderWorkingColumn('영상', workingItems.video, '🔄 🎬')}
+          {renderWorkingColumn('세계관', workingItems.worldview, 'worldview')}
+          {renderWorkingColumn('캐릭터', workingItems.character, 'character')}
+          {renderWorkingColumn('에피소드', workingItems.episode, 'episode')}
+          {renderWorkingColumn('시나리오', workingItems.scenario, 'scenario')}
+          {renderWorkingColumn('영상', workingItems.video, 'video')}
         </div>
       </div>
     </div>

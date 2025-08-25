@@ -11,10 +11,10 @@ import Signup from './components/Signup';
 import { getRefreshToken, refreshAccessToken, clearAllTokens } from './utils/tokenUtils';
 
 // 아이콘 imports
-import iconDashboard from './icons/icon_dashboard.svg';
-import iconBrowser from './icons/icon_browser.svg';
-import iconAnalysis from './icons/icon_analysis.svg';
-import iconSetting from './icons/icon_setting.svg';
+import iconDashboard from './assets/icons/icon_dashboard.svg';
+import iconBrowser from './assets/icons/icon_browser.svg';
+import iconAnalysis from './assets/icons/icon_analysis.svg';
+import iconSetting from './assets/icons/icon_setting.svg';
 
 function AppContent() {
   const navigate = useNavigate();

@@ -136,20 +136,19 @@ html, body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.6);
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .tab-icon img {
   width: 20px;
   height: 20px;
-  filter: invert(1) opacity(0.7);
   transition: all 0.3s ease;
 }
 
@@ -160,17 +159,12 @@ html, body {
 }
 
 .tab-icon.active img {
-  filter: invert(0) opacity(1);
   transform: scale(1.1);
 }
 
 .tab-icon:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.7);
   transform: scale(1.05);
-}
-
-.tab-icon:hover img {
-  filter: invert(1) opacity(0.9);
 }
 
 .current-tab-label {
