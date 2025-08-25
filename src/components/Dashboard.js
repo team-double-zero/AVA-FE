@@ -156,31 +156,6 @@ const Dashboard = ({ itemsData, onItemClick }) => {
     </div>
   );
 
-  const renderApprovedSection = (title, items, icon) => (
-    <div className="approved-section">
-      <div className="section-header">
-        <span className="section-icon">{icon}</span>
-        <h3 className="section-title">{title}</h3>
-        <span className="approved-count">{items.length}개 승인됨</span>
-      </div>
-      <div className="approved-grid">
-        {items.map((item) => (
-          <div 
-            key={item.id} 
-            className="approved-card"
-            onClick={() => onItemClick && onItemClick(item)}
-          >
-            <h4 className="approved-title">{item.title}</h4>
-            <p className="approved-description">{item.description}</p>
-            <div className="approved-status">
-              <span className="approved-badge">✓ 승인됨</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
   return (
     <div className="dashboard">
       <div className="dashboard-header">
@@ -214,20 +189,6 @@ const Dashboard = ({ itemsData, onItemClick }) => {
           {renderWorkingColumn('에피소드', workingItems.episode, '🔄 📖')}
           {renderWorkingColumn('시나리오', workingItems.scenario, '🔄 📝')}
           {renderWorkingColumn('영상', workingItems.video, '🔄 🎬')}
-        </div>
-      </div>
-
-      {/* 승인된 아이템들 */}
-      <div className="approved-items">
-        <div className="approved-header">
-          <h3 className="approved-main-title">승인된 아이템들</h3>
-        </div>
-        <div className="approved-sections">
-          {renderApprovedSection('승인된 세계관', approvedItems.worldview, '✅ 🌍')}
-          {renderApprovedSection('승인된 캐릭터', approvedItems.character, '✅ 👤')}
-          {renderApprovedSection('승인된 에피소드', approvedItems.episode, '✅ 📖')}
-          {renderApprovedSection('승인된 시나리오', approvedItems.scenario, '✅ 📝')}
-          {renderApprovedSection('승인된 영상', approvedItems.video, '✅ 🎬')}
         </div>
       </div>
     </div>
