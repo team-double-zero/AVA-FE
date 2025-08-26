@@ -1308,11 +1308,14 @@ function AppContent() {
             {tabs.map((tab, index) => (
               <div
                 key={tab.id}
-                className={`tab-icon ${activeTab === tab.id ? 'active' : ''}`}
+                className={`tab-item ${activeTab === tab.id ? 'active' : ''}`}
                 onClick={() => handleTabChange(tab.id)}
                 title={tab.label}
               >
-                <img src={tab.icon} alt={tab.label} />
+                <div className="tab-icon">
+                  <img src={tab.icon} alt={tab.label} />
+                </div>
+                <span className="tab-label">{tab.label.toLowerCase()}</span>
               </div>
             ))}
           </div>

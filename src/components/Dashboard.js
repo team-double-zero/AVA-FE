@@ -177,8 +177,7 @@ const Dashboard = ({ itemsData, onItemClick }) => {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h2 className="dashboard-title">승인 관리 대시보드</h2>
-        <p className="dashboard-subtitle">AI 생성 워크플로우를 관리하고 진행 상황을 확인하세요</p>
+        <h2 className="dashboard-title">DASHBOARD</h2>
       </div>
 
       {/* Kanban Board - 승인 대기 중인 아이템들 */}
