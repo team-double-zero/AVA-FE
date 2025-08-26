@@ -122,7 +122,6 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       <div className="auth-card">
         <div className="auth-header">
           <h1 className="auth-title">Avazon</h1>
-          <p className="auth-subtitle">AI 콘텐츠 생성 플랫폼에 오신 것을 환영합니다</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
