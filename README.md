@@ -32,7 +32,7 @@
 - **칸반 보드** 스타일의 워크플로우 관리
 
 ## 현재 디자인
-![Dashbaord 화면](assets/screenshot_for_readme.png)
+![Dashbaord 화면](assets/screenshot-for-readme.png)
 
 ## 설치 및 실행
 
