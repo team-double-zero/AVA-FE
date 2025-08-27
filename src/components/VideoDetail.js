@@ -5,6 +5,7 @@ const VideoDetail = ({ item, onBack, onApprove, onFeedback }) => {
   const [feedbackText, setFeedbackText] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [expandedFeedback, setExpandedFeedback] = useState({});
+  const [videoError, setVideoError] = useState(false);
 
   const handleSubmitFeedback = () => {
     if (feedbackText.trim()) {
@@ -49,24 +50,22 @@ const VideoDetail = ({ item, onBack, onApprove, onFeedback }) => {
         <div className="video-section">
           <h2>영상</h2>
           <div className="video-container">
-            {item.videoUrl ? (
+            {item.videoUrl && !videoError ? (
               <video 
                 controls 
                 className="video-player"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
-                }}
+                onError={() => setVideoError(true)}
               >
                 <source src={item.videoUrl} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-            ) : null}
-            <div className="video-placeholder" style={{ display: item.videoUrl ? 'none' : 'flex' }}>
-              <span>🎬</span>
-              <p>영상이 생성 중입니다</p>
-              {item.duration && <small>예상 길이: {item.duration}</small>}
-            </div>
+            ) : (
+              <div className="video-placeholder">
+                <span>🎬</span>
+                <p>{videoError ? '영상을 불러올 수 없습니다' : '영상이 생성 중입니다'}</p>
+                {item.duration && <small>예상 길이: {item.duration}</small>}
+              </div>
+            )}
           </div>
         </div>
 

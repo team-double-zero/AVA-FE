@@ -1239,7 +1239,7 @@ function AppContent() {
       )}
 
       {/* Main Content */}
-      <div className="app-container">
+      <div className={`app-container ${currentView.type === 'detail' ? 'detail-view' : ''}`}>
         {currentView.type === 'detail' ? (
           <ItemDetail
             item={currentView.data}
@@ -1271,6 +1271,8 @@ function AppContent() {
                 <Browse 
                   itemsData={itemsData}
                   onItemClick={handleItemClick}
+                  onApprove={handleApprove}
+                  onFeedback={handleFeedback}
                 />
               </main>
             </div>

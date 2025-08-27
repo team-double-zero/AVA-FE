@@ -6,11 +6,17 @@ import iconWorldview from '../assets/icons/icon_worldview.svg';
 import iconCharacter from '../assets/icons/icon_character.svg';
 import iconEpisode from '../assets/icons/icon_episode.svg';
 import iconScenario from '../assets/icons/icon_scenario.svg';
-import iconVideo from '../assets/icons/icon_video.svg';
 
-const Browse = ({ itemsData, onItemClick }) => {
+// 상세 컴포넌트 imports
+import WorldviewDetail from './WorldviewDetail';
+import EpisodeDetail from './EpisodeDetail';
+import ScenarioDetail from './ScenarioDetail';
+
+const Browse = ({ itemsData, onItemClick, onApprove, onFeedback }) => {
   const [selectedWorldview, setSelectedWorldview] = useState(null);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItemType, setSelectedItemType] = useState(null);
   
   const approvedItems = itemsData?.approved || {};
   
@@ -30,11 +36,25 @@ const Browse = ({ itemsData, onItemClick }) => {
   const handleWorldviewSelect = (worldview) => {
     setSelectedWorldview(worldview);
     setSelectedEpisode(null);
+    setSelectedItem(worldview);
+    setSelectedItemType('worldview');
   };
   
   // 에피소드 선택
   const handleEpisodeSelect = (episode) => {
     setSelectedEpisode(episode);
+    setSelectedItem(episode);
+    setSelectedItemType('episode');
+  };
+
+  // 시나리오 선택
+  const handleScenarioSelect = (scenario) => {
+    setSelectedItem(scenario);
+    setSelectedItemType('scenario');
+    // 기존 onItemClick도 호출 (다른 탭에서 사용하는 경우)
+    if (onItemClick) {
+      onItemClick(scenario);
+    }
   };
   
   // 해당 세계관의 에피소드들 가져오기
@@ -51,7 +71,7 @@ const Browse = ({ itemsData, onItemClick }) => {
       (scenario.worldviewId === selectedWorldview?.id && !scenario.episodeId)
     ) || [];
   };
-  
+
   // 파일 아이콘 결정
   const getFileIcon = (type) => {
     switch(type) {
@@ -59,7 +79,6 @@ const Browse = ({ itemsData, onItemClick }) => {
       case 'episode': return iconEpisode;
       case 'scenario': return iconScenario;
       case 'character': return iconCharacter;
-      case 'video': return iconVideo;
       default: return iconScenario;
     }
   };
@@ -73,18 +92,57 @@ const Browse = ({ itemsData, onItemClick }) => {
     }
   };
 
+  // 상세 페이지 렌더링
+  const renderDetailView = () => {
+    if (!selectedItem) {
+      return (
+        <div className="detail-placeholder">
+          <div className="placeholder-content">
+            <img src={iconWorldview} alt="선택" className="placeholder-icon" />
+            <h3>항목을 선택해주세요</h3>
+            <p>왼쪽에서 세계관, 에피소드, 또는 시나리오를 선택하면<br />상세 정보가 여기에 표시됩니다.</p>
+          </div>
+        </div>
+      );
+    }
+
+    const commonProps = {
+      item: selectedItem,
+      onBack: () => {
+        setSelectedItem(null);
+        setSelectedItemType(null);
+      },
+      onApprove: onApprove,
+      onFeedback: onFeedback
+    };
+
+    switch (selectedItemType) {
+      case 'worldview':
+        return <WorldviewDetail {...commonProps} />;
+      case 'episode':
+        return <EpisodeDetail {...commonProps} />;
+      case 'scenario':
+        return <ScenarioDetail {...commonProps} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="browse-container">
-      <div className="explorer-header">
-        <div className="breadcrumb">
-          {getBreadcrumb().map((item, index) => (
-            <span key={index} className="breadcrumb-item">
-              {index > 0 && ' > '}
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
+      <div className="browse-layout">
+        {/* 왼쪽 탐색기 영역 */}
+        <div className="explorer-section">
+          <div className="explorer-header">
+            <div className="breadcrumb">
+              {getBreadcrumb().map((item, index) => (
+                <span key={index} className="breadcrumb-item">
+                  {index > 0 && ' > '}
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
       
       <div className="explorer-panels">
         {/* 세계관 패널 */}
@@ -160,7 +218,7 @@ const Browse = ({ itemsData, onItemClick }) => {
                   <div
                     key={scenario.id}
                     className="explorer-item file"
-                    onClick={() => onItemClick(scenario)}
+                    onClick={() => handleScenarioSelect(scenario)}
                   >
                     <img src={getFileIcon('scenario')} alt="시나리오" className="item-icon" />
                     <span className="item-name">{scenario.title}</span>
@@ -180,6 +238,13 @@ const Browse = ({ itemsData, onItemClick }) => {
               </div>
             )}
           </div>
+        </div>
+      </div>
+        </div>
+
+        {/* 오른쪽 상세 페이지 영역 */}
+        <div className="detail-section">
+          {renderDetailView()}
         </div>
       </div>
     </div>

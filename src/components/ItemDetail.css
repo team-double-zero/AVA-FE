@@ -2,18 +2,15 @@
 .detail-container {
   min-height: 100vh;
   background: transparent;
-  padding: 80px 20px 20px 20px;
 }
 
 .detail-wrapper {
   position: relative;
   isolation: isolate;
-  max-width: 1000px;
-  margin: 0 auto;
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 32px;
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow:
@@ -21,6 +18,7 @@
     0 8px 32px rgba(0, 0, 0, 0.12),
     0 1px 2px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
+  margin: 0 10px 40px 10px
 }
 
 .detail-wrapper::before {
