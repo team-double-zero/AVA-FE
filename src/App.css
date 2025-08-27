@@ -299,6 +299,12 @@ html, body {
   position: relative;
 }
 
+/* Detail view일 때는 스크롤 허용 */
+.app-container.detail-view {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 /* 탭 전환 컨테이너 */
 .tabs-container {
   display: flex;
