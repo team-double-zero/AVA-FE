@@ -199,7 +199,7 @@ html, body {
 .app-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #8370FE;
+  color: #1a1a1a;
   margin: 0;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -370,7 +370,7 @@ html, body {
 
 .progress-text {
   font-size: 0.8rem;
-  color: #8370FE;
+  color: #1a1a1a;
   font-weight: 500;
 }
 
