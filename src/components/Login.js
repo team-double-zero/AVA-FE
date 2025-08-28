@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Auth.css';
+import { setAccessToken, setRefreshToken } from '../utils/tokenUtils';
 
 const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   const [formData, setFormData] = useState({
@@ -34,13 +35,15 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
-      const dummyToken = 'dev_token_' + Date.now();
+      const dummyAccessToken = 'dev_access_token_' + Date.now();
+      const dummyRefreshToken = 'dev_refresh_token_' + Date.now();
       
-      localStorage.setItem('authToken', dummyToken);
-      localStorage.setItem('refreshToken', 'dev_refresh_' + Date.now());
+      // Access Token은 메모리에, Refresh Token은 쿠키에 저장
+      setAccessToken(dummyAccessToken);
+      setRefreshToken(dummyRefreshToken);
       localStorage.setItem('userData', JSON.stringify(dummyUser));
       
-      onLoginSuccess(dummyToken, dummyUser);
+      onLoginSuccess(dummyAccessToken, dummyUser);
       setLoading(false);
       return;
     }
@@ -65,9 +68,9 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
         // 로그인 성공
         const { access_token, refresh_token, user } = data.data;
         
-        // 토큰을 localStorage에 저장
-        localStorage.setItem('authToken', access_token);
-        localStorage.setItem('refreshToken', refresh_token);
+        // Access Token은 메모리에, Refresh Token은 쿠키에 저장
+        setAccessToken(access_token);
+        setRefreshToken(refresh_token);
         localStorage.setItem('userData', JSON.stringify(user));
         
         onLoginSuccess(access_token, user);
@@ -93,13 +96,15 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         };
-        const dummyToken = 'offline_token_' + Date.now();
+        const dummyAccessToken = 'offline_access_token_' + Date.now();
+        const dummyRefreshToken = 'offline_refresh_token_' + Date.now();
         
-        localStorage.setItem('authToken', dummyToken);
-        localStorage.setItem('refreshToken', 'offline_refresh_' + Date.now());
+        // Access Token은 메모리에, Refresh Token은 쿠키에 저장
+        setAccessToken(dummyAccessToken);
+        setRefreshToken(dummyRefreshToken);
         localStorage.setItem('userData', JSON.stringify(dummyUser));
         
-        onLoginSuccess(dummyToken, dummyUser);
+        onLoginSuccess(dummyAccessToken, dummyUser);
       } else {
         const devModeHint = process.env.REACT_APP_DEV_MODE === 'true' 
           ? ' 개발모드에서는 admin/admin으로 로그인 가능합니다.' 
@@ -117,7 +122,6 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       <div className="auth-card">
         <div className="auth-header">
           <h1 className="auth-title">Avazon</h1>
-          <p className="auth-subtitle">AI 콘텐츠 생성 플랫폼에 오신 것을 환영합니다</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">

@@ -1,7 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Dashboard.css';
+import { apiRequest } from '../utils/tokenUtils';
+
+// 아이콘 imports
+import iconWorldview from '../assets/icons/icon_worldview.svg';
+import iconCharacter from '../assets/icons/icon_character.svg';
+import iconEpisode from '../assets/icons/icon_episode.svg';
+import iconScenario from '../assets/icons/icon_scenario.svg';
+import iconVideo from '../assets/icons/icon_video.svg';
 
 const Dashboard = ({ itemsData, onItemClick }) => {
+  // React Hooks는 항상 컴포넌트 최상단에서 호출되어야 함
+  // API 요청 예시 (컴포넌트 마운트 시 실행)
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // 개발 모드에서는 API 요청을 스킵
+        if (process.env.REACT_APP_DEV_MODE === 'true') {
+          console.log('개발 모드: API 요청 스킵');
+          return;
+        }
+
+        // apiRequest는 자동으로 Access Token을 헤더에 추가하고
+        // 401 에러 시 토큰을 갱신한 후 재시도합니다
+        const response = await apiRequest(`${process.env.REACT_APP_API_DOMAIN}/api/v1/user/profile`);
+        
+        if (response.ok) {
+          const userData = await response.json();
+          console.log('User profile data:', userData);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        // 인증 실패 시 로그인 페이지로 리디렉션 등의 처리를 여기서 할 수 있습니다
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  // 조건부 렌더링은 Hooks 다음에 위치
   if (!itemsData) return <div>로딩 중...</div>;
 
   const pendingItems = itemsData.pending;
@@ -47,10 +84,21 @@ const Dashboard = ({ itemsData, onItemClick }) => {
 
 
 
-  const renderWorkingColumn = (title, items, icon) => (
+  const getItemIcon = (type) => {
+    switch (type) {
+      case 'worldview': return iconWorldview;
+      case 'character': return iconCharacter;
+      case 'episode': return iconEpisode;
+      case 'scenario': return iconScenario;
+      case 'video': return iconVideo;
+      default: return iconWorldview;
+    }
+  };
+
+  const renderWorkingColumn = (title, items, type) => (
     <div className="working-column">
       <div className="column-header">
-        <span className="column-icon">{icon}</span>
+        <img src={getItemIcon(type)} alt={title} className="column-icon" />
         <h3 className="column-title">{title}</h3>
         <span className="item-count">{items.length}</span>
       </div>
@@ -86,10 +134,10 @@ const Dashboard = ({ itemsData, onItemClick }) => {
     </div>
   );
 
-  const renderKanbanColumn = (title, items, icon) => (
+  const renderKanbanColumn = (title, items, type) => (
     <div className="kanban-column">
       <div className="column-header">
-        <span className="column-icon">{icon}</span>
+        <img src={getItemIcon(type)} alt={title} className="column-icon" />
         <h3 className="column-title">{title}</h3>
         <span className="item-count">{items.length}</span>
       </div>
@@ -126,32 +174,10 @@ const Dashboard = ({ itemsData, onItemClick }) => {
     </div>
   );
 
-  const renderApprovedSection = (title, items, icon) => (
-    <div className="approved-section">
-      <div className="section-header">
-        <span className="section-icon">{icon}</span>
-        <h3 className="section-title">{title}</h3>
-        <span className="approved-count">{items.length}개 승인됨</span>
-      </div>
-      <div className="approved-grid">
-        {items.map((item) => (
-          <div key={item.id} className="approved-card">
-            <h4 className="approved-title">{item.title}</h4>
-            <p className="approved-description">{item.description}</p>
-            <div className="approved-status">
-              <span className="approved-badge">✓ 승인됨</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h2 className="dashboard-title">승인 관리 대시보드</h2>
-        <p className="dashboard-subtitle">AI 생성 워크플로우를 관리하고 진행 상황을 확인하세요</p>
+        <h2 className="dashboard-title">DASHBOARD</h2>
       </div>
 
       {/* Kanban Board - 승인 대기 중인 아이템들 */}
@@ -160,9 +186,11 @@ const Dashboard = ({ itemsData, onItemClick }) => {
           <h3 className="board-title">승인 대기 중인 아이템들</h3>
         </div>
         <div className="kanban-columns">
-          {renderKanbanColumn('세계관', pendingItems.worldview, '🌍')}
-          {renderKanbanColumn('캐릭터', pendingItems.character, '👤')}
-          {renderKanbanColumn('시나리오', pendingItems.scenario, '📝')}
+          {renderKanbanColumn('세계관', pendingItems.worldview, 'worldview')}
+          {renderKanbanColumn('캐릭터', pendingItems.character, 'character')}
+          {renderKanbanColumn('에피소드', pendingItems.episode, 'episode')}
+          {renderKanbanColumn('시나리오', pendingItems.scenario, 'scenario')}
+          {renderKanbanColumn('영상', pendingItems.video, 'video')}
         </div>
       </div>
 
@@ -173,21 +201,11 @@ const Dashboard = ({ itemsData, onItemClick }) => {
           <p className="board-subtitle">AI가 수정 중이거나 새로 생성 중인 아이템들</p>
         </div>
         <div className="working-columns">
-          {renderWorkingColumn('세계관', workingItems.worldview, '🔄 🌍')}
-          {renderWorkingColumn('캐릭터', workingItems.character, '🔄 👤')}
-          {renderWorkingColumn('시나리오', workingItems.scenario, '🔄 📝')}
-        </div>
-      </div>
-
-      {/* 승인된 아이템들 */}
-      <div className="approved-items">
-        <div className="approved-header">
-          <h3 className="approved-main-title">승인된 아이템들</h3>
-        </div>
-        <div className="approved-sections">
-          {renderApprovedSection('승인된 세계관', approvedItems.worldview, '✅ 🌍')}
-          {renderApprovedSection('승인된 캐릭터', approvedItems.character, '✅ 👤')}
-          {renderApprovedSection('승인된 시나리오', approvedItems.scenario, '✅ 📝')}
+          {renderWorkingColumn('세계관', workingItems.worldview, 'worldview')}
+          {renderWorkingColumn('캐릭터', workingItems.character, 'character')}
+          {renderWorkingColumn('에피소드', workingItems.episode, 'episode')}
+          {renderWorkingColumn('시나리오', workingItems.scenario, 'scenario')}
+          {renderWorkingColumn('영상', workingItems.video, 'video')}
         </div>
       </div>
     </div>
