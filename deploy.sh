@@ -16,8 +16,7 @@ if ! command -v npm >/dev/null 2>&1; then
 fi
 
 echo "[2/5] 의존성 설치 (npm ci → 실패 시 npm install)"
-export CI=1
-if ! npm ci; then
+if ! CI=1 npm ci; then
   echo "npm ci 실패 → npm install로 대체 진행"
   npm install
 fi
