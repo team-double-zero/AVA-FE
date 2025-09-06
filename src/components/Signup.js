@@ -56,7 +56,7 @@ const Signup = ({ onSwitchToLogin }) => {
 
     try {
       // 실제 API 요청
-      const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/v1/auth/register`, {
+      const response = await fetch(`${process.env.REACT_APP_DOMAIN}/api/v1/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ const Signup = ({ onSwitchToLogin }) => {
     
     try {
       // 이메일 재전송 API 호출
-      const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/v1/auth/resend-verification`, {
+      const response = await fetch(`${process.env.REACT_APP_DOMAIN}/api/v1/auth/resend-verification`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

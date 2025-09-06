@@ -1,4 +1,4 @@
-import { setCookie, getCookie, deleteCookie } from './cookieUtils';
+import * as cookieUtils from './cookieUtils';
 
 // Access Token을 메모리에 저장 (보안상 안전)
 let accessToken = null;
@@ -190,7 +190,7 @@ export const clearAccessToken = () => {
 // Refresh Token 관리 (쿠키에 저장)
 export const setRefreshToken = (token) => {
   console.log('🔑 Refresh Token 저장 시도:', token ? 'token_' + token.substring(0, 10) + '...' : 'null');
-  setCookie('refreshToken', token, 7); // 7일간 유효
+  cookieUtils.setCookie('refreshToken', token, 7); // 7일간 유효
   
   // 저장 후 즉시 확인
   const saved = getRefreshToken();
@@ -198,11 +198,11 @@ export const setRefreshToken = (token) => {
 };
 
 export const getRefreshToken = () => {
-  return getCookie('refreshToken');
+  return cookieUtils.getCookie('refreshToken');
 };
 
 export const clearRefreshToken = () => {
-  deleteCookie('refreshToken');
+  cookieUtils.deleteCookie('refreshToken');
 };
 
 // 모든 토큰 정리
@@ -441,4 +441,23 @@ export const apiRequest = async (url, options = {}) => {
   }
 
   return response;
+};
+
+// 기본 내보내기 (기존 호환성 유지)
+export default {
+  getIsInitializing,
+  setIsInitializing,
+  isTokenExpiringSoon,
+  isTokenExpired,
+  hasValidStoredToken,
+  setAccessToken,
+  getAccessToken,
+  clearAccessToken,
+  setRefreshToken,
+  getRefreshToken,
+  clearRefreshToken,
+  clearAllTokens,
+  getAuthHeaders,
+  refreshAccessToken,
+  apiRequest,
 };

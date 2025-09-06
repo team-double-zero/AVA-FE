@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import './Setting.css';
+import { Button } from '../../../shared/ui';
+import { SettingSection, ToggleSwitch, NumberInput } from '../components';
 
-const Setting = () => {
+/**
+ * 설정 페이지 컴포넌트
+ */
+const SettingsPage = ({ onLogout }) => {
   const [settings, setSettings] = useState({
     notifications: {
       email: true,
@@ -20,6 +24,8 @@ const Setting = () => {
     }
   });
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleSettingChange = (category, setting, value) => {
     setSettings(prev => ({
       ...prev,
@@ -30,60 +36,51 @@ const Setting = () => {
     }));
   };
 
-  const SettingSection = ({ title, icon, children }) => (
-    <div className="setting-section">
-      <div className="setting-header">
-        <span className="setting-icon">{icon}</span>
-        <h3 className="setting-title">{title}</h3>
-      </div>
-      <div className="setting-content">
-        {children}
-      </div>
-    </div>
-  );
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      // 여기서 API를 통해 설정 저장
+      await new Promise(resolve => setTimeout(resolve, 1000)); // 임시 지연
+      console.log('Settings saved:', settings);
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-  const ToggleSwitch = ({ label, description, checked, onChange }) => (
-    <div className="toggle-item">
-      <div className="toggle-info">
-        <div className="toggle-label">{label}</div>
-        {description && <div className="toggle-description">{description}</div>}
-      </div>
-      <label className="toggle-switch">
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-        />
-        <span className="toggle-slider"></span>
-      </label>
-    </div>
-  );
-
-  const NumberInput = ({ label, description, value, onChange, min, max }) => (
-    <div className="number-item">
-      <div className="number-info">
-        <div className="number-label">{label}</div>
-        {description && <div className="number-description">{description}</div>}
-      </div>
-      <input
-        type="number"
-        className="number-input"
-        value={value}
-        onChange={(e) => onChange(parseInt(e.target.value))}
-        min={min}
-        max={max}
-      />
-    </div>
-  );
+  const handleReset = () => {
+    setSettings({
+      notifications: {
+        email: true,
+        push: false,
+        slack: true
+      },
+      approval: {
+        autoApprove: false,
+        requireReview: true,
+        maxPendingItems: 10
+      },
+      display: {
+        darkMode: false,
+        compactView: false,
+        showPriority: true
+      }
+    });
+  };
 
   return (
-    <div className="setting">
-      <div className="setting-page-header">
-        <h2 className="setting-page-title">설정</h2>
-        <p className="setting-page-subtitle">대시보드와 승인 프로세스를 개인화하세요</p>
+    <div className="settings-page">
+      {/* 페이지 헤더 */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">SETTINGS</h1>
+        <p className="text-gray-600">
+          대시보드와 승인 프로세스를 개인화하세요.
+        </p>
       </div>
 
-      <div className="setting-container">
+      <div className="max-w-4xl">
+        {/* 알림 설정 */}
         <SettingSection title="알림 설정" icon="🔔">
           <ToggleSwitch
             label="이메일 알림"
@@ -105,6 +102,7 @@ const Setting = () => {
           />
         </SettingSection>
 
+        {/* 승인 프로세스 */}
         <SettingSection title="승인 프로세스" icon="✅">
           <ToggleSwitch
             label="자동 승인"
@@ -128,6 +126,7 @@ const Setting = () => {
           />
         </SettingSection>
 
+        {/* 화면 표시 */}
         <SettingSection title="화면 표시" icon="🎨">
           <ToggleSwitch
             label="다크 모드"
@@ -149,17 +148,36 @@ const Setting = () => {
           />
         </SettingSection>
 
-        <div className="setting-actions">
-          <button className="save-button">
-            💾 설정 저장
-          </button>
-          <button className="reset-button">
-            🔄 기본값으로 재설정
-          </button>
+        {/* 액션 버튼들 */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex flex-wrap gap-3">
+            <Button 
+              variant="primary" 
+              onClick={handleSave}
+              loading={isSaving}
+            >
+              💾 설정 저장
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleReset}
+            >
+              🔄 기본값으로 재설정
+            </Button>
+            {onLogout && (
+              <Button 
+                variant="danger" 
+                onClick={onLogout}
+                className="ml-auto"
+              >
+                🚪 로그아웃
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Setting;
+export default SettingsPage;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import './ItemDetail.css';
 
-const WorldviewDetail = ({ item, onBack, onApprove, onFeedback }) => {
+const EpisodeDetail = ({ item, onBack, onApprove, onFeedback }) => {
   const [feedbackText, setFeedbackText] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [expandedFeedback, setExpandedFeedback] = useState({});
@@ -33,7 +33,7 @@ const WorldviewDetail = ({ item, onBack, onApprove, onFeedback }) => {
           <h1 className="detail-title">{item.title}</h1>
           <p className="detail-description">{item.description}</p>
           <div className="detail-meta">
-            <span className="detail-type">🌍 세계관</span>
+            <span className="detail-type">📖 에피소드</span>
             <span className="detail-date">생성일: {item.createdAt}</span>
             {item.feedbackCount > 0 && (
               <span className="detail-feedback">💬 피드백 {item.feedbackCount}개</span>
@@ -44,9 +44,9 @@ const WorldviewDetail = ({ item, onBack, onApprove, onFeedback }) => {
 
       <div className="detail-content">
         <div className="content-section">
-          <h2>세계관 설정</h2>
+          <h2>에피소드 내용</h2>
           <div className="markdown-content">
-            <ReactMarkdown>{item.content || '# 세계관 내용\n\n세계관 설정이 여기에 표시됩니다.'}</ReactMarkdown>
+            <ReactMarkdown>{item.content || '# 에피소드\n\n에피소드 내용이 여기에 표시됩니다.'}</ReactMarkdown>
           </div>
         </div>
 
@@ -103,7 +103,7 @@ const WorldviewDetail = ({ item, onBack, onApprove, onFeedback }) => {
             <textarea
               value={feedbackText}
               onChange={(e) => setFeedbackText(e.target.value)}
-              placeholder="개선사항이나 수정 요청을 입력해주세요..."
+              placeholder="에피소드 개선사항이나 수정 요청을 입력해주세요..."
               rows={4}
             />
             <div className="feedback-actions">
@@ -120,4 +120,4 @@ const WorldviewDetail = ({ item, onBack, onApprove, onFeedback }) => {
   );
 };
 
-export default WorldviewDetail;
+export default EpisodeDetail;

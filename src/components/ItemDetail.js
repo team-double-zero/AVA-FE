@@ -1,8 +1,7 @@
 import React from 'react';
-import WorldviewDetail from './WorldviewDetail';
 import CharacterDetail from './CharacterDetail';
+import SeriesDetail from './SeriesDetail';
 import EpisodeDetail from './EpisodeDetail';
-import ScenarioDetail from './ScenarioDetail';
 import VideoDetail from './VideoDetail';
 
 const ItemDetail = ({ item, onBack, onApprove, onFeedback }) => {
@@ -12,15 +11,6 @@ const ItemDetail = ({ item, onBack, onApprove, onFeedback }) => {
 
   const renderDetailComponent = () => {
     switch (item.type) {
-      case 'worldview':
-        return (
-          <WorldviewDetail
-            item={item}
-            onBack={onBack}
-            onApprove={onApprove}
-            onFeedback={onFeedback}
-          />
-        );
       case 'character':
         return (
           <CharacterDetail
@@ -30,18 +20,18 @@ const ItemDetail = ({ item, onBack, onApprove, onFeedback }) => {
             onFeedback={onFeedback}
           />
         );
-      case 'episode':
+      case 'series':
         return (
-          <EpisodeDetail
+          <SeriesDetail
             item={item}
             onBack={onBack}
             onApprove={onApprove}
             onFeedback={onFeedback}
           />
         );
-      case 'scenario':
+      case 'episode':
         return (
-          <ScenarioDetail
+          <EpisodeDetail
             item={item}
             onBack={onBack}
             onApprove={onApprove}
