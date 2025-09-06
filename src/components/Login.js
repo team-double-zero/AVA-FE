@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Auth.css';
-import { setAccessToken, setRefreshToken } from '../utils/tokenUtils';
+import { setAccessToken, setRefreshToken } from '../shared/lib/tokenUtils';
 
 const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   const [formData, setFormData] = useState({
@@ -184,13 +184,12 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1 className="auth-title">Avazon</h1>
-        </div>
+    <div className="auth-card">
+      <div className="auth-header">
+        <h1 className="auth-title">Avazon</h1>
+      </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+      <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">
               {process.env.REACT_APP_DEV_MODE === 'true' ? '이메일 또는 아이디' : '이메일'}
@@ -280,7 +279,6 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           </p>
         </div>
       </div>
-    </div>
   );
 };
 

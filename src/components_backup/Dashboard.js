@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './Dashboard.css';
-import { apiRequest } from '../utils/tokenUtils';
+import { apiRequest } from '../shared/lib/tokenUtils';
 
 // 아이콘 imports
 import iconCharacter from '../assets/icons/icon_character.svg';

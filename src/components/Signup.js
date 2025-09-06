@@ -156,14 +156,13 @@ const Signup = ({ onSwitchToLogin }) => {
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1 className="auth-title">회원가입</h1>
-          <p className="auth-subtitle">Avazon에서 AI 콘텐츠를 생성해보세요</p>
-        </div>
+    <div className="auth-card">
+      <div className="auth-header">
+        <h1 className="auth-title">회원가입</h1>
+        <p className="auth-subtitle">Avazon에서 AI 콘텐츠를 생성해보세요</p>
+      </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+      <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">이메일</label>
             <input
@@ -240,7 +239,6 @@ const Signup = ({ onSwitchToLogin }) => {
             </button>
           </p>
         </div>
-      </div>
     </div>
   );
 };

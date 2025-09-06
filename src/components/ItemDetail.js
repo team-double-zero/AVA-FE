@@ -1,8 +1,8 @@
 import React from 'react';
-import CharacterDetail from './CharacterDetail';
-import SeriesDetail from './SeriesDetail';
-import EpisodeDetail from './EpisodeDetail';
-import VideoDetail from './VideoDetail';
+import CharacterDetail from '../components_backup/CharacterDetail';
+import SeriesDetail from '../components_backup/SeriesDetail';
+import EpisodeDetail from '../components_backup/EpisodeDetail';
+import VideoDetail from '../components_backup/VideoDetail';
 
 const ItemDetail = ({ item, onBack, onApprove, onFeedback }) => {
   if (!item) {
