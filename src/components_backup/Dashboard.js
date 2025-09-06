@@ -1,18 +1,23 @@
 import React, { useEffect } from 'react';
 import './Dashboard.css';
-import { apiRequest } from '../utils/tokenUtils';
+import { apiRequest } from '../shared/lib/tokenUtils';
 
 // 아이콘 imports
-import iconWorldview from '../assets/icons/icon_worldview.svg';
 import iconCharacter from '../assets/icons/icon_character.svg';
-import iconEpisode from '../assets/icons/icon_episode.svg';
 import iconScenario from '../assets/icons/icon_scenario.svg';
+import iconEpisode from '../assets/icons/icon_episode.svg';
 import iconVideo from '../assets/icons/icon_video.svg';
 
-const Dashboard = ({ itemsData, onItemClick }) => {
+const Dashboard = ({ itemsData, onItemClick, user }) => {
   // React Hooks는 항상 컴포넌트 최상단에서 호출되어야 함
-  // API 요청 예시 (컴포넌트 마운트 시 실행)
+  // API 요청 예시 (사용자가 로그인된 후에만 실행)
   useEffect(() => {
+    // user가 없으면 API 요청하지 않음
+    if (!user) {
+      console.log('사용자 정보 없음 - API 요청 스킵');
+      return;
+    }
+
     const fetchUserData = async () => {
       try {
         // 개발 모드에서는 API 요청을 스킵
@@ -20,10 +25,12 @@ const Dashboard = ({ itemsData, onItemClick }) => {
           console.log('개발 모드: API 요청 스킵');
           return;
         }
+        
+        console.log('프로덕션 모드: 사용자 인증 완료 후 API 요청 진행');
 
         // apiRequest는 자동으로 Access Token을 헤더에 추가하고
         // 401 에러 시 토큰을 갱신한 후 재시도합니다
-        const response = await apiRequest(`${process.env.REACT_APP_API_DOMAIN}/api/v1/user/profile`);
+        const response = await apiRequest(`${process.env.REACT_APP_DOMAIN}/api/v1/user/profile`);
         
         if (response.ok) {
           const userData = await response.json();
@@ -36,14 +43,14 @@ const Dashboard = ({ itemsData, onItemClick }) => {
     };
 
     fetchUserData();
-  }, []);
+  }, [user]); // user 의존성 추가
 
   // 조건부 렌더링은 Hooks 다음에 위치
   if (!itemsData) return <div>로딩 중...</div>;
 
   const pendingItems = itemsData.pending;
   const workingItems = itemsData.working;
-  const approvedItems = itemsData.approved;
+  // const approvedItems = itemsData.approved; // 현재 사용하지 않음
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -86,12 +93,11 @@ const Dashboard = ({ itemsData, onItemClick }) => {
 
   const getItemIcon = (type) => {
     switch (type) {
-      case 'worldview': return iconWorldview;
       case 'character': return iconCharacter;
+      case 'series': return iconScenario;
       case 'episode': return iconEpisode;
-      case 'scenario': return iconScenario;
       case 'video': return iconVideo;
-      default: return iconWorldview;
+      default: return iconCharacter;
     }
   };
 
@@ -100,10 +106,10 @@ const Dashboard = ({ itemsData, onItemClick }) => {
       <div className="column-header">
         <img src={getItemIcon(type)} alt={title} className="column-icon" />
         <h3 className="column-title">{title}</h3>
-        <span className="item-count">{items.length}</span>
+        <span className="item-count">{items?.length || 0}</span>
       </div>
       <div className="column-content">
-        {items.map((item) => (
+        {(items || []).map((item) => (
           <div 
             key={item.id} 
             className="working-card"
@@ -139,10 +145,10 @@ const Dashboard = ({ itemsData, onItemClick }) => {
       <div className="column-header">
         <img src={getItemIcon(type)} alt={title} className="column-icon" />
         <h3 className="column-title">{title}</h3>
-        <span className="item-count">{items.length}</span>
+        <span className="item-count">{items?.length || 0}</span>
       </div>
       <div className="column-content">
-        {items.map((item) => (
+        {(items || []).map((item) => (
           <div 
             key={item.id} 
             className="kanban-card"
@@ -186,10 +192,9 @@ const Dashboard = ({ itemsData, onItemClick }) => {
           <h3 className="board-title">승인 대기 중인 아이템들</h3>
         </div>
         <div className="kanban-columns">
-          {renderKanbanColumn('세계관', pendingItems.worldview, 'worldview')}
           {renderKanbanColumn('캐릭터', pendingItems.character, 'character')}
+          {renderKanbanColumn('시리즈', pendingItems.series, 'series')}
           {renderKanbanColumn('에피소드', pendingItems.episode, 'episode')}
-          {renderKanbanColumn('시나리오', pendingItems.scenario, 'scenario')}
           {renderKanbanColumn('영상', pendingItems.video, 'video')}
         </div>
       </div>
@@ -201,10 +206,9 @@ const Dashboard = ({ itemsData, onItemClick }) => {
           <p className="board-subtitle">AI가 수정 중이거나 새로 생성 중인 아이템들</p>
         </div>
         <div className="working-columns">
-          {renderWorkingColumn('세계관', workingItems.worldview, 'worldview')}
           {renderWorkingColumn('캐릭터', workingItems.character, 'character')}
+          {renderWorkingColumn('시리즈', workingItems.series, 'series')}
           {renderWorkingColumn('에피소드', workingItems.episode, 'episode')}
-          {renderWorkingColumn('시나리오', workingItems.scenario, 'scenario')}
           {renderWorkingColumn('영상', workingItems.video, 'video')}
         </div>
       </div>
