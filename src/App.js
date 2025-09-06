@@ -568,9 +568,6 @@ function AppContent() {
         ) : (
           <div 
             className={`tabs-container ${isSwiping ? 'swiping' : ''}`}
-            style={{
-              transform: `translateX(${getTabOffset()}%)`
-            }}
           >
             <div className="tab-panel">
               <main className="main-content">
