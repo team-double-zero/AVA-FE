@@ -102,7 +102,9 @@
 }
 
 .type-icon {
-  font-size: 2rem;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .type-name {
@@ -206,6 +208,15 @@
   margin: 0 0 16px 0;
   padding-bottom: 8px;
   border-bottom: 2px solid rgba(233, 236, 239, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 /* Series Info Grid */
@@ -447,9 +458,13 @@
 }
 
 .empty-state .icon {
-  color: #9ca3af;
-  font-size: 1.875rem;
   margin-bottom: 0.5rem;
+}
+
+.empty-icon {
+  width: 48px;
+  height: 48px;
+  opacity: 0.5;
 }
 
 .empty-state p {

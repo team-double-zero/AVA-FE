@@ -2,6 +2,8 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Button } from '../../../shared/ui';
 import './SeriesDetailPage.css';
+import iconVideo from '../../../assets/icons/icon_video.svg';
+import iconCharacter from '../../../assets/icons/icon_character.svg';
 
 /**
  * 시리즈 상세 페이지 컴포넌트
@@ -77,7 +79,7 @@ const SeriesDetailPage = ({ itemsData }) => {
           </button>
           <div className="series-title-section">
             <div className="series-type">
-              <span className="type-icon">📺</span>
+              <img src={iconVideo} alt="시리즈" className="type-icon" />
               <span className="type-name">시리즈</span>
             </div>
             <h1 className="series-title">{series.title}</h1>
@@ -112,7 +114,7 @@ const SeriesDetailPage = ({ itemsData }) => {
         <div className="series-detail-content">
           {/* 왼쪽: 시리즈 정보 */}
           <div className="content-section series-info-section">
-            <h2>📝 시리즈 상세 정보</h2>
+            <h2><img src={iconVideo} alt="시리즈" className="section-icon" /> 시리즈 상세 정보</h2>
             <div className="series-info-grid">
               {series.genre && (
                 <div className="info-item">
@@ -164,7 +166,7 @@ const SeriesDetailPage = ({ itemsData }) => {
 
           {/* 오른쪽: 캐릭터 정보 */}
           <div className="content-section characters-section">
-            <h2>👥 시리즈 캐릭터들 ({characters.length})</h2>
+            <h2><img src={iconCharacter} alt="캐릭터" className="section-icon" /> 시리즈 캐릭터들 ({characters.length})</h2>
             
             {characters.length > 0 ? (
               <div className="character-list">
@@ -212,7 +214,9 @@ const SeriesDetailPage = ({ itemsData }) => {
               </div>
             ) : (
               <div className="empty-state">
-                <div className="icon">👥</div>
+                <div className="icon">
+                  <img src={iconCharacter} alt="캐릭터" className="empty-icon" />
+                </div>
                 <p>아직 등록된 캐릭터가 없습니다.</p>
                 <p className="sub-text">시리즈에 캐릭터를 추가해보세요.</p>
               </div>
