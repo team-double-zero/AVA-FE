@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Button } from '../../../shared/ui';
+import './SeriesDetailPage.css';
 
 /**
  * 시리즈 상세 페이지 컴포넌트
@@ -51,17 +52,16 @@ const SeriesDetailPage = ({ itemsData }) => {
 
   if (!series) {
     return (
-      <div className="series-detail-page p-8" style={{ backgroundColor: 'transparent' }}>
-        <div className="max-w-4xl mx-auto">
-          <Button 
-            onClick={() => navigate('/dashboard')}
-            className="mb-4 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
-          >
-            ← 대시보드로 돌아가기
-          </Button>
-          <div className="p-8 text-center bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
-            <h2 className="text-xl font-bold text-white mb-4">시리즈를 찾을 수 없습니다</h2>
-            <p className="text-white/70">요청하신 시리즈가 존재하지 않거나 삭제되었습니다.</p>
+      <div className="series-detail-container">
+        <div className="series-detail-wrapper">
+          <div className="series-detail-header">
+            <button className="back-button" onClick={() => navigate('/dashboard')}>
+              ← 대시보드로 돌아가기
+            </button>
+            <div className="error-state">
+              <h2>시리즈를 찾을 수 없습니다</h2>
+              <p>요청하신 시리즈가 존재하지 않거나 삭제되었습니다.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -69,143 +69,154 @@ const SeriesDetailPage = ({ itemsData }) => {
   }
 
   return (
-    <div className="series-detail-page p-8" style={{ backgroundColor: 'transparent' }}>
-      <div className="max-w-6xl mx-auto">
-        {/* 헤더 */}
-        <div className="mb-8">
-          <Button 
-            onClick={() => navigate('/dashboard')}
-            className="mb-4 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
-          >
+    <div className="series-detail-container">
+      <div className="series-detail-wrapper">
+        <div className="series-detail-header">
+          <button className="back-button" onClick={() => navigate('/dashboard')}>
             ← 대시보드로 돌아가기
-          </Button>
-          <h1 className="text-3xl font-bold text-white mb-2">{series.title}</h1>
-          <div className="flex items-center gap-2">
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-              series.status === 'pending' ? 'bg-yellow-500/20 text-yellow-200 border border-yellow-300/30' :
-              series.status === 'approved' ? 'bg-green-500/20 text-green-200 border border-green-300/30' :
-              'bg-blue-500/20 text-blue-200 border border-blue-300/30'
-            }`}>
-              {series.status === 'pending' ? '승인 대기' :
-               series.status === 'approved' ? '승인 완료' : '작업 중'}
-            </span>
-            {series.feedbackCount > 0 && (
-              <span className="px-3 py-1 bg-white/20 text-white rounded-full text-sm border border-white/30">
-                💬 피드백 {series.feedbackCount}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* 메인 콘텐츠 */}
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* 왼쪽: 시리즈 설명 */}
-          <div className="flex-1">
-            <div className="p-6 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
-              <h2 className="text-xl font-bold text-white mb-4">시리즈 정보</h2>
-              
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-medium text-white/90 mb-2">설명</h3>
-                  <p className="text-white/70 leading-relaxed">
-                    {series.description || '시리즈 설명이 없습니다.'}
-                  </p>
-                </div>
-
-                {series.genre && (
-                  <div>
-                    <h3 className="font-medium text-white/90 mb-2">장르</h3>
-                    <p className="text-white/70">{series.genre}</p>
-                  </div>
-                )}
-
-                {series.targetAudience && (
-                  <div>
-                    <h3 className="font-medium text-white/90 mb-2">타겟 관객</h3>
-                    <p className="text-white/70">{series.targetAudience}</p>
-                  </div>
-                )}
-
-                {series.setting && (
-                  <div>
-                    <h3 className="font-medium text-white/90 mb-2">배경 설정</h3>
-                    <p className="text-white/70">{series.setting}</p>
-                  </div>
-                )}
-
-                {series.theme && (
-                  <div>
-                    <h3 className="font-medium text-white/90 mb-2">주제</h3>
-                    <p className="text-white/70">{series.theme}</p>
-                  </div>
-                )}
-
-                <div>
-                  <h3 className="font-medium text-white/90 mb-2">생성일</h3>
-                  <p className="text-white/70">
-                    {series.createdAt ? new Date(series.createdAt).toLocaleDateString('ko-KR') : '정보 없음'}
-                  </p>
-                </div>
-              </div>
+          </button>
+          <div className="series-title-section">
+            <div className="series-type">
+              <span className="type-icon">📺</span>
+              <span className="type-name">시리즈</span>
             </div>
-          </div>
-
-          {/* 구분선 */}
-          <div className="hidden lg:flex items-stretch">
-            <div className="w-0.5 bg-white/30 self-stretch"></div>
-          </div>
-
-          {/* 오른쪽: 캐릭터들 */}
-          <div className="flex-1">
-            <div className="p-6 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
-              <h2 className="text-xl font-bold text-white mb-4">
-                시리즈 캐릭터들 ({characters.length})
-              </h2>
-              
-              {characters.length > 0 ? (
-                <div className="space-y-4">
-                  {characters.map((character) => (
-                    <div 
-                      key={character.id} 
-                      className="p-4 border border-white/20 rounded-lg hover:bg-white/5 transition-colors"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-medium text-white">{character.title}</h3>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          character.status === 'pending' ? 'bg-yellow-500/20 text-yellow-200 border border-yellow-300/30' :
-                          character.status === 'approved' ? 'bg-green-500/20 text-green-200 border border-green-300/30' :
-                          'bg-blue-500/20 text-blue-200 border border-blue-300/30'
-                        }`}>
-                          {character.status === 'pending' ? '대기' :
-                           character.status === 'approved' ? '완료' : '작업중'}
-                        </span>
-                      </div>
-                      
-                      <p className="text-white/70 text-sm mb-2">
-                        {character.description || '캐릭터 설명이 없습니다.'}
-                      </p>
-                      
-                      {character.role && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-white/60">역할:</span>
-                          <span className="text-xs bg-white/10 px-2 py-1 rounded border border-white/20">
-                            {character.role}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="text-white/40 mb-2">👥</div>
-                  <p className="text-white/60">아직 등록된 캐릭터가 없습니다.</p>
-                  <p className="text-white/40 text-sm mt-1">
-                    시리즈에 캐릭터를 추가해보세요.
-                  </p>
+            <h1 className="series-title">{series.title}</h1>
+            <p className="series-description">{series.description || '시리즈 설명이 없습니다.'}</p>
+            <div className="series-meta">
+              <div className="meta-item">
+                <span className="meta-label">상태</span>
+                <span className={`meta-value status-badge ${
+                  series.status === 'pending' ? 'status-pending' :
+                  series.status === 'approved' ? 'status-approved' : 'status-working'
+                }`}>
+                  {series.status === 'pending' ? '승인 대기' :
+                   series.status === 'approved' ? '승인 완료' : '작업 중'}
+                </span>
+              </div>
+              <div className="meta-item">
+                <span className="meta-label">생성일</span>
+                <span className="meta-value">
+                  {series.createdAt ? new Date(series.createdAt).toLocaleDateString('ko-KR') : '정보 없음'}
+                </span>
+              </div>
+              {series.feedbackCount > 0 && (
+                <div className="meta-item">
+                  <span className="meta-label">피드백</span>
+                  <span className="meta-value">💬 {series.feedbackCount}개</span>
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        <div className="series-detail-content">
+          {/* 왼쪽: 시리즈 정보 */}
+          <div className="content-section series-info-section">
+            <h2>📝 시리즈 상세 정보</h2>
+            <div className="series-info-grid">
+              {series.genre && (
+                <div className="info-item">
+                  <h3>장르</h3>
+                  <div className="genre-tags">
+                    {series.genre.split(',').map((genre, index) => (
+                      <span key={index} className="genre-tag">{genre.trim()}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {series.targetAudience && (
+                <div className="info-item">
+                  <h3>타겟 관객</h3>
+                  <p>{series.targetAudience}</p>
+                </div>
+              )}
+
+              {series.setting && (
+                <div className="info-item">
+                  <h3>배경 설정</h3>
+                  <p>{series.setting}</p>
+                </div>
+              )}
+
+              {series.theme && (
+                <div className="info-item">
+                  <h3>주제</h3>
+                  <p>{series.theme}</p>
+                </div>
+              )}
+
+              {series.content && (
+                <div className="info-item full-width">
+                  <h3>시리즈 개요</h3>
+                  <div className="markdown-content">
+                    <p>{series.content}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 가운데 구분선 */}
+          <div className="content-divider">
+            <div className="divider-line"></div>
+          </div>
+
+          {/* 오른쪽: 캐릭터 정보 */}
+          <div className="content-section characters-section">
+            <h2>👥 시리즈 캐릭터들 ({characters.length})</h2>
+            
+            {characters.length > 0 ? (
+              <div className="character-list">
+                {characters.map((character) => (
+                  <div key={character.id} className="character-item">
+                    <div className="character-content">
+                      <div className="character-avatar">
+                        {character.title ? character.title.charAt(0) : '?'}
+                      </div>
+                      <div className="character-details">
+                        <div className="character-header">
+                          <h4>{character.title}</h4>
+                          <span className={`status-badge ${
+                            character.status === 'pending' ? 'status-pending' :
+                            character.status === 'approved' ? 'status-approved' : 'status-working'
+                          }`}>
+                            {character.status === 'pending' ? '대기' :
+                             character.status === 'approved' ? '완료' : '작업중'}
+                          </span>
+                        </div>
+                        
+                        <p>{character.description || '캐릭터 설명이 없습니다.'}</p>
+                        
+                        {character.role && (
+                          <div className="character-traits">
+                            <span className="trait-tag">역할: {character.role}</span>
+                          </div>
+                        )}
+                        
+                        {character.age && (
+                          <div className="character-traits">
+                            <span className="trait-tag">나이: {character.age}</span>
+                          </div>
+                        )}
+                        
+                        {character.personality && (
+                          <div className="character-traits">
+                            <span className="trait-tag">성격: {character.personality}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state">
+                <div className="icon">👥</div>
+                <p>아직 등록된 캐릭터가 없습니다.</p>
+                <p className="sub-text">시리즈에 캐릭터를 추가해보세요.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
