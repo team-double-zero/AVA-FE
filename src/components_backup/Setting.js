@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Setting.css';
 
-const Setting = () => {
+const Setting = ({ onLogout }) => {
   const [settings, setSettings] = useState({
     notifications: {
       email: true,
@@ -156,6 +156,11 @@ const Setting = () => {
           <button className="reset-button">
             🔄 기본값으로 재설정
           </button>
+          {onLogout && (
+            <button className="logout-button" onClick={onLogout}>
+              🚪 로그아웃
+            </button>
+          )}
         </div>
       </div>
     </div>

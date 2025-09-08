@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Auth.css';
-import { setAccessToken, setRefreshToken } from '../utils/tokenUtils';
+import { setAccessToken, setRefreshToken } from '../shared/lib/tokenUtils';
 
 const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +9,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [serverStatus, setServerStatus] = useState(null); // 'online', 'offline', null
 
   const handleChange = (e) => {
     setFormData({
@@ -18,10 +19,46 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
     setError(''); // 입력 시 에러 메시지 초기화
   };
 
+  // 서버 연결 상태 확인
+  const checkServerStatus = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_DOMAIN}/api/v1/health`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        setServerStatus('online');
+        return true;
+      } else {
+        setServerStatus('offline');
+        return false;
+      }
+    } catch (err) {
+      console.error('Server health check failed:', err);
+      setServerStatus('offline');
+      return false;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    // 서버 상태 확인
+    console.log('Checking server status before login...');
+    const isServerOnline = await checkServerStatus();
+
+    // 서버가 오프라인인 경우 에러 메시지 표시
+    if (!isServerOnline) {
+      setError('서버에 연결할 수 없습니다. 네트워크 연결을 확인하거나 관리자에게 문의하세요.');
+      setLoading(false);
+      return;
+    }
 
     // ========== 개발 모드 테스트 로그인 ==========
     // .env에서 REACT_APP_DEV_MODE=true로 설정하면 admin/admin으로 테스트 로그인 가능
@@ -39,9 +76,11 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       const dummyRefreshToken = 'dev_refresh_token_' + Date.now();
       
       // Access Token은 메모리에, Refresh Token은 쿠키에 저장
+      console.log('💾 개발모드 토큰 저장 시작...');
       setAccessToken(dummyAccessToken);
       setRefreshToken(dummyRefreshToken);
       localStorage.setItem('userData', JSON.stringify(dummyUser));
+      console.log('✅ 개발모드 토큰 저장 완료');
       
       onLoginSuccess(dummyAccessToken, dummyUser);
       setLoading(false);
@@ -51,16 +90,24 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
 
     try {
       // 실제 API 요청
-      const response = await fetch(`${process.env.REACT_APP_API_DOMAIN}/api/v1/auth/login`, {
+      console.log('Making login request to:', `${process.env.REACT_APP_DOMAIN}/api/v1/auth/login`);
+      
+      const response = await fetch(`${process.env.REACT_APP_DOMAIN}/api/v1/auth/login`, {
         method: 'POST',
+        mode: 'cors',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify({
           email: formData.email,
           password: formData.password
         }),
       });
+
+      console.log('Login response status:', response.status);
+      console.log('Login response headers:', response.headers);
 
       const data = await response.json();
 
@@ -69,9 +116,11 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
         const { access_token, refresh_token, user } = data.data;
         
         // Access Token은 메모리에, Refresh Token은 쿠키에 저장
+        console.log('💾 실제 로그인 토큰 저장 시작...');
         setAccessToken(access_token);
         setRefreshToken(refresh_token);
         localStorage.setItem('userData', JSON.stringify(user));
+        console.log('✅ 실제 로그인 토큰 저장 완료');
         
         onLoginSuccess(access_token, user);
       } else {
@@ -84,6 +133,21 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       }
     } catch (err) {
       console.error('Login error:', err);
+      
+      // 에러 타입에 따른 상세한 메시지 제공
+      let errorMessage = '서버에 연결할 수 없습니다.';
+      
+      if (err.name === 'TypeError' && err.message.includes('fetch')) {
+        errorMessage = '네트워크 연결을 확인해주세요. 서버에 접근할 수 없습니다.';
+      } else if (err.message.includes('CORS')) {
+        errorMessage = 'CORS 정책으로 인해 서버에 접근할 수 없습니다.';
+      } else if (err.message.includes('SSL') || err.message.includes('certificate')) {
+        errorMessage = 'SSL 인증서 문제로 서버에 접근할 수 없습니다.';
+      }
+      
+      // 개발자를 위한 추가 정보
+      console.error('API Domain:', process.env.REACT_APP_DOMAIN);
+      console.error('Full URL:', `${process.env.REACT_APP_DOMAIN}/api/v1/auth/login`);
       
       // ========== 서버 연결 실패 시 개발 모드 폴백 ==========
       if (process.env.REACT_APP_DEV_MODE === 'true' && formData.email === 'admin' && formData.password === 'admin') {
@@ -100,16 +164,18 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
         const dummyRefreshToken = 'offline_refresh_token_' + Date.now();
         
         // Access Token은 메모리에, Refresh Token은 쿠키에 저장
+        console.log('💾 오프라인 모드 토큰 저장 시작...');
         setAccessToken(dummyAccessToken);
         setRefreshToken(dummyRefreshToken);
         localStorage.setItem('userData', JSON.stringify(dummyUser));
+        console.log('✅ 오프라인 모드 토큰 저장 완료');
         
         onLoginSuccess(dummyAccessToken, dummyUser);
       } else {
         const devModeHint = process.env.REACT_APP_DEV_MODE === 'true' 
           ? ' 개발모드에서는 admin/admin으로 로그인 가능합니다.' 
           : '';
-        setError(`서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.${devModeHint}`);
+        setError(`${errorMessage} 잠시 후 다시 시도해주세요.${devModeHint}`);
       }
       // ========== 서버 연결 실패 시 개발 모드 폴백 끝 ==========
     } finally {
@@ -118,13 +184,12 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1 className="auth-title">Avazon</h1>
-        </div>
+    <div className="auth-card">
+      <div className="auth-header">
+        <h1 className="auth-title">Avazon</h1>
+      </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+      <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">
               {process.env.REACT_APP_DEV_MODE === 'true' ? '이메일 또는 아이디' : '이메일'}
@@ -154,6 +219,30 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           </div>
 
           {error && <div className="error-message">{error}</div>}
+
+          {/* 서버 상태 표시 */}
+          {serverStatus && (
+            <div className={`status-message ${serverStatus}`} style={{
+              background: serverStatus === 'online' ? '#e8f5e8' : '#ffebee',
+              color: serverStatus === 'online' ? '#2e7d32' : '#c62828',
+              padding: '8px 12px',
+              borderRadius: '4px',
+              fontSize: '0.875rem',
+              marginBottom: '16px'
+            }}>
+              {serverStatus === 'online' ? '✅ 서버 연결 정상' : '❌ 서버 연결 실패'}
+            </div>
+          )}
+
+          {/* 서버 상태 확인 버튼 */}
+          <button
+            type="button"
+            className="auth-button secondary"
+            onClick={checkServerStatus}
+            style={{ marginBottom: '16px' }}
+          >
+            🔄 서버 연결 확인
+          </button>
 
           {process.env.REACT_APP_DEV_MODE === 'true' && (
             <div className="info-message" style={{
@@ -190,7 +279,6 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           </p>
         </div>
       </div>
-    </div>
   );
 };
 

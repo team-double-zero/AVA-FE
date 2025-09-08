@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import './ItemDetail.css';
 
-const ScenarioDetail = ({ item, onBack, onApprove, onFeedback }) => {
+const SeriesDetail = ({ item, onBack, onApprove, onFeedback }) => {
   const [feedbackText, setFeedbackText] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [expandedFeedback, setExpandedFeedback] = useState({});
@@ -33,7 +33,7 @@ const ScenarioDetail = ({ item, onBack, onApprove, onFeedback }) => {
           <h1 className="detail-title">{item.title}</h1>
           <p className="detail-description">{item.description}</p>
           <div className="detail-meta">
-            <span className="detail-type">📝 시나리오</span>
+            <span className="detail-type">📺 시리즈</span>
             <span className="detail-date">생성일: {item.createdAt}</span>
             {item.feedbackCount > 0 && (
               <span className="detail-feedback">💬 피드백 {item.feedbackCount}개</span>
@@ -44,9 +44,9 @@ const ScenarioDetail = ({ item, onBack, onApprove, onFeedback }) => {
 
       <div className="detail-content">
         <div className="content-section">
-          <h2>시나리오 대본</h2>
+          <h2>시리즈 개요</h2>
           <div className="markdown-content">
-            <ReactMarkdown>{item.content || '# 시나리오\n\n시나리오 대본이 여기에 표시됩니다.'}</ReactMarkdown>
+            <ReactMarkdown>{item.content || '# 시리즈\n\n시리즈 개요가 여기에 표시됩니다.'}</ReactMarkdown>
           </div>
         </div>
 
@@ -103,7 +103,7 @@ const ScenarioDetail = ({ item, onBack, onApprove, onFeedback }) => {
             <textarea
               value={feedbackText}
               onChange={(e) => setFeedbackText(e.target.value)}
-              placeholder="시나리오 개선사항이나 수정 요청을 입력해주세요..."
+              placeholder="시리즈 개선사항이나 수정 요청을 입력해주세요..."
               rows={4}
             />
             <div className="feedback-actions">
@@ -120,4 +120,4 @@ const ScenarioDetail = ({ item, onBack, onApprove, onFeedback }) => {
   );
 };
 
-export default ScenarioDetail;
+export default SeriesDetail;

@@ -161,12 +161,12 @@
 
 .auth-button.secondary {
   background: #f8f9fa;
-  color: #8370FE;
-  border: 2px solid #8370FE;
+  color: #1a1a1a;
+  border: 2px solid #2d3748;
 }
 
 .auth-button.secondary:hover:not(:disabled) {
-  background: #8370FE;
+  background: #2d3748;
   color: white;
 }
 
