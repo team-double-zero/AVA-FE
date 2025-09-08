@@ -47,8 +47,8 @@
 
 .kanban-columns {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
   justify-content: center;
@@ -320,8 +320,8 @@
 
 .working-columns {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
   justify-content: center;
@@ -624,8 +624,8 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
   .kanban-columns, .working-columns {
-    grid-template-columns: repeat(4, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    gap: 16px;
   }
   
   .kanban-column, .working-column {
@@ -651,8 +651,8 @@
   }
 
   .kanban-columns, .working-columns {
-    grid-template-columns: repeat(4, minmax(150px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    gap: 12px;
     overflow-x: auto;
     padding-bottom: 10px;
   }
@@ -710,8 +710,8 @@
   }
   
   .kanban-columns, .working-columns {
-    grid-template-columns: repeat(4, minmax(120px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(3, minmax(160px, 1fr));
+    gap: 10px;
   }
   
   .kanban-column, .working-column {
