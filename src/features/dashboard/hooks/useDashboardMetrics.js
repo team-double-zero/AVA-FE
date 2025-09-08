@@ -7,7 +7,6 @@ import { apiClient, endpoints } from '../../../api';
 export const useDashboardMetrics = () => {
   const [metrics, setMetrics] = useState({
     totalSeries: 0,
-    totalCharacters: 0,
     totalEpisodes: 0,
     totalVideos: 0,
     pendingItems: 0,
@@ -28,8 +27,7 @@ export const useDashboardMetrics = () => {
       if (process.env.REACT_APP_DEV_MODE === 'true') {
         // 실제 itemsData에서 계산된 메트릭스를 반환하도록 수정 예정
         setMetrics({
-          totalSeries: 8,
-          totalCharacters: 12,
+          totalSeries: 12, // 기존 시리즈 8 + 캐릭터 4 = 12
           totalEpisodes: 7,
           totalVideos: 8,
           pendingItems: 6,
@@ -69,7 +67,6 @@ export const useDashboardMetrics = () => {
 export const useCalculatedMetrics = (itemsData) => {
   const [metrics, setMetrics] = useState({
     totalSeries: 0,
-    totalCharacters: 0,
     totalEpisodes: 0,
     totalVideos: 0,
     pendingItems: 0,
@@ -90,7 +87,6 @@ export const useCalculatedMetrics = (itemsData) => {
       const types = ['series', 'character', 'episode', 'video'];
       
       let totalSeries = 0;
-      let totalCharacters = 0;
       let totalEpisodes = 0;
       let totalVideos = 0;
       let pendingItems = 0;
@@ -103,9 +99,8 @@ export const useCalculatedMetrics = (itemsData) => {
         types.forEach(type => {
           const items = itemsData[category]?.[type] || [];
           
-          // 타입별 총계
-          if (type === 'series') totalSeries += items.length;
-          if (type === 'character') totalCharacters += items.length;
+          // 시리즈와 캐릭터를 시리즈로 통합
+          if (type === 'series' || type === 'character') totalSeries += items.length;
           if (type === 'episode') totalEpisodes += items.length;
           if (type === 'video') totalVideos += items.length;
 
@@ -128,7 +123,6 @@ export const useCalculatedMetrics = (itemsData) => {
 
       return {
         totalSeries,
-        totalCharacters,
         totalEpisodes,
         totalVideos,
         pendingItems,

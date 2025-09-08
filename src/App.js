@@ -5,6 +5,7 @@ import './App.css';
 // 새로운 구조의 컴포넌트들
 import { AppProvider, ErrorBoundary, AppRoutes } from './app/index';
 import { useItemsData } from './features/dashboard/hooks';
+import { SeriesDetailPage } from './features/dashboard';
 import { tokenUtils } from './shared/lib';
 
 // 기존 컴포넌트들 (임시로 사용)
@@ -118,7 +119,13 @@ function AppContent() {
 
   // 아이템 클릭 처리
   const handleItemClick = (item) => {
-    setCurrentView({ type: 'detail', data: item });
+    if (item.type === 'series') {
+      // 시리즈 아이템인 경우 시리즈 상세 페이지로 이동
+      setCurrentView({ type: 'seriesDetail', data: item });
+    } else {
+      // 다른 아이템은 기존대로 상세 페이지로 이동
+      setCurrentView({ type: 'detail', data: item });
+    }
   };
 
   // 뒤로 가기
@@ -157,13 +164,19 @@ function AppContent() {
   return (
     <div className="app">
       {/* Main Content */}
-      <div className={`app-container ${currentView.type === 'detail' ? 'detail-view' : ''}`}>
+      <div className={`app-container ${(currentView.type === 'detail' || currentView.type === 'seriesDetail') ? 'detail-view' : ''}`}>
         {currentView.type === 'detail' ? (
           <ItemDetail
             item={currentView.data}
             onBack={handleBack}
             onApprove={handleApprove}
             onFeedback={handleFeedback}
+          />
+        ) : currentView.type === 'seriesDetail' ? (
+          <SeriesDetailPage
+            seriesData={currentView.data}
+            onBack={handleBack}
+            isLoading={false}
           />
         ) : (
           <div className="tabs-container">

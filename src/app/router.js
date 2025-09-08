@@ -7,6 +7,9 @@ import Browse from '../components_backup/Browse';
 import Analysis from '../components_backup/Analysis';
 import Setting from '../components_backup/Setting';
 
+// 새로운 시리즈 디테일 페이지
+import SeriesDetailPage from '../features/dashboard/pages/SeriesDetailPage';
+
 /**
  * 라우트 정의
  */
@@ -28,6 +31,22 @@ export const AppRoutes = ({
             itemsData={itemsData}
             onItemClick={onItemClick}
             user={user}
+          />
+        } 
+      />
+      <Route 
+        path="/dashboard/series/:seriesId" 
+        element={
+          <SeriesDetailPage 
+            itemsData={itemsData}
+          />
+        } 
+      />
+      <Route 
+        path="/dashboard/series/:seriesId" 
+        element={
+          <SeriesDetailPage 
+            itemsData={itemsData}
           />
         } 
       />

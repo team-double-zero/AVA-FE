@@ -597,3 +597,402 @@ html, body {
     background-position: 0% 0%;
   }
 }
+
+/* Series Detail Page Styles */
+.series-detail-page {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.series-detail-page .p-6 {
+  padding: 1.5rem;
+}
+
+.series-detail-page .max-w-7xl {
+  max-width: 80rem;
+}
+
+.series-detail-page .mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.series-detail-page .mb-8 {
+  margin-bottom: 2rem;
+}
+
+.series-detail-page .mb-4 {
+  margin-bottom: 1rem;
+}
+
+.series-detail-page .mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.series-detail-page .mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.series-detail-page .mb-3 {
+  margin-bottom: 0.75rem;
+}
+
+.series-detail-page .mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.series-detail-page .mt-8 {
+  margin-top: 2rem;
+}
+
+.series-detail-page .mt-1 {
+  margin-top: 0.25rem;
+}
+
+.series-detail-page .mr-2 {
+  margin-right: 0.5rem;
+}
+
+.series-detail-page .flex {
+  display: flex;
+}
+
+.series-detail-page .grid {
+  display: grid;
+}
+
+.series-detail-page .grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.series-detail-page .grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1024px) {
+  .series-detail-page .lg\\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .series-detail-page .md\\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.series-detail-page .gap-8 {
+  gap: 2rem;
+}
+
+.series-detail-page .gap-6 {
+  gap: 1.5rem;
+}
+
+.series-detail-page .gap-4 {
+  gap: 1rem;
+}
+
+.series-detail-page .gap-2 {
+  gap: 0.5rem;
+}
+
+.series-detail-page .gap-1 {
+  gap: 0.25rem;
+}
+
+.series-detail-page .space-x-4 > * + * {
+  margin-left: 1rem;
+}
+
+.series-detail-page .space-x-3 > * + * {
+  margin-left: 0.75rem;
+}
+
+.series-detail-page .space-x-2 > * + * {
+  margin-left: 0.5rem;
+}
+
+.series-detail-page .space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.series-detail-page .space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+
+.series-detail-page .space-y-1 > * + * {
+  margin-top: 0.25rem;
+}
+
+.series-detail-page .items-center {
+  align-items: center;
+}
+
+.series-detail-page .items-start {
+  align-items: flex-start;
+}
+
+.series-detail-page .flex-1 {
+  flex: 1 1 0%;
+}
+
+.series-detail-page .flex-wrap {
+  flex-wrap: wrap;
+}
+
+.series-detail-page .text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.series-detail-page .text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.series-detail-page .text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.series-detail-page .text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.series-detail-page .text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.series-detail-page .text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.series-detail-page .font-bold {
+  font-weight: 700;
+}
+
+.series-detail-page .font-semibold {
+  font-weight: 600;
+}
+
+.series-detail-page .font-medium {
+  font-weight: 500;
+}
+
+.series-detail-page .text-gray-900 {
+  color: #111827;
+}
+
+.series-detail-page .text-gray-800 {
+  color: #1f2937;
+}
+
+.series-detail-page .text-gray-700 {
+  color: #374151;
+}
+
+.series-detail-page .text-gray-600 {
+  color: #4b5563;
+}
+
+.series-detail-page .text-gray-500 {
+  color: #6b7280;
+}
+
+.series-detail-page .text-gray-400 {
+  color: #9ca3af;
+}
+
+.series-detail-page .text-blue-800 {
+  color: #1e40af;
+}
+
+.series-detail-page .text-green-800 {
+  color: #166534;
+}
+
+.series-detail-page .text-yellow-800 {
+  color: #92400e;
+}
+
+.series-detail-page .bg-blue-100 {
+  background-color: #dbeafe;
+}
+
+.series-detail-page .bg-green-100 {
+  background-color: #dcfce7;
+}
+
+.series-detail-page .bg-yellow-100 {
+  background-color: #fef3c7;
+}
+
+.series-detail-page .bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+.series-detail-page .bg-gray-200 {
+  background-color: #e5e7eb;
+}
+
+.series-detail-page .bg-blue-600 {
+  background-color: #2563eb;
+}
+
+.series-detail-page .bg-blue-700 {
+  background-color: #1d4ed8;
+}
+
+.series-detail-page .text-white {
+  color: #ffffff;
+}
+
+.series-detail-page .p-2 {
+  padding: 0.5rem;
+}
+
+.series-detail-page .p-4 {
+  padding: 1rem;
+}
+
+.series-detail-page .p-8 {
+  padding: 2rem;
+}
+
+.series-detail-page .px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.series-detail-page .px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.series-detail-page .px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.series-detail-page .py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.series-detail-page .py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.series-detail-page .py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.series-detail-page .py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.series-detail-page .rounded-md {
+  border-radius: 0.375rem;
+}
+
+.series-detail-page .rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.series-detail-page .rounded-full {
+  border-radius: 9999px;
+}
+
+.series-detail-page .rounded {
+  border-radius: 0.25rem;
+}
+
+.series-detail-page .border {
+  border-width: 1px;
+}
+
+.series-detail-page .border-gray-200 {
+  border-color: #e5e7eb;
+}
+
+.series-detail-page .w-5 {
+  width: 1.25rem;
+}
+
+.series-detail-page .w-10 {
+  width: 2.5rem;
+}
+
+.series-detail-page .w-1\/4 {
+  width: 25%;
+}
+
+.series-detail-page .w-1\/3 {
+  width: 33.333333%;
+}
+
+.series-detail-page .h-5 {
+  height: 1.25rem;
+}
+
+.series-detail-page .h-6 {
+  height: 1.5rem;
+}
+
+.series-detail-page .h-8 {
+  height: 2rem;
+}
+
+.series-detail-page .h-10 {
+  height: 2.5rem;
+}
+
+.series-detail-page .h-32 {
+  height: 8rem;
+}
+
+.series-detail-page .hover\\:bg-gray-100:hover {
+  background-color: #f3f4f6;
+}
+
+.series-detail-page .hover\\:bg-blue-700:hover {
+  background-color: #1d4ed8;
+}
+
+.series-detail-page .transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.series-detail-page .text-center {
+  text-align: center;
+}
+
+.series-detail-page .leading-relaxed {
+  line-height: 1.625;
+}
+
+.series-detail-page .cursor-pointer {
+  cursor: pointer;
+}
+
+.series-detail-page .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
