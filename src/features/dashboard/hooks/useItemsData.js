@@ -6,16 +6,16 @@ import { apiClient, endpoints } from '../../../api';
  */
 export const useItemsData = () => {
   const [itemsData, setItemsData] = useState({
-    pending: { series: [], character: [], episode: [], video: [] },
-    working: { series: [], character: [], episode: [], video: [] },
-    approved: { series: [], character: [], episode: [], video: [] },
+    pending: { series: [], episode: [], video: [] },
+    working: { series: [], episode: [], video: [] },
+    approved: { series: [], episode: [], video: [] },
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // 개발 모드 더미 데이터
   const getDummyData = () => {
-    return {
+    const rawData = {
       pending: {
         series: [
           { 
@@ -42,11 +42,10 @@ export const useItemsData = () => {
             content: '# 아르카나 시리즈\n\n마법이 존재하는 중세 판타지 세계를 배경으로 한 시리즈...',
             feedbackHistory: []
           },
-        ],
-        character: [
+          // 기존 캐릭터를 시리즈로 통합
           { 
-            id: 1, 
-            type: 'character',
+            id: 101, 
+            type: 'series',
             title: '주인공 - 알렉스', 
             description: '사이버 해커 캐릭터', 
             status: 'pending',
@@ -54,9 +53,18 @@ export const useItemsData = () => {
             createdAt: '2024-01-16',
             aiGenerated: true,
             seriesId: 1,
+            isCharacter: true, // 원래 캐릭터였음을 표시
             imageUrl: '/images/alex-character.jpg',
             content: '## 캐릭터 프로필\n\n**이름**: 알렉스 첸\n**나이**: 28세\n**직업**: 사이버 해커...',
-            feedbackHistory: []
+            feedbackHistory: [],
+            characters: [
+              {
+                id: 1,
+                name: '알렉스 첸',
+                description: '뛰어난 해킹 실력을 가진 28세 사이버 해커',
+                traits: ['똑똑함', '신중함', '정의감']
+              }
+            ]
           },
         ],
         episode: [
@@ -106,7 +114,6 @@ export const useItemsData = () => {
             feedbackHistory: []
           }
         ],
-        character: [],
         episode: [],
         video: []
       },
@@ -124,11 +131,10 @@ export const useItemsData = () => {
             content: '# 아르카디아 시리즈\n\n마법과 검이 공존하는 판타지 세계를 배경으로 한 시리즈...',
             feedbackHistory: []
           },
-        ],
-        character: [
+          // 기존 캐릭터를 시리즈로 통합
           { 
-            id: 5, 
-            type: 'character', 
+            id: 105, 
+            type: 'series', 
             title: '머로우 상인', 
             description: '아이템 판매 캐릭터',
             status: 'approved',
@@ -137,9 +143,18 @@ export const useItemsData = () => {
             aiGenerated: true,
             seriesId: 5,
             episodeId: 4,
+            isCharacter: true, // 원래 캐릭터였음을 표시
             imageUrl: '/images/shop-keeper.jpg',
             content: '## 캐릭터 프로필\n\n**이름**: 머로우 상인\n**나이**: 45세\n**직업**: 잡화점 주인...',
-            feedbackHistory: []
+            feedbackHistory: [],
+            characters: [
+              {
+                id: 5,
+                name: '머로우 상인',
+                description: '아르카디아 왕국의 친절한 잡화점 주인',
+                traits: ['친절함', '상술', '정보통']
+              }
+            ]
           },
         ],
         episode: [
@@ -176,6 +191,36 @@ export const useItemsData = () => {
         ]
       }
     };
+
+    // 캐릭터를 시리즈로 통합
+    const processedData = {
+      pending: { series: [], episode: [], video: [] },
+      working: { series: [], episode: [], video: [] },
+      approved: { series: [], episode: [], video: [] },
+    };
+
+    Object.keys(rawData).forEach(category => {
+      const categoryData = rawData[category];
+      
+      // 시리즈와 캐릭터를 합쳐서 시리즈로 통합
+      const mergedSeries = [
+        ...categoryData.series || [],
+        ...(categoryData.character || []).map(char => ({
+          ...char,
+          type: 'series', // 캐릭터를 시리즈 타입으로 변경
+          isCharacter: true, // 원래 캐릭터였음을 표시
+          characters: [char] // 캐릭터를 characters 배열에 포함
+        }))
+      ];
+
+      processedData[category] = {
+        series: mergedSeries,
+        episode: categoryData.episode || [],
+        video: categoryData.video || []
+      };
+    });
+
+    return processedData;
   };
 
   const fetchItemsData = useCallback(async () => {
@@ -197,9 +242,9 @@ export const useItemsData = () => {
       ]);
 
       setItemsData({
-        pending: pending.data || { series: [], character: [], episode: [], video: [] },
-        working: working.data || { series: [], character: [], episode: [], video: [] },
-        approved: approved.data || { series: [], character: [], episode: [], video: [] },
+        pending: pending.data || { series: [], episode: [], video: [] },
+        working: working.data || { series: [], episode: [], video: [] },
+        approved: approved.data || { series: [], episode: [], video: [] },
       });
     } catch (err) {
       setError(err.message);
@@ -243,7 +288,6 @@ export const useItemsData = () => {
       // 프로덕션에서는 API 호출
       const endpoint = {
         series: endpoints.series.approve,
-        character: endpoints.characters.approve,
         episode: endpoints.episodes.approve,
         video: endpoints.videos.approve,
       }[item.type];
@@ -290,7 +334,6 @@ export const useItemsData = () => {
       // 프로덕션에서는 API 호출
       const endpoint = {
         series: endpoints.series.feedback,
-        character: endpoints.characters.feedback,
         episode: endpoints.episodes.feedback,
         video: endpoints.videos.feedback,
       }[item.type];

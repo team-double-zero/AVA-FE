@@ -94,12 +94,6 @@ export const KPICardGrid = ({ metrics, isLoading }) => {
       color: 'blue',
     },
     {
-      title: '총 캐릭터',
-      value: metrics.totalCharacters,
-      icon: '👥',
-      color: 'green',
-    },
-    {
       title: '총 에피소드',
       value: metrics.totalEpisodes,
       icon: '📝',

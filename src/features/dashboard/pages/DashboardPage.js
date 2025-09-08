@@ -80,7 +80,7 @@ const DashboardPage = ({
             <div className="flex justify-between">
               <span>전체 아이템:</span>
               <span className="font-medium">
-                {metrics.totalSeries + metrics.totalCharacters + metrics.totalEpisodes + metrics.totalVideos}개
+                {metrics.totalSeries + metrics.totalEpisodes + metrics.totalVideos}개
               </span>
             </div>
           </div>

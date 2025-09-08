@@ -16,7 +16,6 @@ const KanbanBoard = ({
 }) => {
   const types = [
     { key: 'series', title: '시리즈', icon: '📚' },
-    { key: 'character', title: '캐릭터', icon: '👤' },
     { key: 'episode', title: '에피소드', icon: '📝' },
     { key: 'video', title: '영상', icon: '🎬' },
   ];
@@ -60,10 +59,12 @@ const KanbanBoard = ({
           ) : (
             typeItems.map((item) => {
               const CardComponent = cardType === 'working' ? WorkingItemCard : PendingItemCard;
+              // 아이템에 타입 정보 추가
+              const itemWithType = { ...item, type: type.key };
               return (
                 <CardComponent
                   key={item.id}
-                  item={item}
+                  item={itemWithType}
                   onClick={onItemClick}
                 />
               );

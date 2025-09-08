@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import { apiRequest } from '../shared/lib/tokenUtils';
 
@@ -9,6 +10,8 @@ import iconEpisode from '../assets/icons/icon_episode.svg';
 import iconVideo from '../assets/icons/icon_video.svg';
 
 const Dashboard = ({ itemsData, onItemClick, user }) => {
+  const navigate = useNavigate();
+  
   // React Hooks는 항상 컴포넌트 최상단에서 호출되어야 함
   // API 요청 예시 (사용자가 로그인된 후에만 실행)
   useEffect(() => {
@@ -51,6 +54,13 @@ const Dashboard = ({ itemsData, onItemClick, user }) => {
   const pendingItems = itemsData.pending;
   const workingItems = itemsData.working;
   // const approvedItems = itemsData.approved; // 현재 사용하지 않음
+
+  // 캐릭터와 시리즈를 통합하여 시리즈로 표시
+  const getMergedSeriesData = (category) => {
+    const seriesItems = itemsData[category]?.series || [];
+    const characterItems = itemsData[category]?.character || [];
+    return [...seriesItems, ...characterItems];
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -101,6 +111,15 @@ const Dashboard = ({ itemsData, onItemClick, user }) => {
     }
   };
 
+  // 아이템 클릭 핸들러 - 시리즈는 디테일 페이지로, 나머지는 기존 방식
+  const handleItemClick = (item, type) => {
+    if (type === 'series') {
+      navigate(`/dashboard/series/${item.id}`);
+    } else {
+      onItemClick && onItemClick(item);
+    }
+  };
+
   const renderWorkingColumn = (title, items, type) => (
     <div className="working-column">
       <div className="column-header">
@@ -113,7 +132,7 @@ const Dashboard = ({ itemsData, onItemClick, user }) => {
           <div 
             key={item.id} 
             className="working-card"
-            onClick={() => onItemClick && onItemClick(item)}
+            onClick={() => handleItemClick(item, type)}
           >
             <div className="card-header">
               <h4 className="card-title">{item.title}</h4>
@@ -152,7 +171,7 @@ const Dashboard = ({ itemsData, onItemClick, user }) => {
           <div 
             key={item.id} 
             className="kanban-card"
-            onClick={() => onItemClick && onItemClick(item)}
+            onClick={() => handleItemClick(item, type)}
           >
             <div className="card-header">
               <h4 className="card-title">{item.title}</h4>
@@ -192,8 +211,7 @@ const Dashboard = ({ itemsData, onItemClick, user }) => {
           <h3 className="board-title">승인 대기 중인 아이템들</h3>
         </div>
         <div className="kanban-columns">
-          {renderKanbanColumn('캐릭터', pendingItems.character, 'character')}
-          {renderKanbanColumn('시리즈', pendingItems.series, 'series')}
+          {renderKanbanColumn('시리즈', getMergedSeriesData('pending'), 'series')}
           {renderKanbanColumn('에피소드', pendingItems.episode, 'episode')}
           {renderKanbanColumn('영상', pendingItems.video, 'video')}
         </div>
@@ -206,8 +224,7 @@ const Dashboard = ({ itemsData, onItemClick, user }) => {
           <p className="board-subtitle">AI가 수정 중이거나 새로 생성 중인 아이템들</p>
         </div>
         <div className="working-columns">
-          {renderWorkingColumn('캐릭터', workingItems.character, 'character')}
-          {renderWorkingColumn('시리즈', workingItems.series, 'series')}
+          {renderWorkingColumn('시리즈', getMergedSeriesData('working'), 'series')}
           {renderWorkingColumn('에피소드', workingItems.episode, 'episode')}
           {renderWorkingColumn('영상', workingItems.video, 'video')}
         </div>
