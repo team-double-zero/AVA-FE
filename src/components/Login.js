@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Auth.css';
 import { setAccessToken, setRefreshToken } from '../shared/lib/tokenUtils';
+import { endpoints } from '../api/endpoints';
 
 const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   const [formData, setFormData] = useState({
@@ -92,7 +93,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       // 실제 API 요청
       console.log('Making login request to:', `${process.env.REACT_APP_DOMAIN}/api/v1/auth/login`);
       
-      const response = await fetch(`${process.env.REACT_APP_DOMAIN}/api/v1/auth/login`, {
+      const response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.login}`, {
         method: 'POST',
         mode: 'cors',
         credentials: 'include',
