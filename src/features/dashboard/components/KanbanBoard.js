@@ -16,6 +16,7 @@ const KanbanBoard = ({
 }) => {
   const types = [
     { key: 'series', title: '시리즈', icon: '📚' },
+    { key: 'character', title: '캐릭터', icon: '👤' },
     { key: 'episode', title: '에피소드', icon: '📝' },
     { key: 'video', title: '영상', icon: '🎬' },
   ];
