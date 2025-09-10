@@ -3,12 +3,12 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 // 기존 컴포넌트들 (Tailwind CSS 문제로 임시 복구)
 import Dashboard from '../components_backup/Dashboard';
-import Browse from '../components_backup/Browse';
 import Analysis from '../components_backup/Analysis';
 import Setting from '../components_backup/Setting';
 
-// 새로운 시리즈 디테일 페이지
+// 새로운 컴포넌트들
 import SeriesDetailPage from '../features/dashboard/pages/SeriesDetailPage';
+import { BrowsePage } from '../features/browse';
 
 /**
  * 라우트 정의
@@ -50,16 +50,9 @@ export const AppRoutes = ({
           />
         } 
       />
-      <Route 
-        path="/browse" 
-        element={
-          <Browse 
-            itemsData={itemsData}
-            onItemClick={onItemClick}
-            onApprove={onApprove}
-            onFeedback={onFeedback}
-          />
-        } 
+      <Route
+        path="/browse"
+        element={<BrowsePage />}
       />
       <Route 
         path="/analysis" 

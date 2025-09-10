@@ -6,6 +6,7 @@ import './App.css';
 import { AppProvider, ErrorBoundary, AppRoutes } from './app/index';
 import { useItemsData } from './features/dashboard/hooks';
 import { SeriesDetailPage } from './features/dashboard';
+import { BrowsePage } from './features/browse';
 import { tokenUtils } from './shared/lib';
 
 // 기존 컴포넌트들 (임시로 사용)
