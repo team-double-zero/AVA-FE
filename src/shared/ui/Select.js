@@ -1,5 +1,5 @@
 import React from 'react';
-import { clsx } from '../lib';
+import './Select.css';
 
 /**
  * 공용 셀렉트 컴포넌트
@@ -18,26 +18,23 @@ const Select = ({
   ...props
 }) => {
   const id = props.id || `select-${Math.random().toString(36).substr(2, 9)}`;
-  
-  const selectClasses = clsx(
-    'block w-full border rounded-md shadow-sm px-3 py-2 text-sm bg-white',
-    'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
-    'disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed',
-    error
-      ? 'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500'
-      : 'border-gray-300 text-gray-900',
+
+  const selectClasses = [
+    'select',
+    error ? 'select-error' : '',
+    disabled ? 'select-disabled' : '',
     className
-  );
+  ].filter(Boolean).join(' ');
 
   return (
-    <div className="space-y-1">
+    <div className="select-wrapper">
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        <label htmlFor={id} className="select-label">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="select-required">*</span>}
         </label>
       )}
-      
+
       <select
         id={id}
         value={value}
@@ -58,13 +55,13 @@ const Select = ({
           </option>
         ))}
       </select>
-      
+
       {error && (
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="select-error-text">{error}</p>
       )}
-      
+
       {helper && !error && (
-        <p className="text-sm text-gray-500">{helper}</p>
+        <p className="select-helper-text">{helper}</p>
       )}
     </div>
   );

@@ -1,0 +1,86 @@
+/* Modal Component Styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.2s ease;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-small {
+  max-width: 28rem;
+}
+
+.modal-medium {
+  max-width: 32rem;
+}
+
+.modal-large {
+  max-width: 42rem;
+}
+
+.modal-xlarge {
+  max-width: 56rem;
+}
+
+.modal-full {
+  max-width: 100%;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.modal-close-button {
+  color: #9ca3af;
+  transition: color 0.2s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.modal-close-button:hover {
+  color: #6b7280;
+}
+
+.modal-close-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.modal-body {
+  padding: 24px;
+}
