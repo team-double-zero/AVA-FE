@@ -43,13 +43,18 @@ export const endpoints = {
 
   // 시리즈 관련
   series: {
-    // list: '/api/v1/series',
-    // create: '/api/v1/series',
-    // detail: (id) => `/api/v1/series/${id}`,
-    // update: (id) => `/api/v1/series/${id}`,
-    // delete: (id) => `/api/v1/series/${id}`,
-    // approve: (id) => `/api/v1/series/${id}/approve`,
-    // feedback: (id) => `/api/v1/series/${id}/feedback`,
+    /**
+     * 승인된 시리즈 목록 조회
+     * GET /api/v1/series
+     * bearer token (access token) 필요
+     */
+    list: '/api/v1/series',
+    create: '/api/v1/series',
+    detail: (id) => `/api/v1/series/${id}`,
+    update: (id) => `/api/v1/series/${id}`,
+    delete: (id) => `/api/v1/series/${id}`,
+    approve: (id) => `/api/v1/series/${id}/approve`,
+    feedback: (id) => `/api/v1/series/${id}/feedback`,
     /**
      * 초안 시리즈 목록 조회
      * GET /api/v1/series-drafts?draft_status=pending
@@ -60,16 +65,21 @@ export const endpoints = {
   },
 
   // 캐릭터 관련
-  // characters: {
-  //   list: '/api/v1/characters',
-  //   create: '/api/v1/characters',
-  //   detail: (id) => `/api/v1/characters/${id}`,
-  //   update: (id) => `/api/v1/characters/${id}`,
-  //   delete: (id) => `/api/v1/characters/${id}`,
-  //   approve: (id) => `/api/v1/characters/${id}/approve`,
-  //   feedback: (id) => `/api/v1/characters/${id}/feedback`,
-  //   bySeries: (seriesId) => `/api/v1/series/${seriesId}/characters`,
-  // },
+  characters: {
+    /**
+     * 캐릭터 목록 조회
+     * GET /api/v1/characters
+     * bearer token (access token) 필요
+     */
+    list: '/api/v1/characters',
+    create: '/api/v1/characters',
+    detail: (id) => `/api/v1/characters/${id}`,
+    update: (id) => `/api/v1/characters/${id}`,
+    delete: (id) => `/api/v1/characters/${id}`,
+    approve: (id) => `/api/v1/characters/${id}/approve`,
+    feedback: (id) => `/api/v1/characters/${id}/feedback`,
+    bySeries: (seriesId) => `/api/v1/series/${seriesId}/characters`,
+  },
 
   // 에피소드 관련
   // episodes: {

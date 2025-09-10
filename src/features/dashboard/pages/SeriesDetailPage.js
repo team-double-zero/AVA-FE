@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import ReactJson from 'react-json-view';
 import { Card, Button } from '../../../shared/ui';
 import './SeriesDetailPage.css';
 import iconVideo from '../../../assets/icons/icon_video.svg';
@@ -148,11 +149,149 @@ const SeriesDetailPage = ({ itemsData }) => {
                 </div>
               )}
 
-              {series.content && (
+              {series.draftData && series.draftData.series && (
                 <div className="info-item full-width">
-                  <h3>시리즈 개요</h3>
-                  <div className="markdown-content">
-                    <p>{series.content}</p>
+                  <h3>시리즈 상세 정보</h3>
+                  <div className="json-view-container" style={{
+                    backgroundColor: '#f8f9fa',
+                    borderRadius: '8px',
+                    padding: '16px',
+                    border: '1px solid #e9ecef'
+                  }}>
+                    <ReactJson
+                      src={series.draftData.series}
+                      theme="rjv-default"
+                      collapsed={false}
+                      collapseStringsAfterLength={100}
+                      enableClipboard={true}
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                      quotesOnKeys={false}
+                      style={{
+                        fontSize: '14px',
+                        backgroundColor: 'transparent',
+                        fontFamily: 'monospace'
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {series.draftData && series.draftData.metadata && (
+                <div className="info-item full-width">
+                  <h3>메타데이터</h3>
+                  <div className="json-view-container" style={{
+                    backgroundColor: '#f8f9fa',
+                    borderRadius: '8px',
+                    padding: '16px',
+                    border: '1px solid #e9ecef'
+                  }}>
+                    <ReactJson
+                      src={series.draftData.metadata}
+                      theme="rjv-default"
+                      collapsed={false}
+                      collapseStringsAfterLength={100}
+                      enableClipboard={true}
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                      quotesOnKeys={false}
+                      style={{
+                        fontSize: '14px',
+                        backgroundColor: 'transparent',
+                        fontFamily: 'monospace'
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {series.draftData && (series.draftData.style_visual || series.draftData.style_audio || series.draftData.format_outline) && (
+                <div className="info-item full-width">
+                  <h3>스타일 및 형식 정보</h3>
+                  <div className="style-info-grid">
+                    {series.draftData.style_visual && (
+                      <div className="style-section">
+                        <h4>비주얼 스타일</h4>
+                        <div className="json-view-container" style={{
+                          backgroundColor: '#f8f9fa',
+                          borderRadius: '6px',
+                          padding: '12px',
+                          border: '1px solid #e9ecef'
+                        }}>
+                          <ReactJson
+                            src={series.draftData.style_visual}
+                            theme="rjv-default"
+                            collapsed={false}
+                            collapseStringsAfterLength={100}
+                            enableClipboard={true}
+                            displayDataTypes={false}
+                            displayObjectSize={false}
+                            quotesOnKeys={false}
+                            style={{
+                              fontSize: '14px',
+                              backgroundColor: 'transparent',
+                              fontFamily: 'monospace'
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {series.draftData.style_audio && (
+                      <div className="style-section">
+                        <h4>오디오 스타일</h4>
+                        <div className="json-view-container" style={{
+                          backgroundColor: '#f8f9fa',
+                          borderRadius: '6px',
+                          padding: '12px',
+                          border: '1px solid #e9ecef'
+                        }}>
+                          <ReactJson
+                            src={series.draftData.style_audio}
+                            theme="rjv-default"
+                            collapsed={false}
+                            collapseStringsAfterLength={100}
+                            enableClipboard={true}
+                            displayDataTypes={false}
+                            displayObjectSize={false}
+                            quotesOnKeys={false}
+                            style={{
+                              fontSize: '14px',
+                              backgroundColor: 'transparent',
+                              fontFamily: 'monospace'
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {series.draftData.format_outline && (
+                      <div className="style-section">
+                        <h4>형식 아웃라인</h4>
+                        <div className="json-view-container" style={{
+                          backgroundColor: '#f8f9fa',
+                          borderRadius: '6px',
+                          padding: '12px',
+                          border: '1px solid #e9ecef'
+                        }}>
+                          <ReactJson
+                            src={series.draftData.format_outline}
+                            theme="rjv-default"
+                            collapsed={false}
+                            collapseStringsAfterLength={100}
+                            enableClipboard={true}
+                            displayDataTypes={false}
+                            displayObjectSize={false}
+                            quotesOnKeys={false}
+                            style={{
+                              fontSize: '14px',
+                              backgroundColor: 'transparent',
+                              fontFamily: 'monospace'
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -187,24 +326,48 @@ const SeriesDetailPage = ({ itemsData }) => {
                              character.status === 'approved' ? '완료' : '작업중'}
                           </span>
                         </div>
-                        
+
                         <p>{character.description || '캐릭터 설명이 없습니다.'}</p>
-                        
-                        {character.role && (
-                          <div className="character-traits">
-                            <span className="trait-tag">역할: {character.role}</span>
+
+                        {/* 캐릭터 상세 정보 JSON View */}
+                        {character.characterData && (
+                          <div className="character-json-view" style={{
+                            marginTop: '12px',
+                            backgroundColor: '#f8f9fa',
+                            borderRadius: '6px',
+                            padding: '8px',
+                            border: '1px solid #e9ecef'
+                          }}>
+                            <ReactJson
+                              src={character.characterData}
+                              theme="rjv-default"
+                              collapsed={false}
+                              collapseStringsAfterLength={100}
+                              enableClipboard={true}
+                              displayDataTypes={false}
+                              displayObjectSize={false}
+                              quotesOnKeys={false}
+                              style={{
+                                fontSize: '14px',
+                                backgroundColor: 'transparent',
+                                fontFamily: 'monospace'
+                              }}
+                            />
                           </div>
                         )}
-                        
-                        {character.age && (
-                          <div className="character-traits">
-                            <span className="trait-tag">나이: {character.age}</span>
-                          </div>
-                        )}
-                        
-                        {character.personality && (
-                          <div className="character-traits">
-                            <span className="trait-tag">성격: {character.personality}</span>
+
+                        {/* 기존 트레이트 정보는 간단히 표시 */}
+                        {(character.role || character.age || character.personality) && (
+                          <div className="character-traits" style={{ marginTop: '8px' }}>
+                            {character.role && (
+                              <span className="trait-tag">역할: {character.role}</span>
+                            )}
+                            {character.age && (
+                              <span className="trait-tag">나이: {character.age}</span>
+                            )}
+                            {character.personality && (
+                              <span className="trait-tag">성격: {character.personality}</span>
+                            )}
                           </div>
                         )}
                       </div>

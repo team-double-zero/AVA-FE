@@ -305,6 +305,68 @@
     0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
+/* Style Info Grid */
+.style-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.style-section {
+  background: rgba(248, 249, 250, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.style-section h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.style-section h4::before {
+  content: "🎨";
+  font-size: 0.75rem;
+}
+
+/* JSON View Container */
+.json-view-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  border: 1px solid rgba(233, 236, 239, 0.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.json-view-container:hover {
+  border-color: rgba(192, 183, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 2px 6px rgba(192, 183, 255, 0.2);
+}
+
+/* Character JSON View */
+.character-json-view {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  border: 1px solid rgba(233, 236, 239, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
 /* Status Badge */
 .status-badge {
   padding: 0.25rem 0.5rem;
@@ -509,16 +571,21 @@
   .series-info-grid {
     grid-template-columns: 1fr;
   }
-  
+
+  .style-info-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
   /* 1024px 이하에서는 좌우 레이아웃 유지하되 간격 조정 */
   .series-info-section {
     padding-right: 16px;
   }
-  
+
   .characters-section {
     padding-left: 16px;
   }
-  
+
   .content-divider {
     padding: 0 12px;
   }
@@ -575,6 +642,23 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  .style-info-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .style-section {
+    padding: 8px;
+  }
+
+  .json-view-container {
+    padding: 8px;
+  }
+
+  .character-json-view {
+    padding: 6px;
   }
 }
 
