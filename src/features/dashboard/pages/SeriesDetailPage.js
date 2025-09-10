@@ -32,23 +32,21 @@ const SeriesDetailPage = ({ itemsData }) => {
 
   const series = findSeries();
 
-  // 해당 시리즈의 캐릭터들 찾기 (기존 character 타입 아이템들)
+  // 해당 시리즈의 캐릭터들 찾기 (draft_data에서)
   const getSeriesCharacters = () => {
-    if (!itemsData || !series) return [];
-    
-    const categories = ['pending', 'working', 'approved'];
-    let characters = [];
-    
-    categories.forEach(category => {
-      const characterItems = itemsData[category]?.character || [];
-      // 시리즈와 연관된 캐릭터들 필터링 (seriesId로 연결되어 있다고 가정)
-      const relatedCharacters = characterItems.filter(char => 
-        char.seriesId === series.id || char.series_id === series.id
-      );
-      characters = [...characters, ...relatedCharacters];
-    });
-    
-    return characters;
+    if (!series || !series.draftData || !series.draftData.characters) return [];
+
+    return series.draftData.characters.map((character, index) => ({
+      id: `${series.id}_char_${index}`,
+      title: character.display_name || character.name || '이름 없음',
+      description: character.role || '역할 없음',
+      status: series.status || 'pending',
+      createdAt: series.createdAt,
+      characterData: character,
+      role: character.role,
+      age: character.age,
+      personality: character.personality
+    }));
   };
 
   const characters = getSeriesCharacters();

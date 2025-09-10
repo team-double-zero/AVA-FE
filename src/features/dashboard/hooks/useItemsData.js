@@ -6,9 +6,9 @@ import { apiClient, endpoints } from '../../../api';
  */
 export const useItemsData = () => {
   const [itemsData, setItemsData] = useState({
-    pending: { series: [], character: [], episode: [], video: [] },
-    working: { series: [], character: [], episode: [], video: [] },
-    approved: { series: [], character: [], episode: [], video: [] },
+    pending: { series: [], episode: [], video: [] },
+    working: { series: [], episode: [], video: [] },
+    approved: { series: [], episode: [], video: [] },
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -41,46 +41,6 @@ export const useItemsData = () => {
             aiGenerated: true,
             content: '# 아르카나 시리즈\n\n마법이 존재하는 중세 판타지 세계를 배경으로 한 시리즈...',
             feedbackHistory: []
-          },
-        ],
-        character: [
-          {
-            id: '1_char_0',
-            type: 'character',
-            title: '알렉스 첸',
-            description: '주인공 캐릭터',
-            status: 'pending',
-            feedbackCount: 1,
-            createdAt: '2024-01-16',
-            aiGenerated: true,
-            seriesId: 1,
-            content: '## 캐릭터 프로필\n\n**이름**: 알렉스 첸\n**나이**: 28세\n**직업**: 사이버 해커...',
-            feedbackHistory: [],
-            characterData: {
-              display_name: '알렉스 첸',
-              role: 'protagonist',
-              age: 28,
-              personality: '신중하고 정의감 있는 해커'
-            }
-          },
-          {
-            id: '2_char_0',
-            type: 'character',
-            title: '엘리나',
-            description: '마법사 캐릭터',
-            status: 'pending',
-            feedbackCount: 0,
-            createdAt: '2024-01-17',
-            aiGenerated: true,
-            seriesId: 2,
-            content: '## 캐릭터 프로필\n\n**이름**: 엘리나\n**나이**: 25세\n**직업**: 마법사...',
-            feedbackHistory: [],
-            characterData: {
-              display_name: '엘리나',
-              role: 'mage',
-              age: 25,
-              personality: '호기심 많고 강한 마법사'
-            }
           },
         ],
         episode: [
@@ -130,7 +90,6 @@ export const useItemsData = () => {
             feedbackHistory: []
           }
         ],
-        character: [],
         episode: [],
         video: []
       },
@@ -147,27 +106,6 @@ export const useItemsData = () => {
             aiGenerated: true,
             content: '# 아르카디아 시리즈\n\n마법과 검이 공존하는 판타지 세계를 배경으로 한 시리즈...',
             feedbackHistory: []
-          },
-        ],
-        character: [
-          {
-            id: '5_char_0',
-            type: 'character',
-            title: '머로우 상인',
-            description: '아이템 판매 캐릭터',
-            status: 'approved',
-            feedbackCount: 0,
-            createdAt: '2024-01-08',
-            aiGenerated: true,
-            seriesId: 5,
-            content: '## 캐릭터 프로필\n\n**이름**: 머로우 상인\n**나이**: 45세\n**직업**: 잡화점 주인...',
-            feedbackHistory: [],
-            characterData: {
-              display_name: '머로우 상인',
-              role: 'merchant',
-              age: 45,
-              personality: '친절하고 상술이 뛰어난 상인'
-            }
           },
         ],
         episode: [
@@ -207,9 +145,9 @@ export const useItemsData = () => {
 
     // 캐릭터를 시리즈로 통합
     const processedData = {
-      pending: { series: [], character: [], episode: [], video: [] },
-      working: { series: [], character: [], episode: [], video: [] },
-      approved: { series: [], character: [], episode: [], video: [] },
+      pending: { series: [], episode: [], video: [] },
+      working: { series: [], episode: [], video: [] },
+      approved: { series: [], episode: [], video: [] },
     };
 
     Object.keys(rawData).forEach(category => {
@@ -217,7 +155,6 @@ export const useItemsData = () => {
 
       processedData[category] = {
         series: categoryData.series || [],
-        character: categoryData.character || [],
         episode: categoryData.episode || [],
         video: categoryData.video || []
       };
@@ -226,10 +163,9 @@ export const useItemsData = () => {
     return processedData;
   };
 
-  // draft 데이터를 시리즈와 캐릭터로 분리하는 함수
+  // draft 데이터를 시리즈로 변환하는 함수
   const processDraftData = (draftItems) => {
     const seriesItems = [];
-    const characterItems = [];
 
     draftItems.forEach(draft => {
       const { id, status, draft_data, created_at, updated_at } = draft;
@@ -250,29 +186,9 @@ export const useItemsData = () => {
         };
         seriesItems.push(seriesItem);
       }
-
-      if (draft_data && draft_data.characters && draft_data.characters.length > 0) {
-        // 캐릭터 아이템들 생성 (시리즈 ID와 함께 저장)
-        draft_data.characters.forEach((character, index) => {
-          const characterItem = {
-            id: `${id}_char_${index}`, // 캐릭터 고유 ID 생성
-            type: 'character',
-            title: character.display_name || character.name || '이름 없음',
-            description: character.role || '역할 없음',
-            status,
-            feedbackCount: 0,
-            createdAt: created_at,
-            aiGenerated: true,
-            seriesId: id, // 시리즈 ID 함께 저장
-            characterData: character,
-            content: JSON.stringify(character, null, 2)
-          };
-          characterItems.push(characterItem);
-        });
-      }
     });
 
-    return { seriesItems, characterItems };
+    return { seriesItems };
   };
 
   const fetchItemsData = useCallback(async () => {
@@ -290,19 +206,18 @@ export const useItemsData = () => {
       const response = await apiClient.get(endpoints.series.drafts);
       const draftItems = response.data || [];
 
-      // draft 데이터를 시리즈와 캐릭터로 분리
-      const { seriesItems, characterItems } = processDraftData(draftItems);
+      // draft 데이터를 시리즈로 변환
+      const { seriesItems } = processDraftData(draftItems);
 
       // 상태별로 분류 (현재는 모두 pending으로 처리)
       const processedData = {
         pending: {
           series: seriesItems,
-          character: characterItems,
           episode: [],
           video: []
         },
-        working: { series: [], character: [], episode: [], video: [] },
-        approved: { series: [], character: [], episode: [], video: [] },
+        working: { series: [], episode: [], video: [] },
+        approved: { series: [], episode: [], video: [] },
       };
 
       setItemsData(processedData);
