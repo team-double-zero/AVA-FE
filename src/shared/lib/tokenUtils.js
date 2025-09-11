@@ -1,5 +1,5 @@
 import * as cookieUtils from './cookieUtils';
-import { endpoints } from '../../api/endpoints';
+import { endpoints } from '../api/endpoints';
 
 // Access Token을 메모리에 저장 (보안상 안전)
 let accessToken = null;

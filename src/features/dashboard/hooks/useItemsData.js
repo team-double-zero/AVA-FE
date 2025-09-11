@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiClient, endpoints } from '../../../api';
+import { apiClient, endpoints } from '../../../shared/api';
 
 /**
  * 아이템 데이터를 관리하는 훅
@@ -168,7 +168,7 @@ export const useItemsData = () => {
     const seriesItems = [];
 
     draftItems.forEach(draft => {
-      const { id, status, draft_data, created_at, updated_at } = draft;
+      const { id, status, draft_data, created_at } = draft;
 
       if (draft_data && draft_data.series) {
         // 시리즈 아이템 생성
@@ -260,14 +260,17 @@ export const useItemsData = () => {
         return;
       }
 
-      // 프로덕션에서는 API 호출
-      const endpoint = {
-        series: endpoints.series.approve,
-        episode: endpoints.episodes.approve,
-        video: endpoints.videos.approve,
-      }[item.type];
+      // 프로덕션에서는 API 호출 (현재 시리즈만 지원)
+      let endpoint;
+      if (item.type === 'series') {
+        endpoint = `${endpoints.series.list}/${item.id}/approve`;
+      } else {
+        // 에피소드와 비디오는 아직 API 미지원
+        console.warn(`${item.type} 승인은 아직 지원되지 않습니다.`);
+        return;
+      }
 
-      await apiClient.post(endpoint(item.id));
+      await apiClient.post(endpoint);
       await fetchItemsData(); // 데이터 새로고침
     } catch (err) {
       setError(err.message);
@@ -306,14 +309,17 @@ export const useItemsData = () => {
         return;
       }
 
-      // 프로덕션에서는 API 호출
-      const endpoint = {
-        series: endpoints.series.feedback,
-        episode: endpoints.episodes.feedback,
-        video: endpoints.videos.feedback,
-      }[item.type];
+      // 프로덕션에서는 API 호출 (현재 시리즈만 지원)
+      let endpoint;
+      if (item.type === 'series') {
+        endpoint = `${endpoints.series.list}/${item.id}/feedback`;
+      } else {
+        // 에피소드와 비디오는 아직 API 미지원
+        console.warn(`${item.type} 피드백은 아직 지원되지 않습니다.`);
+        return;
+      }
 
-      await apiClient.post(endpoint(item.id), { feedback: feedbackText });
+      await apiClient.post(endpoint, { feedback: feedbackText });
       await fetchItemsData(); // 데이터 새로고침
     } catch (err) {
       setError(err.message);

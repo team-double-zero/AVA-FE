@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import './Auth.css';
-import { setAccessToken, setRefreshToken } from '../shared/lib/tokenUtils';
-import { endpoints } from '../api/endpoints';
+import '../Auth.css';
+import { setAccessToken, setRefreshToken } from '../../../shared/lib/tokenUtils';
+import { endpoints } from '../../../shared/api/endpoints';
 
-const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
+const LoginPage = ({ onLoginSuccess, onSwitchToSignup }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -30,7 +30,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           'Content-Type': 'application/json',
         },
       });
-      
+
       if (response.ok) {
         setServerStatus('online');
         return true;
@@ -75,14 +75,14 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       };
       const dummyAccessToken = 'dev_access_token_' + Date.now();
       const dummyRefreshToken = 'dev_refresh_token_' + Date.now();
-      
+
       // Access Token은 메모리에, Refresh Token은 쿠키에 저장
       console.log('💾 개발모드 토큰 저장 시작...');
       setAccessToken(dummyAccessToken);
       setRefreshToken(dummyRefreshToken);
       localStorage.setItem('userData', JSON.stringify(dummyUser));
       console.log('✅ 개발모드 토큰 저장 완료');
-      
+
       onLoginSuccess(dummyAccessToken, dummyUser);
       setLoading(false);
       return;
@@ -92,7 +92,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
     try {
       // 실제 API 요청
       console.log('Making login request to:', `${process.env.REACT_APP_DOMAIN}/api/v1/auth/login`);
-      
+
       const response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.login}`, {
         method: 'POST',
         mode: 'cors',
@@ -115,14 +115,14 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       if (response.ok && data.success) {
         // 로그인 성공
         const { access_token, refresh_token, user } = data.data;
-        
+
         // Access Token은 메모리에, Refresh Token은 쿠키에 저장
         console.log('💾 실제 로그인 토큰 저장 시작...');
         setAccessToken(access_token);
         setRefreshToken(refresh_token);
         localStorage.setItem('userData', JSON.stringify(user));
         console.log('✅ 실제 로그인 토큰 저장 완료');
-        
+
         onLoginSuccess(access_token, user);
       } else {
         // 로그인 실패
@@ -134,10 +134,10 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       }
     } catch (err) {
       console.error('Login error:', err);
-      
+
       // 에러 타입에 따른 상세한 메시지 제공
       let errorMessage = '서버에 연결할 수 없습니다.';
-      
+
       if (err.name === 'TypeError' && err.message.includes('fetch')) {
         errorMessage = '네트워크 연결을 확인해주세요. 서버에 접근할 수 없습니다.';
       } else if (err.message.includes('CORS')) {
@@ -145,11 +145,11 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       } else if (err.message.includes('SSL') || err.message.includes('certificate')) {
         errorMessage = 'SSL 인증서 문제로 서버에 접근할 수 없습니다.';
       }
-      
+
       // 개발자를 위한 추가 정보
       console.error('API Domain:', process.env.REACT_APP_DOMAIN);
       console.error('Full URL:', `${process.env.REACT_APP_DOMAIN}/api/v1/auth/login`);
-      
+
       // ========== 서버 연결 실패 시 개발 모드 폴백 ==========
       if (process.env.REACT_APP_DEV_MODE === 'true' && formData.email === 'admin' && formData.password === 'admin') {
         const dummyUser = {
@@ -163,18 +163,18 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
         };
         const dummyAccessToken = 'offline_access_token_' + Date.now();
         const dummyRefreshToken = 'offline_refresh_token_' + Date.now();
-        
+
         // Access Token은 메모리에, Refresh Token은 쿠키에 저장
         console.log('💾 오프라인 모드 토큰 저장 시작...');
         setAccessToken(dummyAccessToken);
         setRefreshToken(dummyRefreshToken);
         localStorage.setItem('userData', JSON.stringify(dummyUser));
         console.log('✅ 오프라인 모드 토큰 저장 완료');
-        
+
         onLoginSuccess(dummyAccessToken, dummyUser);
       } else {
-        const devModeHint = process.env.REACT_APP_DEV_MODE === 'true' 
-          ? ' 개발모드에서는 admin/admin으로 로그인 가능합니다.' 
+        const devModeHint = process.env.REACT_APP_DEV_MODE === 'true'
+          ? ' 개발모드에서는 admin/admin으로 로그인 가능합니다.'
           : '';
         setError(`${errorMessage} 잠시 후 다시 시도해주세요.${devModeHint}`);
       }
@@ -283,4 +283,4 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   );
 };
 
-export default Login;
+export default LoginPage;

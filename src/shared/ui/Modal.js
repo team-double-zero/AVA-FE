@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { clsx } from '../lib';
+import './Modal.css';
 
 /**
  * 공용 모달 컴포넌트
@@ -44,13 +44,11 @@ const Modal = ({
 
   if (!isOpen) return null;
 
-  const sizeClasses = {
-    small: 'max-w-md',
-    medium: 'max-w-lg',
-    large: 'max-w-2xl',
-    xlarge: 'max-w-4xl',
-    full: 'max-w-full mx-4',
-  };
+  const modalClasses = [
+    'modal',
+    `modal-${size}`,
+    className
+  ].filter(Boolean).join(' ');
 
   const backdropClick = (e) => {
     if (closeOnBackdrop && e.target === e.currentTarget) {
@@ -60,38 +58,34 @@ const Modal = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto"
+      className="modal-overlay"
       onClick={backdropClick}
     >
       {/* 배경 오버레이 */}
-      <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" />
-      
+      <div className="modal-backdrop" />
+
       {/* 모달 콘텐츠 */}
       <div
-        className={clsx(
-          'relative w-full bg-white rounded-lg shadow-xl',
-          sizeClasses[size],
-          className
-        )}
+        className={modalClasses}
         {...props}
       >
         {/* 헤더 */}
         {title && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+          <div className="modal-header">
+            <h3 className="modal-title">{title}</h3>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="modal-close-button"
             >
-              <svg className="w-6 h-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="modal-close-icon" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                 <path d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
         )}
-        
+
         {/* 바디 */}
-        <div className="p-6">
+        <div className="modal-body">
           {children}
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
-import './Analysis.css';
+import '../Analysis.css';
 
-const Analysis = () => {
+const AnalysisPage = () => {
   return (
     <div className="analysis">
       <div className="analysis-header">
@@ -38,4 +38,4 @@ const Analysis = () => {
   );
 };
 
-export default Analysis;
+export default AnalysisPage;

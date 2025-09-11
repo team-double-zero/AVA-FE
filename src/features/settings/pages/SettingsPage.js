@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './Setting.css';
+import '../Settings.css';
 
-const Setting = ({ onLogout }) => {
+const SettingsPage = ({ onLogout }) => {
   const [settings, setSettings] = useState({
     notifications: {
       email: true,
@@ -167,4 +167,4 @@ const Setting = ({ onLogout }) => {
   );
 };
 
-export default Setting;
+export default SettingsPage;

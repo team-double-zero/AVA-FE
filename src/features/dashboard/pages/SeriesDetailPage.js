@@ -1,7 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactJson from 'react-json-view';
-import { Card, Button } from '../../../shared/ui';
 import './SeriesDetailPage.css';
 import iconVideo from '../../../assets/icons/icon_video.svg';
 import iconCharacter from '../../../assets/icons/icon_character.svg';

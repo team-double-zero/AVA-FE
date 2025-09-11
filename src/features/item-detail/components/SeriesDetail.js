@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import './ItemDetail.css';
+import '../ItemDetail.css';
 
 const SeriesDetail = ({ item, onBack, onApprove, onFeedback }) => {
   const [feedbackText, setFeedbackText] = useState('');

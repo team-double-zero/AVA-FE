@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import './ItemDetail.css';
+import ReactMarkdown from 'react-markdown';
+import '../ItemDetail.css';
 
-const VideoDetail = ({ item, onBack, onApprove, onFeedback }) => {
+const CharacterDetail = ({ item, onBack, onApprove, onFeedback }) => {
   const [feedbackText, setFeedbackText] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [expandedFeedback, setExpandedFeedback] = useState({});
-  const [videoError, setVideoError] = useState(false);
 
   const handleSubmitFeedback = () => {
     if (feedbackText.trim()) {
@@ -33,11 +33,8 @@ const VideoDetail = ({ item, onBack, onApprove, onFeedback }) => {
           <h1 className="detail-title">{item.title}</h1>
           <p className="detail-description">{item.description}</p>
           <div className="detail-meta">
-            <span className="detail-type">🎬 영상</span>
+            <span className="detail-type">👤 캐릭터</span>
             <span className="detail-date">생성일: {item.createdAt}</span>
-            {item.duration && (
-              <span className="detail-duration">⏱️ {item.duration}</span>
-            )}
             {item.feedbackCount > 0 && (
               <span className="detail-feedback">💬 피드백 {item.feedbackCount}개</span>
             )}
@@ -46,50 +43,33 @@ const VideoDetail = ({ item, onBack, onApprove, onFeedback }) => {
       </div>
 
       <div className="detail-content">
-        {/* 비디오 플레이어 */}
-        <div className="video-section">
-          <h2>영상</h2>
-          <div className="video-container">
-            {item.videoUrl && !videoError ? (
-              <video 
-                controls 
-                className="video-player"
-                onError={() => setVideoError(true)}
-              >
-                <source src={item.videoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            ) : (
-              <div className="video-placeholder">
-                <span>🎬</span>
-                <p>{videoError ? '영상을 불러올 수 없습니다' : '영상이 생성 중입니다'}</p>
-                {item.duration && <small>예상 길이: {item.duration}</small>}
-              </div>
-            )}
+        {/* 캐릭터 이미지 */}
+        <div className="character-image-section">
+          <h2>캐릭터 이미지</h2>
+          <div className="character-image-container">
+            {item.imageUrl ? (
+              <img 
+                src={item.imageUrl} 
+                alt={item.title}
+                className="character-image"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <div className="image-placeholder" style={{ display: item.imageUrl ? 'none' : 'flex' }}>
+              <span>🎨</span>
+              <p>캐릭터 이미지가 생성 중입니다</p>
+            </div>
           </div>
         </div>
 
-        {/* 영상 정보 */}
-        <div className="video-info-section">
-          <h2>영상 정보</h2>
-          <div className="video-info">
-            <div className="info-item">
-              <strong>제목:</strong> {item.title}
-            </div>
-            <div className="info-item">
-              <strong>설명:</strong> {item.description}
-            </div>
-            {item.duration && (
-              <div className="info-item">
-                <strong>재생 시간:</strong> {item.duration}
-              </div>
-            )}
-            <div className="info-item">
-              <strong>생성일:</strong> {item.createdAt}
-            </div>
-            <div className="info-item">
-              <strong>AI 생성:</strong> {item.aiGenerated ? '예' : '아니오'}
-            </div>
+        {/* 캐릭터 설정 */}
+        <div className="content-section">
+          <h2>캐릭터 설정</h2>
+          <div className="markdown-content">
+            <ReactMarkdown>{item.content || '## 캐릭터 프로필\n\n캐릭터 설정이 여기에 표시됩니다.'}</ReactMarkdown>
           </div>
         </div>
 
@@ -146,7 +126,7 @@ const VideoDetail = ({ item, onBack, onApprove, onFeedback }) => {
             <textarea
               value={feedbackText}
               onChange={(e) => setFeedbackText(e.target.value)}
-              placeholder="영상 개선사항이나 수정 요청을 입력해주세요..."
+              placeholder="캐릭터 개선사항이나 수정 요청을 입력해주세요..."
               rows={4}
             />
             <div className="feedback-actions">
@@ -163,4 +143,4 @@ const VideoDetail = ({ item, onBack, onApprove, onFeedback }) => {
   );
 };
 
-export default VideoDetail;
+export default CharacterDetail;

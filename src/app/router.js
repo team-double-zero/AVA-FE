@@ -2,9 +2,9 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // 기존 컴포넌트들 (Tailwind CSS 문제로 임시 복구)
-import Dashboard from '../components_backup/Dashboard';
-import Analysis from '../components_backup/Analysis';
-import Setting from '../components_backup/Setting';
+import DashboardPage from '../features/dashboard/pages/DashboardPage';
+import { AnalysisPage } from '../features/analysis';
+import { SettingsPage } from '../features/settings';
 
 // 새로운 컴포넌트들
 import SeriesDetailPage from '../features/dashboard/pages/SeriesDetailPage';
@@ -24,31 +24,23 @@ export const AppRoutes = ({
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route 
-        path="/dashboard" 
+      <Route
+        path="/dashboard"
         element={
-          <Dashboard 
+          <DashboardPage
             itemsData={itemsData}
             onItemClick={onItemClick}
             user={user}
           />
-        } 
+        }
       />
-      <Route 
-        path="/dashboard/series/:seriesId" 
+      <Route
+        path="/dashboard/series/:seriesId"
         element={
-          <SeriesDetailPage 
+          <SeriesDetailPage
             itemsData={itemsData}
           />
-        } 
-      />
-      <Route 
-        path="/dashboard/series/:seriesId" 
-        element={
-          <SeriesDetailPage 
-            itemsData={itemsData}
-          />
-        } 
+        }
       />
       <Route
         path="/browse"
@@ -56,11 +48,11 @@ export const AppRoutes = ({
       />
       <Route 
         path="/analysis" 
-        element={<Analysis />} 
+        element={<AnalysisPage />} 
       />
       <Route 
         path="/setting" 
-        element={<Setting onLogout={onLogout} />} 
+        element={<SettingsPage onLogout={onLogout} />} 
       />
       {/* 404 페이지 */}
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
