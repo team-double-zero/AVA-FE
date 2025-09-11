@@ -4,7 +4,7 @@ import { tokenUtils } from '../lib';
  * API 클라이언트 - TanStack Query와 함께 사용할 fetch 래퍼
  */
 class ApiClient {
-  constructor(baseURL = process.env.REACT_APP_DOMAIN || '') {
+  constructor(baseURL = import.meta.env.VITE_DOMAIN || '') {
     this.baseURL = baseURL;
   }
 

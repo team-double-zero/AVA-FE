@@ -24,7 +24,7 @@ const DashboardPage = ({ itemsData, onItemClick, user }) => {
     const fetchUserData = async () => {
       try {
         // 개발 모드에서는 API 요청을 스킵
-        if (process.env.REACT_APP_DEV_MODE === 'true') {
+        if (import.meta.env.VITE_DEV_MODE === 'true') {
           console.log('개발 모드: API 요청 스킵');
           return;
         }
@@ -33,7 +33,7 @@ const DashboardPage = ({ itemsData, onItemClick, user }) => {
 
         // apiRequest는 자동으로 Access Token을 헤더에 추가하고
         // 401 에러 시 토큰을 갱신한 후 재시도합니다
-        const response = await apiRequest(`${process.env.REACT_APP_DOMAIN}/api/v1/user/profile`);
+        const response = await apiRequest(`${import.meta.env.VITE_DOMAIN}/api/v1/user/profile`);
 
         if (response.ok) {
           const userData = await response.json();

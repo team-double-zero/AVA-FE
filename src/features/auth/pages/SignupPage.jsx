@@ -24,7 +24,7 @@ const SignupPage = ({ onSwitchToLogin }) => {
 
   const validateForm = () => {
     // 개발 모드가 아닐 때만 이메일 형식 검사
-    if (process.env.REACT_APP_DEV_MODE !== 'true') {
+    if (import.meta.env.VITE_DEV_MODE !== 'true') {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
         setError('올바른 이메일 형식을 입력해주세요.');
@@ -57,7 +57,7 @@ const SignupPage = ({ onSwitchToLogin }) => {
 
     try {
       // 실제 API 요청
-      const response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.register}`, {
+      const response = await fetch(`${import.meta.env.VITE_DOMAIN}${endpoints.auth.register}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const SignupPage = ({ onSwitchToLogin }) => {
 
     try {
       // 이메일 재전송 API 호출
-      const response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.resendVerification}`, {
+      const response = await fetch(`${import.meta.env.VITE_DOMAIN}${endpoints.auth.resendVerification}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -167,12 +167,12 @@ const SignupPage = ({ onSwitchToLogin }) => {
           <div className="form-group">
             <label htmlFor="email">이메일</label>
             <input
-              type={process.env.REACT_APP_DEV_MODE === 'true' ? 'text' : 'email'}
+              type={import.meta.env.VITE_DEV_MODE === 'true' ? 'text' : 'email'}
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder={process.env.REACT_APP_DEV_MODE === 'true' ? 'test@example.com 또는 이메일을 입력하세요' : '이메일을 입력하세요'}
+              placeholder={import.meta.env.VITE_DEV_MODE === 'true' ? 'test@example.com 또는 이메일을 입력하세요' : '이메일을 입력하세요'}
               required
             />
           </div>
