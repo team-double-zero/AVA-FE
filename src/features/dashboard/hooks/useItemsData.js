@@ -197,12 +197,12 @@ export const useItemsData = () => {
       setError(null);
 
       // 개발 모드에서는 더미 데이터 사용
-      if (process.env.REACT_APP_DEV_MODE === 'true') {
+      if (import.meta.env.VITE_DEV_MODE === 'true') {
         setItemsData(getDummyData());
         return;
       }
 
-      // 프로덕션에서는 시리즈 초안 API 호출
+      // 프로덕션에서는 시리즈 초안 API 호출 (원래대로)
       const response = await apiClient.get(endpoints.series.drafts);
       const draftItems = response.data || [];
 
@@ -236,7 +236,7 @@ export const useItemsData = () => {
   const approveItem = useCallback(async (item) => {
     try {
       // 개발 모드에서는 클라이언트 사이드에서만 처리
-      if (process.env.REACT_APP_DEV_MODE === 'true') {
+      if (import.meta.env.VITE_DEV_MODE === 'true') {
         setItemsData(prevData => {
           const newData = { ...prevData };
           
@@ -282,7 +282,7 @@ export const useItemsData = () => {
   const submitFeedback = useCallback(async (item, feedbackText) => {
     try {
       // 개발 모드에서는 클라이언트 사이드에서만 처리
-      if (process.env.REACT_APP_DEV_MODE === 'true') {
+      if (import.meta.env.VITE_DEV_MODE === 'true') {
         setItemsData(prevData => {
           const newData = { ...prevData };
           

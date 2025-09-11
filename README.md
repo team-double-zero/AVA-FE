@@ -55,7 +55,7 @@ npm start
 
 `.env` 파일에서 개발 모드를 활성화:
 ```env
-REACT_APP_DEV_MODE=true
+VITE_DEV_MODE=true
 ```
 
 개발 모드가 활성화되면:
@@ -67,7 +67,7 @@ REACT_APP_DEV_MODE=true
 ### 개발 모드 비활성화
 운영 환경에서는 반드시 개발 모드를 비활성화하세요:
 ```env
-REACT_APP_DEV_MODE=false
+VITE_DEV_MODE=false
 ```
 
 ### 3. 빌드
@@ -78,9 +78,17 @@ npm run build
 ## 기술 스택
 
 - **React** 18.2.0
+- **Vite** 7.1.5 (빌드 도구)
+- **React Router DOM** 7.8.1
 - **CSS3** (Grid, Flexbox)
 - **Responsive Design**
 - **Modern JavaScript (ES6+)**
+
+### Vite 마이그레이션 (2025.09.11)
+- Create React App에서 Vite로 마이그레이션 완료
+- ⚡ 빌드 속도 10-100배 향상
+- 🔧 더 유연한 개발 환경
+- 📦 최적화된 번들 사이즈
 
 ## 프로젝트 구조
 

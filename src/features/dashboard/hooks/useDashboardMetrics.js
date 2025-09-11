@@ -24,7 +24,7 @@ export const useDashboardMetrics = () => {
       setError(null);
       
       // 개발 모드에서는 더미 데이터 사용
-      if (process.env.REACT_APP_DEV_MODE === 'true') {
+      if (import.meta.env.VITE_DEV_MODE === 'true') {
         // 실제 itemsData에서 계산된 메트릭스를 반환하도록 수정 예정
         setMetrics({
           totalSeries: 12, // 기존 시리즈 8 + 캐릭터 4 = 12

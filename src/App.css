@@ -383,7 +383,7 @@ html, body {
   margin: 0 10px 40px 10px;
   min-height: calc(100vh - 180px);
   height: calc(100%);
-  max-height: calc(100%-180px);
+  max-height: calc(100% - 180px);
   overflow-y: auto;
 
   /* 유리판 본체: 반투명 배경 */

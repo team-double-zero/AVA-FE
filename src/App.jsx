@@ -22,6 +22,7 @@ import iconSetting from './assets/icons/icon_setting.svg';
 function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
+
   
   // 기본 상태
   const [user, setUser] = useState(null);
@@ -29,10 +30,10 @@ function AppContent() {
   const [currentView, setCurrentView] = useState({ type: 'tab', data: null });
   const [showAuthModal, setShowAuthModal] = useState('login');
 
-  // 아이템 데이터 관리 (새로운 훅 사용)
-  const { 
-    itemsData, 
-    // isLoading: itemsLoading, 
+  // 아이템 데이터 관리 (실제 API 사용)
+  const {
+    itemsData,
+    // isLoading: itemsLoading,
     // error: itemsError,
   } = useItemsData();
 
@@ -148,18 +149,19 @@ function AppContent() {
     return (
       <div className="auth-container">
         {showAuthModal === 'login' ? (
-          <Login 
+          <Login
             onLoginSuccess={handleLoginSuccess}
             onSwitchToSignup={() => handleAuthSwitch('signup')}
           />
         ) : (
-          <Signup 
+          <Signup
             onSwitchToLogin={() => handleAuthSwitch('login')}
           />
         )}
       </div>
     );
   }
+
 
   return (
     <div className="app">
@@ -182,7 +184,7 @@ function AppContent() {
           <div className="tabs-container">
             <div className="tab-panel">
               <main className="main-content">
-                <AppRoutes 
+                <AppRoutes
                   itemsData={itemsData}
                   onItemClick={handleItemClick}
                   onApprove={handleApprove}
