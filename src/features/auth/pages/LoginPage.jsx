@@ -23,7 +23,7 @@ const LoginPage = ({ onLoginSuccess, onSwitchToSignup }) => {
   // 서버 연결 상태 확인
   const checkServerStatus = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_DOMAIN}/api/v1/health`, {
+      const response = await fetch(`${import.meta.env.VITE_DOMAIN}/api/v1/health`, {
         method: 'GET',
         mode: 'cors',
         headers: {
@@ -62,8 +62,8 @@ const LoginPage = ({ onLoginSuccess, onSwitchToSignup }) => {
     }
 
     // ========== 개발 모드 테스트 로그인 ==========
-    // .env에서 REACT_APP_DEV_MODE=true로 설정하면 admin/admin으로 테스트 로그인 가능
-    if (process.env.REACT_APP_DEV_MODE === 'true' && formData.email === 'admin' && formData.password === 'admin') {
+    // .env에서 VITE_DEV_MODE=true로 설정하면 admin/admin으로 테스트 로그인 가능
+    if (import.meta.env.VITE_DEV_MODE === 'true' && formData.email === 'admin' && formData.password === 'admin') {
       const dummyUser = {
         id: 1,
         email: 'admin@test.com',
@@ -91,9 +91,9 @@ const LoginPage = ({ onLoginSuccess, onSwitchToSignup }) => {
 
     try {
       // 실제 API 요청
-      console.log('Making login request to:', `${process.env.REACT_APP_DOMAIN}/api/v1/auth/login`);
+      console.log('Making login request to:', `${import.meta.env.VITE_DOMAIN}/api/v1/auth/login`);
 
-      const response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.login}`, {
+      const response = await fetch(`${import.meta.env.VITE_DOMAIN}${endpoints.auth.login}`, {
         method: 'POST',
         mode: 'cors',
         credentials: 'include',
@@ -147,11 +147,11 @@ const LoginPage = ({ onLoginSuccess, onSwitchToSignup }) => {
       }
 
       // 개발자를 위한 추가 정보
-      console.error('API Domain:', process.env.REACT_APP_DOMAIN);
-      console.error('Full URL:', `${process.env.REACT_APP_DOMAIN}/api/v1/auth/login`);
+      console.error('API Domain:', import.meta.env.VITE_DOMAIN);
+      console.error('Full URL:', `${import.meta.env.VITE_DOMAIN}/api/v1/auth/login`);
 
       // ========== 서버 연결 실패 시 개발 모드 폴백 ==========
-      if (process.env.REACT_APP_DEV_MODE === 'true' && formData.email === 'admin' && formData.password === 'admin') {
+      if (import.meta.env.VITE_DEV_MODE === 'true' && formData.email === 'admin' && formData.password === 'admin') {
         const dummyUser = {
           id: 1,
           email: 'admin@test.com',
@@ -173,7 +173,7 @@ const LoginPage = ({ onLoginSuccess, onSwitchToSignup }) => {
 
         onLoginSuccess(dummyAccessToken, dummyUser);
       } else {
-        const devModeHint = process.env.REACT_APP_DEV_MODE === 'true'
+        const devModeHint = import.meta.env.VITE_DEV_MODE === 'true'
           ? ' 개발모드에서는 admin/admin으로 로그인 가능합니다.'
           : '';
         setError(`${errorMessage} 잠시 후 다시 시도해주세요.${devModeHint}`);
@@ -193,15 +193,15 @@ const LoginPage = ({ onLoginSuccess, onSwitchToSignup }) => {
       <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">
-              {process.env.REACT_APP_DEV_MODE === 'true' ? '이메일 또는 아이디' : '이메일'}
+              {import.meta.env.VITE_DEV_MODE === 'true' ? '이메일 또는 아이디' : '이메일'}
             </label>
             <input
-              type={process.env.REACT_APP_DEV_MODE === 'true' ? 'text' : 'email'}
+              type={import.meta.env.VITE_DEV_MODE === 'true' ? 'text' : 'email'}
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder={process.env.REACT_APP_DEV_MODE === 'true' ? "이메일 또는 아이디를 입력하세요" : "이메일을 입력하세요"}
+              placeholder={import.meta.env.VITE_DEV_MODE === 'true' ? "이메일 또는 아이디를 입력하세요" : "이메일을 입력하세요"}
               required
             />
           </div>
@@ -245,7 +245,7 @@ const LoginPage = ({ onLoginSuccess, onSwitchToSignup }) => {
             🔄 서버 연결 확인
           </button>
 
-          {process.env.REACT_APP_DEV_MODE === 'true' && (
+          {import.meta.env.VITE_DEV_MODE === 'true' && (
             <div className="info-message" style={{
               background: '#e3f2fd',
               color: '#1976d2',

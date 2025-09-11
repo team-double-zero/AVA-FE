@@ -39,7 +39,7 @@ export const useApprovedData = () => {
       setError(null);
 
       // 개발 모드에서는 더미 데이터 사용
-      if (process.env.REACT_APP_DEV_MODE === 'true') {
+      if (import.meta.env.VITE_DEV_MODE === 'true') {
         const dummySeries = [
           {
             id: 1,

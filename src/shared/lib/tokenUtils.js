@@ -258,7 +258,7 @@ export const refreshAccessToken = async () => {
   try {
     console.log('📤 첫 번째 시도: Authorization 헤더로 Refresh Token 전송');
 
-    let response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.refresh}`, {
+    let response = await fetch(`${import.meta.env.VITE_DOMAIN}${endpoints.auth.refresh}`, {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
@@ -276,7 +276,7 @@ export const refreshAccessToken = async () => {
     if (!response.ok && response.status === 401) {
       console.log('📤 두 번째 시도: Body로 Refresh Token 전송');
       
-      response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.refresh}`, {
+      response = await fetch(`${import.meta.env.VITE_DOMAIN}${endpoints.auth.refresh}`, {
         method: 'POST',
         mode: 'cors',
         credentials: 'include',
@@ -352,7 +352,7 @@ export const refreshAccessToken = async () => {
 // API 요청 래퍼 함수 (자동 토큰 갱신 포함)
 export const apiRequest = async (url, options = {}) => {
   // 개발 모드에서는 토큰 없이 요청
-  if (process.env.REACT_APP_DEV_MODE === 'true') {
+  if (import.meta.env.VITE_DEV_MODE === 'true') {
     console.log('개발 모드: 토큰 없이 API 요청');
     return await fetch(url, {
       ...options,
@@ -395,7 +395,7 @@ export const apiRequest = async (url, options = {}) => {
     tokenExpired,
     tokenExpiringSoon,
     hasStoredValidToken,
-    url: url.replace(process.env.REACT_APP_DOMAIN || '', '')
+    url: url.replace(import.meta.env.VITE_DOMAIN || '', '')
   });
 
   // Access Token이 없거나 만료되었거나 곧 만료될 예정이면 갱신
