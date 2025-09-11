@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import './ItemDetail.css';
+import '../ItemDetail.css';
 
-const CharacterDetail = ({ item, onBack, onApprove, onFeedback }) => {
+const EpisodeDetail = ({ item, onBack, onApprove, onFeedback }) => {
   const [feedbackText, setFeedbackText] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [expandedFeedback, setExpandedFeedback] = useState({});
@@ -33,7 +33,7 @@ const CharacterDetail = ({ item, onBack, onApprove, onFeedback }) => {
           <h1 className="detail-title">{item.title}</h1>
           <p className="detail-description">{item.description}</p>
           <div className="detail-meta">
-            <span className="detail-type">👤 캐릭터</span>
+            <span className="detail-type">📖 에피소드</span>
             <span className="detail-date">생성일: {item.createdAt}</span>
             {item.feedbackCount > 0 && (
               <span className="detail-feedback">💬 피드백 {item.feedbackCount}개</span>
@@ -43,33 +43,10 @@ const CharacterDetail = ({ item, onBack, onApprove, onFeedback }) => {
       </div>
 
       <div className="detail-content">
-        {/* 캐릭터 이미지 */}
-        <div className="character-image-section">
-          <h2>캐릭터 이미지</h2>
-          <div className="character-image-container">
-            {item.imageUrl ? (
-              <img 
-                src={item.imageUrl} 
-                alt={item.title}
-                className="character-image"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
-                }}
-              />
-            ) : null}
-            <div className="image-placeholder" style={{ display: item.imageUrl ? 'none' : 'flex' }}>
-              <span>🎨</span>
-              <p>캐릭터 이미지가 생성 중입니다</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 캐릭터 설정 */}
         <div className="content-section">
-          <h2>캐릭터 설정</h2>
+          <h2>에피소드 내용</h2>
           <div className="markdown-content">
-            <ReactMarkdown>{item.content || '## 캐릭터 프로필\n\n캐릭터 설정이 여기에 표시됩니다.'}</ReactMarkdown>
+            <ReactMarkdown>{item.content || '# 에피소드\n\n에피소드 내용이 여기에 표시됩니다.'}</ReactMarkdown>
           </div>
         </div>
 
@@ -126,7 +103,7 @@ const CharacterDetail = ({ item, onBack, onApprove, onFeedback }) => {
             <textarea
               value={feedbackText}
               onChange={(e) => setFeedbackText(e.target.value)}
-              placeholder="캐릭터 개선사항이나 수정 요청을 입력해주세요..."
+              placeholder="에피소드 개선사항이나 수정 요청을 입력해주세요..."
               rows={4}
             />
             <div className="feedback-actions">
@@ -143,4 +120,4 @@ const CharacterDetail = ({ item, onBack, onApprove, onFeedback }) => {
   );
 };
 
-export default CharacterDetail;
+export default EpisodeDetail;

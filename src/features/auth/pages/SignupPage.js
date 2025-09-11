@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import './Auth.css';
-import { endpoints } from '../api/endpoints';
+import '../Auth.css';
+import { endpoints } from '../../../shared/api/endpoints';
 
-const Signup = ({ onSwitchToLogin }) => {
+const SignupPage = ({ onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -31,7 +31,7 @@ const Signup = ({ onSwitchToLogin }) => {
         return false;
       }
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       setError('비밀번호가 일치하지 않습니다.');
       return false;
@@ -49,7 +49,7 @@ const Signup = ({ onSwitchToLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setLoading(true);
@@ -90,7 +90,7 @@ const Signup = ({ onSwitchToLogin }) => {
     setLoading(true);
     setError('');
     setSuccess('');
-    
+
     try {
       // 이메일 재전송 API 호출
       const response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.resendVerification}`, {
@@ -130,7 +130,7 @@ const Signup = ({ onSwitchToLogin }) => {
           <div className="verification-content">
             <div className="verification-icon">📧</div>
             <p>이메일의 인증 링크를 클릭하여 회원가입을 완료해주세요.</p>
-            
+
             {success && <div className="success-message">{success}</div>}
             {error && <div className="error-message">{error}</div>}
 
@@ -244,4 +244,4 @@ const Signup = ({ onSwitchToLogin }) => {
   );
 };
 
-export default Signup;
+export default SignupPage;

@@ -11,12 +11,9 @@ import './BrowsePage.css';
 const BrowsePage = () => {
   const {
     approvedSeries,
-    approvedCharacters,
     isLoading,
     error,
-    getSeriesCharacters,
-    getSeriesById,
-    getCharacterById
+    getSeriesCharacters
   } = useApprovedData();
 
   const [selectedSeries, setSelectedSeries] = useState(null);

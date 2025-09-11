@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiClient, endpoints } from '../../../api';
+import { apiClient, endpoints } from '../../../shared/api';
 
 /**
  * 승인된 아이템 데이터를 관리하는 훅 (Browse 전용)

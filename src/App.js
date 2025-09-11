@@ -6,13 +6,12 @@ import './App.css';
 import { AppProvider, ErrorBoundary, AppRoutes } from './app/index';
 import { useItemsData } from './features/dashboard/hooks';
 import { SeriesDetailPage } from './features/dashboard';
-import { BrowsePage } from './features/browse';
 import { tokenUtils } from './shared/lib';
 
 // 기존 컴포넌트들 (임시로 사용)
-import Login from './components/Login';
-import Signup from './components/Signup';
-import ItemDetail from './components/ItemDetail';
+import { LoginPage as Login } from './features/auth';
+import { SignupPage as Signup } from './features/auth';
+import { ItemDetail } from './features/item-detail';
 
 // 아이콘 imports
 import iconDashboard from './assets/icons/icon_dashboard.svg';

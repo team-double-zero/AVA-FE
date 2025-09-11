@@ -1,4 +1,4 @@
-import { tokenUtils } from '../shared/lib';
+import { tokenUtils } from '../lib';
 
 /**
  * API 클라이언트 - TanStack Query와 함께 사용할 fetch 래퍼
