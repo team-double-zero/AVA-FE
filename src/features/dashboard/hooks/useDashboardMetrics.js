@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { apiClient, endpoints } from '../../../api';
+import { apiClient, endpoints } from '../../../shared/api';
 
 /**
  * 대시보드 메트릭스 데이터를 관리하는 훅
@@ -39,8 +39,25 @@ export const useDashboardMetrics = () => {
         return;
       }
 
-      const data = await apiClient.get(endpoints.dashboard.metrics);
-      setMetrics(data);
+      // 프로덕션에서는 시리즈와 캐릭터 데이터를 조합하여 메트릭스 계산
+      const [seriesResponse, charactersResponse] = await Promise.all([
+        apiClient.get(endpoints.series.list),
+        apiClient.get(endpoints.characters.list)
+      ]);
+
+      const seriesData = seriesResponse.data || [];
+      const charactersData = charactersResponse.data || [];
+
+      setMetrics({
+        totalSeries: seriesData.length + charactersData.length, // 시리즈 + 캐릭터
+        totalEpisodes: 0, // 현재 API에 없는 데이터
+        totalVideos: 0,   // 현재 API에 없는 데이터
+        pendingItems: 0,  // 현재 API에 없는 데이터
+        workingItems: 0,  // 현재 API에 없는 데이터
+        approvedItems: seriesData.length + charactersData.length,
+        todayGenerated: 0, // 현재 API에 없는 데이터
+        weeklyGenerated: 0, // 현재 API에 없는 데이터
+      });
     } catch (err) {
       setError(err.message);
       console.error('Failed to fetch dashboard metrics:', err);

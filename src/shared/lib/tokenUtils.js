@@ -1,4 +1,5 @@
 import * as cookieUtils from './cookieUtils';
+import { endpoints } from '../api/endpoints';
 
 // Access Token을 메모리에 저장 (보안상 안전)
 let accessToken = null;
@@ -257,7 +258,7 @@ export const refreshAccessToken = async () => {
   try {
     console.log('📤 첫 번째 시도: Authorization 헤더로 Refresh Token 전송');
 
-    let response = await fetch(`${process.env.REACT_APP_DOMAIN}/api/v1/auth/refresh`, {
+    let response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.refresh}`, {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
@@ -275,7 +276,7 @@ export const refreshAccessToken = async () => {
     if (!response.ok && response.status === 401) {
       console.log('📤 두 번째 시도: Body로 Refresh Token 전송');
       
-      response = await fetch(`${process.env.REACT_APP_DOMAIN}/api/v1/auth/refresh`, {
+      response = await fetch(`${process.env.REACT_APP_DOMAIN}${endpoints.auth.refresh}`, {
         method: 'POST',
         mode: 'cors',
         credentials: 'include',

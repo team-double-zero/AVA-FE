@@ -1,0 +1,41 @@
+/* Card Component Styles */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.card-padded {
+  padding: 24px;
+}
+
+.card-shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-hover {
+  transition: box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.card-hover:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Sub-components */
+.card-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.card-body {
+  /* 기본 스타일 없음 */
+}
+
+.card-footer {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+  margin-top: 16px;
+}

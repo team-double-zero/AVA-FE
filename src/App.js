@@ -9,9 +9,9 @@ import { SeriesDetailPage } from './features/dashboard';
 import { tokenUtils } from './shared/lib';
 
 // 기존 컴포넌트들 (임시로 사용)
-import Login from './components/Login';
-import Signup from './components/Signup';
-import ItemDetail from './components/ItemDetail';
+import { LoginPage as Login } from './features/auth';
+import { SignupPage as Signup } from './features/auth';
+import { ItemDetail } from './features/item-detail';
 
 // 아이콘 imports
 import iconDashboard from './assets/icons/icon_dashboard.svg';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { clsx } from '../lib';
+import './Card.css';
 
 /**
  * 공용 카드 컴포넌트
@@ -13,17 +13,13 @@ const Card = ({
   onClick,
   ...props
 }) => {
-  const baseClasses = 'bg-white rounded-lg border border-gray-200';
-  
-  const classes = clsx(
-    baseClasses,
-    {
-      'p-6': padding,
-      'shadow-sm': shadow,
-      'hover:shadow-md transition-shadow cursor-pointer': hover || onClick,
-    },
+  const classes = [
+    'card',
+    padding ? 'card-padded' : '',
+    shadow ? 'card-shadow' : '',
+    hover || onClick ? 'card-hover' : '',
     className
-  );
+  ].filter(Boolean).join(' ');
 
   const Component = onClick ? 'button' : 'div';
 
@@ -40,19 +36,19 @@ const Card = ({
 
 // Card 하위 컴포넌트들
 Card.Header = ({ children, className = '', ...props }) => (
-  <div className={clsx('border-b border-gray-200 pb-4 mb-4', className)} {...props}>
+  <div className={`card-header ${className}`} {...props}>
     {children}
   </div>
 );
 
 Card.Body = ({ children, className = '', ...props }) => (
-  <div className={clsx('', className)} {...props}>
+  <div className={`card-body ${className}`} {...props}>
     {children}
   </div>
 );
 
 Card.Footer = ({ children, className = '', ...props }) => (
-  <div className={clsx('border-t border-gray-200 pt-4 mt-4', className)} {...props}>
+  <div className={`card-footer ${className}`} {...props}>
     {children}
   </div>
 );

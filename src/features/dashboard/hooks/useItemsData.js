@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiClient, endpoints } from '../../../api';
+import { apiClient, endpoints } from '../../../shared/api';
 
 /**
  * 아이템 데이터를 관리하는 훅
@@ -18,11 +18,11 @@ export const useItemsData = () => {
     const rawData = {
       pending: {
         series: [
-          { 
-            id: 1, 
+          {
+            id: 1,
             type: 'series',
-            title: '미래형 도시 시리즈', 
-            description: '미래형 디스토피아 시리즈', 
+            title: '미래형 도시 시리즈',
+            description: '미래형 디스토피아 시리즈',
             status: 'pending',
             feedbackCount: 0,
             createdAt: '2024-01-15',
@@ -30,49 +30,25 @@ export const useItemsData = () => {
             content: '# 네오 시티 시리즈\n\n2087년, 기술과 자본이 지배하는 거대 도시를 배경으로 한 시리즈입니다...',
             feedbackHistory: []
           },
-          { 
-            id: 2, 
+          {
+            id: 2,
             type: 'series',
-            title: '판타지 왕국 시리즈', 
-            description: '중세 판타지 시리즈', 
-            status: 'review', 
+            title: '판타지 왕국 시리즈',
+            description: '중세 판타지 시리즈',
+            status: 'review',
             feedbackCount: 2,
             createdAt: '2024-01-14',
             aiGenerated: true,
             content: '# 아르카나 시리즈\n\n마법이 존재하는 중세 판타지 세계를 배경으로 한 시리즈...',
             feedbackHistory: []
           },
-          // 기존 캐릭터를 시리즈로 통합
-          { 
-            id: 101, 
-            type: 'series',
-            title: '주인공 - 알렉스', 
-            description: '사이버 해커 캐릭터', 
-            status: 'pending',
-            feedbackCount: 1,
-            createdAt: '2024-01-16',
-            aiGenerated: true,
-            seriesId: 1,
-            isCharacter: true, // 원래 캐릭터였음을 표시
-            imageUrl: '/images/alex-character.jpg',
-            content: '## 캐릭터 프로필\n\n**이름**: 알렉스 첸\n**나이**: 28세\n**직업**: 사이버 해커...',
-            feedbackHistory: [],
-            characters: [
-              {
-                id: 1,
-                name: '알렉스 첸',
-                description: '뛰어난 해킹 실력을 가진 28세 사이버 해커',
-                traits: ['똑똑함', '신중함', '정의감']
-              }
-            ]
-          },
         ],
         episode: [
-          { 
-            id: 1, 
+          {
+            id: 1,
             type: 'episode',
-            title: '첫 번째 만남', 
-            description: '주인공과 조력자의 첫 만남', 
+            title: '첫 번째 만남',
+            description: '주인공과 조력자의 첫 만남',
             status: 'pending',
             feedbackCount: 0,
             createdAt: '2024-01-20',
@@ -83,11 +59,11 @@ export const useItemsData = () => {
           },
         ],
         video: [
-          { 
-            id: 1, 
+          {
+            id: 1,
             type: 'video',
-            title: '오프닝 영상', 
-            description: '게임 인트로 영상', 
+            title: '오프닝 영상',
+            description: '게임 인트로 영상',
             status: 'pending',
             feedbackCount: 0,
             createdAt: '2024-01-22',
@@ -100,11 +76,11 @@ export const useItemsData = () => {
       },
       working: {
         series: [
-          { 
-            id: 4, 
+          {
+            id: 4,
             type: 'series',
-            title: '우주 전쟁 시리즈', 
-            description: 'SF 우주 배경 시리즈', 
+            title: '우주 전쟁 시리즈',
+            description: 'SF 우주 배경 시리즈',
             status: 'generating',
             feedbackCount: 3,
             createdAt: '2024-01-13',
@@ -119,10 +95,10 @@ export const useItemsData = () => {
       },
       approved: {
         series: [
-          { 
-            id: 5, 
-            type: 'series', 
-            title: '아르카디아 시리즈', 
+          {
+            id: 5,
+            type: 'series',
+            title: '아르카디아 시리즈',
             description: '판타지 중세 시리즈',
             status: 'approved',
             feedbackCount: 0,
@@ -131,37 +107,12 @@ export const useItemsData = () => {
             content: '# 아르카디아 시리즈\n\n마법과 검이 공존하는 판타지 세계를 배경으로 한 시리즈...',
             feedbackHistory: []
           },
-          // 기존 캐릭터를 시리즈로 통합
-          { 
-            id: 105, 
-            type: 'series', 
-            title: '머로우 상인', 
-            description: '아이템 판매 캐릭터',
-            status: 'approved',
-            feedbackCount: 0,
-            createdAt: '2024-01-08',
-            aiGenerated: true,
-            seriesId: 5,
-            episodeId: 4,
-            isCharacter: true, // 원래 캐릭터였음을 표시
-            imageUrl: '/images/shop-keeper.jpg',
-            content: '## 캐릭터 프로필\n\n**이름**: 머로우 상인\n**나이**: 45세\n**직업**: 잡화점 주인...',
-            feedbackHistory: [],
-            characters: [
-              {
-                id: 5,
-                name: '머로우 상인',
-                description: '아르카디아 왕국의 친절한 잡화점 주인',
-                traits: ['친절함', '상술', '정보통']
-              }
-            ]
-          },
         ],
         episode: [
-          { 
-            id: 4, 
-            type: 'episode', 
-            title: '아르카디아 프롤로그', 
+          {
+            id: 4,
+            type: 'episode',
+            title: '아르카디아 프롤로그',
             description: '모험의 시작',
             status: 'approved',
             feedbackCount: 0,
@@ -173,10 +124,10 @@ export const useItemsData = () => {
           },
         ],
         video: [
-          { 
-            id: 5, 
-            type: 'video', 
-            title: '아르카디아 튜토리얼 영상', 
+          {
+            id: 5,
+            type: 'video',
+            title: '아르카디아 튜토리얼 영상',
             description: '게임 가이드 영상',
             status: 'approved',
             feedbackCount: 0,
@@ -201,20 +152,9 @@ export const useItemsData = () => {
 
     Object.keys(rawData).forEach(category => {
       const categoryData = rawData[category];
-      
-      // 시리즈와 캐릭터를 합쳐서 시리즈로 통합
-      const mergedSeries = [
-        ...categoryData.series || [],
-        ...(categoryData.character || []).map(char => ({
-          ...char,
-          type: 'series', // 캐릭터를 시리즈 타입으로 변경
-          isCharacter: true, // 원래 캐릭터였음을 표시
-          characters: [char] // 캐릭터를 characters 배열에 포함
-        }))
-      ];
 
       processedData[category] = {
-        series: mergedSeries,
+        series: categoryData.series || [],
         episode: categoryData.episode || [],
         video: categoryData.video || []
       };
@@ -223,33 +163,68 @@ export const useItemsData = () => {
     return processedData;
   };
 
+  // draft 데이터를 시리즈로 변환하는 함수
+  const processDraftData = (draftItems) => {
+    const seriesItems = [];
+
+    draftItems.forEach(draft => {
+      const { id, status, draft_data, created_at } = draft;
+
+      if (draft_data && draft_data.series) {
+        // 시리즈 아이템 생성
+        const seriesItem = {
+          id,
+          type: 'series',
+          title: draft_data.series.name || '제목 없음',
+          description: draft_data.series.one_liner || '요약 없음',
+          status,
+          feedbackCount: 0,
+          createdAt: created_at,
+          aiGenerated: true,
+          draftData: draft_data,
+          content: JSON.stringify(draft_data.series, null, 2)
+        };
+        seriesItems.push(seriesItem);
+      }
+    });
+
+    return { seriesItems };
+  };
+
   const fetchItemsData = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // 개발 모드에서는 더미 데이터 사용
       if (process.env.REACT_APP_DEV_MODE === 'true') {
         setItemsData(getDummyData());
         return;
       }
 
-      // 프로덕션에서는 실제 API 호출
-      const [pending, working, approved] = await Promise.all([
-        apiClient.get(endpoints.dashboard.pending),
-        apiClient.get(endpoints.dashboard.working),
-        apiClient.get(endpoints.dashboard.approved),
-      ]);
+      // 프로덕션에서는 시리즈 초안 API 호출
+      const response = await apiClient.get(endpoints.series.drafts);
+      const draftItems = response.data || [];
 
-      setItemsData({
-        pending: pending.data || { series: [], episode: [], video: [] },
-        working: working.data || { series: [], episode: [], video: [] },
-        approved: approved.data || { series: [], episode: [], video: [] },
-      });
+      // draft 데이터를 시리즈로 변환
+      const { seriesItems } = processDraftData(draftItems);
+
+      // 상태별로 분류 (현재는 모두 pending으로 처리)
+      const processedData = {
+        pending: {
+          series: seriesItems,
+          episode: [],
+          video: []
+        },
+        working: { series: [], episode: [], video: [] },
+        approved: { series: [], episode: [], video: [] },
+      };
+
+      setItemsData(processedData);
     } catch (err) {
       setError(err.message);
       console.error('Failed to fetch items data:', err);
-      
+
       // 에러 발생 시 더미 데이터로 폴백
       setItemsData(getDummyData());
     } finally {
@@ -285,14 +260,17 @@ export const useItemsData = () => {
         return;
       }
 
-      // 프로덕션에서는 API 호출
-      const endpoint = {
-        series: endpoints.series.approve,
-        episode: endpoints.episodes.approve,
-        video: endpoints.videos.approve,
-      }[item.type];
+      // 프로덕션에서는 API 호출 (현재 시리즈만 지원)
+      let endpoint;
+      if (item.type === 'series') {
+        endpoint = `${endpoints.series.list}/${item.id}/approve`;
+      } else {
+        // 에피소드와 비디오는 아직 API 미지원
+        console.warn(`${item.type} 승인은 아직 지원되지 않습니다.`);
+        return;
+      }
 
-      await apiClient.post(endpoint(item.id));
+      await apiClient.post(endpoint);
       await fetchItemsData(); // 데이터 새로고침
     } catch (err) {
       setError(err.message);
@@ -331,14 +309,17 @@ export const useItemsData = () => {
         return;
       }
 
-      // 프로덕션에서는 API 호출
-      const endpoint = {
-        series: endpoints.series.feedback,
-        episode: endpoints.episodes.feedback,
-        video: endpoints.videos.feedback,
-      }[item.type];
+      // 프로덕션에서는 API 호출 (현재 시리즈만 지원)
+      let endpoint;
+      if (item.type === 'series') {
+        endpoint = `${endpoints.series.list}/${item.id}/feedback`;
+      } else {
+        // 에피소드와 비디오는 아직 API 미지원
+        console.warn(`${item.type} 피드백은 아직 지원되지 않습니다.`);
+        return;
+      }
 
-      await apiClient.post(endpoint(item.id), { feedback: feedbackText });
+      await apiClient.post(endpoint, { feedback: feedbackText });
       await fetchItemsData(); // 데이터 새로고침
     } catch (err) {
       setError(err.message);
