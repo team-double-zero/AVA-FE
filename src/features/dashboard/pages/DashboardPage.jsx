@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
-import { apiRequest } from '../../../shared/lib/tokenUtils';
+import { CreateSeriesModal, ToastContainer } from '../../../shared/ui';
+import { seriesService } from '../../../shared/api/seriesService';
+import { authService } from '../../../shared/api';
 
 // 아이콘 imports
 import iconCharacter from '../../../assets/icons/icon_character.svg';
@@ -9,8 +11,74 @@ import iconScenario from '../../../assets/icons/icon_scenario.svg';
 import iconEpisode from '../../../assets/icons/icon_episode.svg';
 import iconVideo from '../../../assets/icons/icon_video.svg';
 
-const DashboardPage = ({ itemsData, onItemClick, user }) => {
+const DashboardPage = ({ itemsData, onItemClick, user, onCreateSeries }) => {
   const navigate = useNavigate();
+
+  // 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [toasts, setToasts] = useState([]);
+
+  // 토스트 관리 함수들
+  const showToast = (message, type = 'success', duration = 3000) => {
+    const id = Date.now();
+    const newToast = {
+      id,
+      message,
+      type,
+      duration,
+      isVisible: true,
+      onClose: () => removeToast(id),
+    };
+    setToasts(prev => [...prev, newToast]);
+  };
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
+
+  // 시리즈 생성 핸들러
+  const handleCreateSeries = async (userMessage) => {
+    setIsLoading(true);
+    try {
+      // 개발 모드에서는 Mock 응답
+      if (import.meta.env.VITE_DEV_MODE === 'true') {
+        console.log('개발 모드: Mock API 응답');
+        await new Promise(resolve => setTimeout(resolve, 1500)); // 로딩 시뮬레이션
+        showToast('시리즈 초안 생성이 시작되었습니다. AI가 작업 중입니다!', 'success');
+        setIsModalOpen(false);
+        return;
+      }
+
+      // 실제 API 요청
+      const response = await seriesService.createDraft(userMessage);
+      console.log('시리즈 생성 응답:', response);
+      
+      // API 응답의 message 표시
+      const successMessage = response.message || '시리즈 초안 생성이 시작되었습니다.';
+      showToast(successMessage, 'success');
+      setIsModalOpen(false);
+      
+    } catch (error) {
+      console.error('시리즈 생성 실패:', error);
+      const errorMessage = error.message || '시리즈 생성 중 오류가 발생했습니다.';
+      showToast(errorMessage, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // FloatingButton 클릭 핸들러를 부모로 전달
+  const handleFloatingButtonClick = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
+
+  // 컴포넌트가 마운트되거나 onCreateSeries prop이 변경될 때 핸들러 등록
+  useEffect(() => {
+    if (onCreateSeries) {
+      onCreateSeries(handleFloatingButtonClick);
+    }
+  }, [onCreateSeries, handleFloatingButtonClick]);
 
   // React Hooks는 항상 컴포넌트 최상단에서 호출되어야 함
   // API 요청 예시 (사용자가 로그인된 후에만 실행)
@@ -31,14 +99,10 @@ const DashboardPage = ({ itemsData, onItemClick, user }) => {
 
         console.log('프로덕션 모드: 사용자 인증 완료 후 API 요청 진행');
 
-        // apiRequest는 자동으로 Access Token을 헤더에 추가하고
+        // authService.getCurrentUser()는 자동으로 Access Token을 헤더에 추가하고
         // 401 에러 시 토큰을 갱신한 후 재시도합니다
-        const response = await apiRequest(`${import.meta.env.VITE_DOMAIN}/api/v1/user/profile`);
-
-        if (response.ok) {
-          const userData = await response.json();
-          console.log('User profile data:', userData);
-        }
+        const userData = await authService.getCurrentUser();
+        console.log('User profile data:', userData);
       } catch (error) {
         console.error('Failed to fetch user data:', error);
         // 인증 실패 시 로그인 페이지로 리디렉션 등의 처리를 여기서 할 수 있습니다
@@ -227,6 +291,17 @@ const DashboardPage = ({ itemsData, onItemClick, user }) => {
           {renderWorkingColumn('영상', workingItems.video, 'video')}
         </div>
       </div>
+
+      {/* 시리즈 생성 모달 */}
+      <CreateSeriesModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleCreateSeries}
+        loading={isLoading}
+      />
+
+      {/* 토스트 컨테이너 */}
+      <ToastContainer toasts={toasts} />
     </div>
   );
 };

@@ -9,36 +9,17 @@ export const endpoints = {
     resendVerification: '/api/v1/auth/resend-verification',
     refresh: '/api/v1/auth/refresh',
     logout: '/api/v1/auth/logout',
+    /**
+     * 사용자 정보 조회 API
+     * GET /api/v1/auth/me
+     * Bearer token (access token) 필요
+     */
+    me: '/api/v1/auth/me',
   },
 
-  // 사용자 관련
+  // 사용자 관련 (향후 확장용)
   user: {
-    /**
-     *  get a user profile
-     * GET /api/v1/auth/me
-     * bearer token (access token) 필요
-     * response example:
-     * {
-     *     "data": {
-     *         "user": {
-     *             "created_at": "2025-09-05T05:37:33.762186",
-     *             "email": "handlecu@gmail.com",
-     *             "first_name": null,
-     *             "id": 2,
-     *             "is_active": true,
-     *             "is_verified": true,
-     *             "last_login_at": "2025-09-10T06:53:49.213556",
-     *             "last_name": null,
-     *             "phone_number": null,
-     *             "profile_image_url": null,
-     *             "updated_at": "2025-09-10T06:53:49.218688",
-     *             "username": "handlecu"
-     *         }
-     *     },
-     *     "success": true
-     * }
-     */
-    profile: '/api/v1/auth/me',
+    // 현재 사용자 정보 조회는 auth.me 사용
   },
 
   // 시리즈 관련
@@ -56,6 +37,13 @@ export const endpoints = {
      * 쿼리 파라미터: draft_status (선택)
      */
     drafts: '/api/v1/series-drafts?draft_status=pending',
+    /**
+     * 시리즈 초안 생성
+     * POST /api/v1/series-drafts?story_type=series
+     * bearer token (access token) 필요
+     * 요청 바디: { user_message: string }
+     */
+    createDraft: '/api/v1/series-drafts?story_type=series',
   },
 
   // 캐릭터 관련
