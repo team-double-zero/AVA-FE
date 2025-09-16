@@ -19,7 +19,8 @@ export const AppRoutes = ({
   onApprove, 
   onFeedback,
   user,
-  onLogout 
+  onLogout,
+  onCreateSeries
 }) => {
   return (
     <Routes>
@@ -31,6 +32,7 @@ export const AppRoutes = ({
             itemsData={itemsData}
             onItemClick={onItemClick}
             user={user}
+            onCreateSeries={onCreateSeries}
           />
         }
       />

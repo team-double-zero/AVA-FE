@@ -12,12 +12,14 @@ import { tokenUtils } from './shared/lib';
 import { LoginPage as Login } from './features/auth';
 import { SignupPage as Signup } from './features/auth';
 import { ItemDetail } from './features/item-detail';
+import { FloatingButton } from './shared/ui';
 
 // 아이콘 imports
 import iconDashboard from './assets/icons/icon_dashboard.svg';
 import iconBrowser from './assets/icons/icon_browser.svg';
 import iconAnalysis from './assets/icons/icon_analysis.svg';
 import iconSetting from './assets/icons/icon_setting.svg';
+import iconPlus from './assets/icons/icon_plus.svg';
 
 function AppContent() {
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ function AppContent() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [currentView, setCurrentView] = useState({ type: 'tab', data: null });
   const [showAuthModal, setShowAuthModal] = useState('login');
+  const [dashboardCreateHandler, setDashboardCreateHandler] = useState(null);
 
   // 아이템 데이터 관리 (실제 API 사용)
   const {
@@ -144,6 +147,18 @@ function AppContent() {
     console.log('피드백:', item, feedback);
   };
 
+  // FloatingButton 클릭 처리
+  const handleFloatingButtonClick = () => {
+    if (dashboardCreateHandler) {
+      dashboardCreateHandler();
+    }
+  };
+
+  // Dashboard 컴포넌트에서 생성 핸들러를 등록
+  const handleSetCreateHandler = (handler) => {
+    setDashboardCreateHandler(() => handler);
+  };
+
   // 로그인하지 않은 경우 인증 모달 표시
   if (!user) {
     return (
@@ -191,12 +206,22 @@ function AppContent() {
                   onFeedback={handleFeedback}
                   user={user}
                   onLogout={handleLogout}
+                  onCreateSeries={handleSetCreateHandler}
                 />
               </main>
             </div>
           </div>
         )}
       </div>
+
+      {/* Floating Action Button - dashboard 페이지에서만 표시 */}
+      {activeTab === 'dashboard' && currentView.type === 'tab' && (
+        <FloatingButton
+          onClick={handleFloatingButtonClick}
+          icon={<img src={iconPlus} alt="새 시리즈 생성" />}
+          position="bottom-right"
+        />
+      )}
 
       {/* Bottom Header */}
       <footer className="bottom-header">

@@ -1,0 +1,132 @@
+/* Floating Action Button Styles */
+.floating-button {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(131, 112, 254, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: #8370FE;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 8px 32px rgba(131, 112, 254, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10000;
+  outline: none;
+  /* Ensure button stays fixed regardless of parent transform contexts */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.floating-button:hover {
+  transform: translateY(-2px) scale(1.05) translateZ(0);
+  background: rgba(131, 112, 254, 0.25);
+  box-shadow: 
+    0 12px 40px rgba(131, 112, 254, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.floating-button:active {
+  transform: translateY(0) scale(0.95) translateZ(0);
+  background: rgba(131, 112, 254, 0.2);
+  box-shadow: 
+    0 4px 20px rgba(131, 112, 254, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.floating-button:focus-visible {
+  outline: 2px solid rgba(131, 112, 254, 0.5);
+  outline-offset: 3px;
+}
+
+.floating-button-disabled {
+  background: rgba(160, 160, 160, 0.15);
+  color: rgba(160, 160, 160, 0.7);
+  cursor: not-allowed;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.floating-button-disabled:hover {
+  transform: none;
+  background: rgba(160, 160, 160, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Position Classes */
+.floating-button-bottom-right {
+  bottom: 44px;
+  right: 24px;
+}
+
+.floating-button-bottom-left {
+  bottom: 44px;
+  left: 24px;
+}
+
+.floating-button-top-right {
+  top: 24px;
+  right: 24px;
+}
+
+.floating-button-top-left {
+  top: 24px;
+  left: 24px;
+}
+
+/* Icon Styling */
+.floating-button svg,
+.floating-button img {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  filter: drop-shadow(0 2px 4px rgba(131, 112, 254, 0.3));
+}
+
+/* Animation for appearing */
+@keyframes floatingButtonAppear {
+  from {
+    opacity: 0;
+    transform: scale(0) rotate(180deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.floating-button {
+  animation: floatingButtonAppear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .floating-button-bottom-right {
+    bottom: 36px;
+    right: 16px;
+  }
+  
+  .floating-button-bottom-left {
+    bottom: 36px;
+    left: 16px;
+  }
+  
+  .floating-button-top-right {
+    top: 16px;
+    right: 16px;
+  }
+  
+  .floating-button-top-left {
+    top: 16px;
+    left: 16px;
+  }
+}
