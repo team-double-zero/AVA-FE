@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import { apiRequest } from '../../../shared/lib/tokenUtils';
@@ -69,16 +69,16 @@ const DashboardPage = ({ itemsData, onItemClick, user, onCreateSeries }) => {
   };
 
   // FloatingButton 클릭 핸들러를 부모로 전달
-  const handleFloatingButtonClick = () => {
+  const handleFloatingButtonClick = useCallback(() => {
     setIsModalOpen(true);
-  };
+  }, []);
 
   // 컴포넌트가 마운트되거나 onCreateSeries prop이 변경될 때 핸들러 등록
-  React.useEffect(() => {
+  useEffect(() => {
     if (onCreateSeries) {
       onCreateSeries(handleFloatingButtonClick);
     }
-  }, [onCreateSeries]);
+  }, [onCreateSeries, handleFloatingButtonClick]);
 
   // React Hooks는 항상 컴포넌트 최상단에서 호출되어야 함
   // API 요청 예시 (사용자가 로그인된 후에만 실행)

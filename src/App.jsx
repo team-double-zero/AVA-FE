@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 
@@ -155,9 +155,9 @@ function AppContent() {
   };
 
   // Dashboard 컴포넌트에서 생성 핸들러를 등록
-  const handleSetCreateHandler = (handler) => {
+  const handleSetCreateHandler = useCallback((handler) => {
     setDashboardCreateHandler(() => handler);
-  };
+  }, []);
 
   // 로그인하지 않은 경우 인증 모달 표시
   if (!user) {
