@@ -5,6 +5,7 @@
 export { apiClient, default as client } from './client';
 export { endpoints, default as apiEndpoints } from './endpoints';
 export { default as schemas } from './schemas';
+export { authService, default as auth } from './authService';
 
 // API 서비스 함수들을 여기서 re-export할 수 있습니다
 // 예: export * from './services/series';

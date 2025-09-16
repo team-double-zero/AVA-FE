@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
-import { apiRequest } from '../../../shared/lib/tokenUtils';
 import { CreateSeriesModal, ToastContainer } from '../../../shared/ui';
 import { seriesService } from '../../../shared/api/seriesService';
+import { authService } from '../../../shared/api';
 
 // 아이콘 imports
 import iconCharacter from '../../../assets/icons/icon_character.svg';
@@ -99,14 +99,10 @@ const DashboardPage = ({ itemsData, onItemClick, user, onCreateSeries }) => {
 
         console.log('프로덕션 모드: 사용자 인증 완료 후 API 요청 진행');
 
-        // apiRequest는 자동으로 Access Token을 헤더에 추가하고
+        // authService.getCurrentUser()는 자동으로 Access Token을 헤더에 추가하고
         // 401 에러 시 토큰을 갱신한 후 재시도합니다
-        const response = await apiRequest(`${import.meta.env.VITE_DOMAIN}/api/v1/user/profile`);
-
-        if (response.ok) {
-          const userData = await response.json();
-          console.log('User profile data:', userData);
-        }
+        const userData = await authService.getCurrentUser();
+        console.log('User profile data:', userData);
       } catch (error) {
         console.error('Failed to fetch user data:', error);
         // 인증 실패 시 로그인 페이지로 리디렉션 등의 처리를 여기서 할 수 있습니다
