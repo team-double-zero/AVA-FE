@@ -2,8 +2,9 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import { CreateSeriesModal, ToastContainer } from '../../../shared/ui';
+import { useToasts } from '../../../shared/ui/hooks/useToasts';
 import { useItemsData } from '../hooks';
-import { authService } from '../../../shared/api';
+import KanbanColumn from '../components/KanbanColumn';
 
 // 아이콘 imports
 import iconCharacter from '../../../assets/icons/icon_character.svg';
@@ -18,25 +19,7 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
   // 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [toasts, setToasts] = useState([]);
-
-  // 토스트 관리 함수들
-  const showToast = (message, type = 'success', duration = 3000) => {
-    const id = Date.now();
-    const newToast = {
-      id,
-      message,
-      type,
-      duration,
-      isVisible: true,
-      onClose: () => removeToast(id),
-    };
-    setToasts(prev => [...prev, newToast]);
-  };
-
-  const removeToast = (id) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-  };
+  const { toasts, showToast } = useToasts();
 
   // 시리즈 생성 핸들러
   const handleCreateSeries = async (userMessage) => {
@@ -118,42 +101,7 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
     return [...seriesItems, ...characterItems];
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'pending': return '#ff6b6b';
-      case 'review': return '#ffa726';
-      case 'revision': return '#ef5350';
-      case 'draft': return '#42a5f5';
-      default: return '#8370FE';
-    }
-  };
-
-  const getStatusText = (status) => {
-    switch (status) {
-      case 'pending': return '승인 대기';
-      case 'review': return '검토 중';
-      case 'revision': return '수정 요청';
-      case 'draft': return '초안';
-      case 'generating': return 'AI 생성 중';
-      default: return '대기';
-    }
-  };
-
-  const getWorkStatusText = (workStatus) => {
-    switch (workStatus) {
-      case 'generating': return '🤖 생성 중';
-      case 'revision_requested': return '✏️ 수정 중';
-      default: return '🔄 작업 중';
-    }
-  };
-
-  const getWorkStatusColor = (workStatus) => {
-    switch (workStatus) {
-      case 'generating': return '#17a2b8';
-      case 'revision_requested': return '#fd7e14';
-      default: return '#6c757d';
-    }
-  };
+  
 
   const getItemIcon = (type) => {
     switch (type) {
@@ -166,92 +114,7 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
   };
 
   // 아이템 클릭 핸들러 - 시리즈는 디테일 페이지로, 나머지는 기존 방식
-  const handleItemClick = (item, type) => {
-    if (type === 'series') {
-      navigate(`/dashboard/series/${item.id}`);
-    } else {
-      onItemClick && onItemClick(item);
-    }
-  };
-
-  const renderWorkingColumn = (title, items, type) => (
-    <div className="working-column">
-      <div className="column-header">
-        <img src={getItemIcon(type)} alt={title} className="column-icon" />
-        <h3 className="column-title">{title}</h3>
-        <span className="item-count">{items?.length || 0}</span>
-      </div>
-      <div className="column-content">
-        {(items || []).map((item) => (
-          <div
-            key={item.id}
-            className="working-card"
-            onClick={() => handleItemClick(item, type)}
-          >
-            <div className="card-header">
-              <h4 className="card-title">{item.title}</h4>
-              <div className="card-badges">
-                {item.feedbackCount > 0 && (
-                  <span className="feedback-badge">
-                    💬 {item.feedbackCount}
-                  </span>
-                )}
-              </div>
-            </div>
-            <p className="card-description">{item.description}</p>
-            <div className="card-footer">
-              <span
-                className="work-status-badge"
-                style={{ backgroundColor: getWorkStatusColor(item.workStatus) }}
-              >
-                {getWorkStatusText(item.workStatus)}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderKanbanColumn = (title, items, type) => (
-    <div className="kanban-column">
-      <div className="column-header">
-        <img src={getItemIcon(type)} alt={title} className="column-icon" />
-        <h3 className="column-title">{title}</h3>
-        <span className="item-count">{items?.length || 0}</span>
-      </div>
-      <div className="column-content">
-        {(items || []).map((item) => (
-          <div
-            key={item.id}
-            className="kanban-card"
-            onClick={() => handleItemClick(item, type)}
-          >
-            <div className="card-header">
-              <h4 className="card-title">{item.title}</h4>
-              <div className="card-badges">
-                {item.feedbackCount > 0 && (
-                  <span className="feedback-badge">
-                    💬 {item.feedbackCount}
-                  </span>
-                )}
-              </div>
-            </div>
-            <p className="card-description">{item.description}</p>
-            <div className="card-footer">
-              <div className="card-footer-spacer"></div>
-              <span
-                className="status-badge"
-                style={{ backgroundColor: getStatusColor(item.status) }}
-              >
-                {getStatusText(item.status)}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  
 
   return (
     <div className="dashboard">
@@ -265,9 +128,30 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
           <h3 className="board-title">승인 대기 중인 아이템들</h3>
         </div>
         <div className="kanban-columns">
-          {renderKanbanColumn('시리즈', getMergedSeriesData('pending'), 'series')}
-          {renderKanbanColumn('에피소드', pendingItems.episode, 'episode')}
-          {renderKanbanColumn('영상', pendingItems.video, 'video')}
+          <KanbanColumn
+            title="시리즈"
+            items={getMergedSeriesData('pending')}
+            itemType="series"
+            columnType="kanban"
+            icon={getItemIcon('series')}
+            onItemClick={onItemClick}
+          />
+          <KanbanColumn
+            title="에피소드"
+            items={pendingItems.episode}
+            itemType="episode"
+            columnType="kanban"
+            icon={getItemIcon('episode')}
+            onItemClick={onItemClick}
+          />
+          <KanbanColumn
+            title="영상"
+            items={pendingItems.video}
+            itemType="video"
+            columnType="kanban"
+            icon={getItemIcon('video')}
+            onItemClick={onItemClick}
+          />
         </div>
       </div>
 
@@ -278,9 +162,30 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
           <p className="board-subtitle">AI가 수정 중이거나 새로 생성 중인 아이템들</p>
         </div>
         <div className="working-columns">
-          {renderWorkingColumn('시리즈', getMergedSeriesData('working'), 'series')}
-          {renderWorkingColumn('에피소드', workingItems.episode, 'episode')}
-          {renderWorkingColumn('영상', workingItems.video, 'video')}
+          <KanbanColumn
+            title="시리즈"
+            items={getMergedSeriesData('working')}
+            itemType="series"
+            columnType="working"
+            icon={getItemIcon('series')}
+            onItemClick={onItemClick}
+          />
+          <KanbanColumn
+            title="에피소드"
+            items={workingItems.episode}
+            itemType="episode"
+            columnType="working"
+            icon={getItemIcon('episode')}
+            onItemClick={onItemClick}
+          />
+          <KanbanColumn
+            title="영상"
+            items={workingItems.video}
+            itemType="video"
+            columnType="working"
+            icon={getItemIcon('video')}
+            onItemClick={onItemClick}
+          />
         </div>
       </div>
 
