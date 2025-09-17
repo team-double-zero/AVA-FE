@@ -501,3 +501,63 @@ Authorization: Bearer {{access_token}}
     "success": false
 }
 ```
+
+## 8. 시리즈 초안 생성 API
+
+### 요청
+```http
+POST /api/v1/series-drafts?story_type=series
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "user_message": "{text}"
+}
+```
+
+### 쿼리 파라미터
+- `story_type` (필수): 콘텐츠 타입 (`series`)
+
+### 요청 바디
+- `user_message` (필수): 시리즈 생성을 위한 사용자 메시지 텍스트
+
+### 성공 응답 (201)
+```json
+{
+    "data": {
+        "created_at": "2025-08-28T06:44:10.746785+00:00",
+        "created_character_ids": null,
+        "created_series_id": null,
+        "draft_data": {},
+        "error_message": null,
+        "id": 14,
+        "is_processed": false,
+        "language": null,
+        "last_attempt_at": "2025-08-28T06:44:10.767235",
+        "original_draft_id": null,
+        "processing_error": null,
+        "retry_count": 0,
+        "source_entry_id": null,
+        "status": "processing",
+        "updated_at": "2025-08-28T06:44:10.769627+00:00",
+        "version": "series-draft.v4"
+    },
+    "message": "시리즈 초안 생성이 시작되었습니다."
+}
+```
+
+### 실패 응답 (400)
+```json
+{
+    "message": "Invalid request data",
+    "success": false
+}
+```
+
+### 실패 응답 (401)
+```json
+{
+    "message": "Unauthorized access",
+    "success": false
+}
+```
