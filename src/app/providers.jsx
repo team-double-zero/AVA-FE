@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 /**
  * 애플리케이션 상태 관리를 위한 Context
@@ -113,6 +114,9 @@ const appReducer = (state, action) => {
   }
 };
 
+// React Query 클라이언트 생성
+const queryClient = new QueryClient();
+
 // Context 생성
 const AppContext = createContext();
 
@@ -155,9 +159,11 @@ export const AppProvider = ({ children, initialData = {} }) => {
   };
 
   return (
-    <AppContext.Provider value={value}>
-      {children}
-    </AppContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <AppContext.Provider value={value}>
+        {children}
+      </AppContext.Provider>
+    </QueryClientProvider>
   );
 };
 

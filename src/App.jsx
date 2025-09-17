@@ -4,7 +4,7 @@ import './App.css';
 
 // 새로운 구조의 컴포넌트들
 import { AppProvider, ErrorBoundary, AppRoutes } from './app/index';
-import { useItemsData } from './features/dashboard/hooks';
+
 import { SeriesDetailPage } from './features/dashboard';
 import { tokenUtils } from './shared/lib';
 
@@ -33,12 +33,7 @@ function AppContent() {
   const [showAuthModal, setShowAuthModal] = useState('login');
   const [dashboardCreateHandler, setDashboardCreateHandler] = useState(null);
 
-  // 아이템 데이터 관리 (실제 API 사용)
-  const {
-    itemsData,
-    // isLoading: itemsLoading,
-    // error: itemsError,
-  } = useItemsData();
+  
 
   // 사용자 인증 상태 확인
   useEffect(() => {
@@ -200,7 +195,6 @@ function AppContent() {
             <div className="tab-panel">
               <main className="main-content">
                 <AppRoutes
-                  itemsData={itemsData}
                   onItemClick={handleItemClick}
                   onApprove={handleApprove}
                   onFeedback={handleFeedback}

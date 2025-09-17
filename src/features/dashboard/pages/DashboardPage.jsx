@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import { CreateSeriesModal, ToastContainer } from '../../../shared/ui';
-import { seriesService } from '../../../shared/api/seriesService';
+import { useItemsData } from '../hooks';
 import { authService } from '../../../shared/api';
 
 // 아이콘 imports
@@ -11,8 +11,9 @@ import iconScenario from '../../../assets/icons/icon_scenario.svg';
 import iconEpisode from '../../../assets/icons/icon_episode.svg';
 import iconVideo from '../../../assets/icons/icon_video.svg';
 
-const DashboardPage = ({ itemsData, onItemClick, user, onCreateSeries }) => {
+const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
   const navigate = useNavigate();
+  const { itemsData, isLoading: isItemsLoading, error, createSeries } = useItemsData();
 
   // 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,28 +42,18 @@ const DashboardPage = ({ itemsData, onItemClick, user, onCreateSeries }) => {
   const handleCreateSeries = async (userMessage) => {
     setIsLoading(true);
     try {
-      // 개발 모드에서는 Mock 응답
-      if (import.meta.env.VITE_DEV_MODE === 'true') {
-        console.log('개발 모드: Mock API 응답');
-        await new Promise(resolve => setTimeout(resolve, 1500)); // 로딩 시뮬레이션
-        showToast('시리즈 초안 생성이 시작되었습니다. AI가 작업 중입니다!', 'success');
-        setIsModalOpen(false);
-        return;
-      }
-
-      // 실제 API 요청
-      const response = await seriesService.createDraft(userMessage);
-      console.log('시리즈 생성 응답:', response);
-      
-      // API 응답의 message 표시
-      const successMessage = response.message || '시리즈 초안 생성이 시작되었습니다.';
-      showToast(successMessage, 'success');
-      setIsModalOpen(false);
-      
+      await createSeries(userMessage, {
+        onSuccess: () => {
+          showToast('시리즈 초안 생성이 시작되었습니다.', 'success');
+          setIsModalOpen(false);
+        },
+        onError: (error) => {
+          const errorMessage = error.message || '시리즈 생성 중 오류가 발생했습니다.';
+          showToast(errorMessage, 'error');
+        },
+      });
     } catch (error) {
-      console.error('시리즈 생성 실패:', error);
-      const errorMessage = error.message || '시리즈 생성 중 오류가 발생했습니다.';
-      showToast(errorMessage, 'error');
+      // 이 부분은 useMutation의 onError에서 처리되므로 비워두거나 제거할 수 있습니다.
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +104,8 @@ const DashboardPage = ({ itemsData, onItemClick, user, onCreateSeries }) => {
   }, [user]); // user 의존성 추가
 
   // 조건부 렌더링은 Hooks 다음에 위치
-  if (!itemsData) return <div>로딩 중...</div>;
+  if (isItemsLoading) return <div>로딩 중...</div>;
+  if (error) return <div>에러가 발생했습니다: {error.message}</div>;
 
   const pendingItems = itemsData.pending;
   const workingItems = itemsData.working;
