@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateSeriesModal, ToastContainer } from '../../../shared/ui';
 import { useToasts } from '../../../shared/ui/hooks/useToasts';
-import { useScrollMonitor } from '../../../shared/ui/hooks';
 import { useItemsData } from '../hooks';
 import KanbanColumn from '../components/KanbanColumn';
 
@@ -20,9 +19,6 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toasts, showToast } = useToasts();
-  
-  // 스크롤 모니터링
-  const { scrollRef, scrollInfo } = useScrollMonitor({ debug: true });
 
   // 시리즈 생성 핸들러
   const handleCreateSeries = async (userMessage) => {
@@ -112,7 +108,7 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
   };
 
   return (
-    <div ref={scrollRef} className="w-full min-h-full h-auto pb-0">
+    <div className="w-full min-h-full h-auto pb-0">
       <div className="mb-3 text-center">
         <h2 className="font-montserrat text-4xl font-bold text-white text-shadow-md">DASHBOARD</h2>
       </div>
@@ -192,25 +188,6 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
       />
 
       <ToastContainer toasts={toasts} />
-      
-      {/* 스크롤 디버그 정보 */}
-      {scrollInfo && (
-        <div className="fixed top-4 right-4 bg-black/90 text-white p-3 rounded-lg text-xs z-50 border border-white/20">
-          <div className="text-green-400 font-bold mb-2">📊 스크롤 상태</div>
-          <div>위치: {Math.round(scrollInfo.scrollTop)}px</div>
-          <div>화면: {scrollInfo.clientHeight}px</div>
-          <div>전체: {scrollInfo.scrollHeight}px</div>
-          <div>여백: {Math.round(scrollInfo.scrollHeight - scrollInfo.clientHeight)}px</div>
-          <div>진행률: {Math.round(scrollInfo.scrollPercentage)}%</div>
-          <div>하단까지: {Math.round(scrollInfo.scrollBottom)}px</div>
-          <div className={scrollInfo.isAtBottom ? 'text-green-400 font-bold' : 'text-red-400'}>
-            {scrollInfo.isAtBottom ? '✅ 끝까지 도달' : '❌ 더 스크롤 가능'}
-          </div>
-          <div className="text-gray-300 mt-1 text-xs">
-            여백비율: {Math.round((scrollInfo.scrollHeight - scrollInfo.clientHeight) / scrollInfo.scrollHeight * 100)}%
-          </div>
-        </div>
-      )}
     </div>
   );
 };
