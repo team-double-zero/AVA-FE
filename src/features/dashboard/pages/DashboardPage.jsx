@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Dashboard.css';
 import { CreateSeriesModal, ToastContainer } from '../../../shared/ui';
 import { useToasts } from '../../../shared/ui/hooks/useToasts';
 import { useItemsData } from '../hooks';
@@ -13,95 +12,90 @@ import iconEpisode from '../../../assets/icons/icon_episode.svg';
 import iconVideo from '../../../assets/icons/icon_video.svg';
 
 const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
-  const navigate = useNavigate();
-  const { itemsData, isLoading: isItemsLoading, error, createSeries } = useItemsData();
+  const { itemsData, isLoading: isItemsLoading, error } = useItemsData();
+  const { createSeries } = useItemsData(); // createSeries만 별도로 가져올 수 있습니다.
 
   // 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toasts, showToast } = useToasts();
 
   // 시리즈 생성 핸들러
   const handleCreateSeries = async (userMessage) => {
-    setIsLoading(true);
+    setIsSubmitting(true);
     try {
       await createSeries(userMessage, {
         onSuccess: () => {
           showToast('시리즈 초안 생성이 시작되었습니다.', 'success');
           setIsModalOpen(false);
         },
-        onError: (error) => {
-          const errorMessage = error.message || '시리즈 생성 중 오류가 발생했습니다.';
-          showToast(errorMessage, 'error');
+        onError: (err) => {
+          showToast(err.message || '시리즈 생성 중 오류가 발생했습니다.', 'error');
         },
       });
-    } catch (error) {
-      // 이 부분은 useMutation의 onError에서 처리되므로 비워두거나 제거할 수 있습니다.
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
-  // FloatingButton 클릭 핸들러를 부모로 전달
   const handleFloatingButtonClick = useCallback(() => {
     setIsModalOpen(true);
   }, []);
 
-  // 컴포넌트가 마운트되거나 onCreateSeries prop이 변경될 때 핸들러 등록
   useEffect(() => {
     if (onCreateSeries) {
       onCreateSeries(handleFloatingButtonClick);
     }
   }, [onCreateSeries, handleFloatingButtonClick]);
 
-  // React Hooks는 항상 컴포넌트 최상단에서 호출되어야 함
-  // API 요청 예시 (사용자가 로그인된 후에만 실행)
-  useEffect(() => {
-    // user가 없으면 API 요청하지 않음
-    if (!user) {
-      console.log('사용자 정보 없음 - API 요청 스킵');
-      return;
-    }
-
-    const fetchUserData = async () => {
-      try {
-        // 개발 모드에서는 API 요청을 스킵
-        if (import.meta.env.VITE_DEV_MODE === 'true') {
-          console.log('개발 모드: API 요청 스킵');
-          return;
-        }
-
-        console.log('프로덕션 모드: 사용자 인증 완료 후 API 요청 진행');
-
-        // authService.getCurrentUser()는 자동으로 Access Token을 헤더에 추가하고
-        // 401 에러 시 토큰을 갱신한 후 재시도합니다
-        const userData = await authService.getCurrentUser();
-        console.log('User profile data:', userData);
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
-        // 인증 실패 시 로그인 페이지로 리디렉션 등의 처리를 여기서 할 수 있습니다
-      }
-    };
-
-    fetchUserData();
-  }, [user]); // user 의존성 추가
-
-  // 조건부 렌더링은 Hooks 다음에 위치
-  if (isItemsLoading) return <div>로딩 중...</div>;
-  if (error) return <div>에러가 발생했습니다: {error.message}</div>;
+  if (isItemsLoading) {
+    return (
+      <div className="w-full min-h-full h-auto pb-10">
+        <div className="mb-5 text-center">
+          <h2 className="font-montserrat text-4xl font-bold text-white text-shadow-md">DASHBOARD</h2>
+        </div>
+        <div className="text-white text-center p-10">
+          <div className="animate-pulse">
+            <div className="text-xl mb-4">📊 대시보드 데이터를 불러오는 중...</div>
+            <div className="text-sm text-white/70">잠시만 기다려주세요</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="w-full min-h-full h-auto pb-10">
+        <div className="mb-5 text-center">
+          <h2 className="font-montserrat text-4xl font-bold text-white text-shadow-md">DASHBOARD</h2>
+        </div>
+        <div className="text-center p-10">
+          <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-6 max-w-md mx-auto">
+            <div className="text-red-300 text-xl mb-4">⚠️ 데이터 로딩 실패</div>
+            <div className="text-red-200 text-sm mb-4">
+              {error.message || '알 수 없는 오류가 발생했습니다'}
+            </div>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors"
+            >
+              다시 시도
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const pendingItems = itemsData.pending;
   const workingItems = itemsData.working;
-  // const approvedItems = itemsData.approved; // 현재 사용하지 않음
 
-  // 캐릭터와 시리즈를 통합하여 시리즈로 표시
   const getMergedSeriesData = (category) => {
     const seriesItems = itemsData[category]?.series || [];
     const characterItems = itemsData[category]?.character || [];
     return [...seriesItems, ...characterItems];
   };
-
-  
 
   const getItemIcon = (type) => {
     switch (type) {
@@ -113,21 +107,18 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
     }
   };
 
-  // 아이템 클릭 핸들러 - 시리즈는 디테일 페이지로, 나머지는 기존 방식
-  
-
   return (
-    <div className="dashboard">
-      <div className="dashboard-header">
-        <h2 className="dashboard-title">DASHBOARD</h2>
+    <div className="w-full min-h-full h-auto pb-10">
+      <div className="mb-5 text-center">
+        <h2 className="font-montserrat text-4xl font-bold text-white text-shadow-md">DASHBOARD</h2>
       </div>
 
       {/* Kanban Board - 승인 대기 중인 아이템들 */}
-      <div className="kanban-board">
-        <div className="board-header">
-          <h3 className="board-title">승인 대기 중인 아이템들</h3>
+      <div className="mb-8">
+        <div className="mb-4 text-center">
+          <h3 className="text-2xl font-semibold text-white text-shadow">승인 대기 중인 아이템들</h3>
         </div>
-        <div className="kanban-columns">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl mx-auto">
           <KanbanColumn
             title="시리즈"
             items={getMergedSeriesData('pending')}
@@ -156,12 +147,12 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
       </div>
 
       {/* 작업 중인 아이템들 */}
-      <div className="working-board">
-        <div className="board-header">
-          <h3 className="board-title">작업 중인 아이템들</h3>
-          <p className="board-subtitle">AI가 수정 중이거나 새로 생성 중인 아이템들</p>
+      <div className="mb-16">
+        <div className="mb-4 text-center">
+          <h3 className="text-2xl font-semibold text-white text-shadow">작업 중인 아이템들</h3>
+          <p className="text-base text-white/80 text-shadow-sm">AI가 수정 중이거나 새로 생성 중인 아이템들</p>
         </div>
-        <div className="working-columns">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl mx-auto">
           <KanbanColumn
             title="시리즈"
             items={getMergedSeriesData('working')}
@@ -189,15 +180,13 @@ const DashboardPage = ({ onItemClick, user, onCreateSeries }) => {
         </div>
       </div>
 
-      {/* 시리즈 생성 모달 */}
       <CreateSeriesModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateSeries}
-        loading={isLoading}
+        loading={isSubmitting}
       />
 
-      {/* 토스트 컨테이너 */}
       <ToastContainer toasts={toasts} />
     </div>
   );

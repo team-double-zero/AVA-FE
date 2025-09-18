@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient, endpoints } from '../../../shared/api';
 import { seriesService } from '../../../shared/api/seriesService';
+import { config } from '../../../config';
 
 // 더미 데이터 생성 함수 (기존 로직 유지)
 const getDummyData = () => {
@@ -148,51 +149,127 @@ const getDummyData = () => {
     return processedData;
 };
 
-// 데이터 변환 함수 (기존 로직 유지)
+// 데이터 변환 함수 - API 응답 구조에 맞게 수정
 const processDraftData = (draftItems) => {
+    console.log('🔍 Processing draft data:', draftItems);
+    
     const seriesItems = [];
+    
+    if (!Array.isArray(draftItems)) {
+      console.warn('Draft items is not an array:', draftItems);
+      return { seriesItems };
+    }
+    
     draftItems.forEach(draft => {
-      const { id, status, draft_data, created_at } = draft;
+      console.log('🔍 Processing draft item:', draft);
+      
+      const { id, draft_status, draft_data, created_at, updated_at } = draft;
+      
+      // draft_data가 있고 그 안에 series 데이터가 있는 경우
       if (draft_data && draft_data.series) {
+        const seriesData = draft_data.series;
         const seriesItem = {
           id,
           type: 'series',
-          title: draft_data.series.name || '제목 없음',
-          description: draft_data.series.one_liner || '요약 없음',
-          status,
+          title: seriesData.name || '제목 없음',
+          description: seriesData.one_liner || '요약 없음',
+          status: draft_status || 'pending',
           feedbackCount: 0,
-          createdAt: created_at,
+          createdAt: created_at || updated_at,
           aiGenerated: true,
           draftData: draft_data,
-          content: JSON.stringify(draft_data.series, null, 2)
+          content: JSON.stringify(seriesData, null, 2)
+        };
+        seriesItems.push(seriesItem);
+      }
+      // draft_data가 직접 series 구조인 경우 (API 응답 구조에 따라)
+      else if (draft_data && (draft_data.name || draft_data.title)) {
+        const seriesItem = {
+          id,
+          type: 'series',
+          title: draft_data.name || draft_data.title || '제목 없음',
+          description: draft_data.one_liner || draft_data.description || '요약 없음',
+          status: draft_status || 'pending',
+          feedbackCount: 0,
+          createdAt: created_at || updated_at,
+          aiGenerated: true,
+          draftData: draft_data,
+          content: JSON.stringify(draft_data, null, 2)
+        };
+        seriesItems.push(seriesItem);
+      }
+      // draft_data가 비어있거나 처리할 수 없는 구조인 경우 - 기본 정보로 아이템 생성
+      else {
+        console.warn('Draft data structure not recognized, creating basic item:', draft);
+        const seriesItem = {
+          id,
+          type: 'series',
+          title: `Draft #${id}`,
+          description: draft_status === 'pending' ? '처리 대기 중인 초안' : 
+                      draft_status === 'processing' ? '처리 중인 초안' : 
+                      draft_status === 'failed' ? '처리 실패한 초안' : 
+                      '상태 불명의 초안',
+          status: draft_status || 'pending',
+          feedbackCount: 0,
+          createdAt: created_at || updated_at,
+          aiGenerated: true,
+          draftData: draft_data || {},
+          content: JSON.stringify(draft, null, 2),
+          isIncomplete: true // 불완전한 데이터임을 표시
         };
         seriesItems.push(seriesItem);
       }
     });
+    
+    console.log('✅ Processed series items:', seriesItems);
     return { seriesItems };
 };
 
 // 데이터 페칭 함수
 const fetchItemsData = async () => {
   try {
-    if (import.meta.env.VITE_DEV_MODE === 'true') {
+    console.log('🔄 Fetching dashboard items data...');
+    console.log('🔧 isDevMode:', config.isDevMode);
+    
+    if (config.isDevMode) {
+      console.log('📋 Using dummy data (dev mode)');
       return getDummyData();
     }
 
+    console.log('🌐 Fetching draft data from API...');
     const response = await seriesService.getDrafts('pending');
-    const draftItems = response.data || [];
+    console.log('📦 API Response:', response);
+    
+    const draftItems = response.data || response || [];
+    console.log('📋 Draft items:', draftItems);
+    
     const { seriesItems } = processDraftData(draftItems);
 
-    // API 응답 구조에 따라 다른 데이터도 가져와야 함 (현재는 초안만 처리)
-    return {
+    const result = {
       pending: { series: seriesItems, episode: [], video: [] },
       working: { series: [], episode: [], video: [] },
       approved: { series: [], episode: [], video: [] },
     };
+    
+    console.log('✅ Final dashboard data:', result);
+    return result;
   } catch (err) {
-    console.error('Failed to fetch items data:', err);
-    // 에러 발생 시 더미 데이터로 폴백
-    return getDummyData();
+    console.error('❌ Failed to fetch items data:', err);
+    console.error('📊 Error details:', {
+      message: err.message,
+      response: err.response?.data,
+      status: err.response?.status
+    });
+    
+    // 에러 발생 시에도 빈 데이터 구조 반환 (더미 데이터 대신)
+    const fallbackData = {
+      pending: { series: [], episode: [], video: [] },
+      working: { series: [], episode: [], video: [] },
+      approved: { series: [], episode: [], video: [] },
+    };
+    
+    console.log('🔄 Using fallback data structure');
+    return fallbackData;
   }
 };
 
@@ -213,7 +290,7 @@ export const useItemsData = () => {
 
   const approveItemMutation = useMutation({
     mutationFn: async (item) => {
-      if (import.meta.env.VITE_DEV_MODE === 'true') {
+      if (config.isDevMode) {
         console.log('DEV_MODE: Simulating approve item.');
         return item; // 시뮬레이션에서는 아이템을 그대로 반환
       }
@@ -236,7 +313,7 @@ export const useItemsData = () => {
 
   const submitFeedbackMutation = useMutation({
     mutationFn: async ({ item, feedbackText }) => {
-      if (import.meta.env.VITE_DEV_MODE === 'true') {
+      if (config.isDevMode) {
         console.log('DEV_MODE: Simulating submit feedback.');
         return { ...item, feedbackText }; // 시뮬레이션
       }

@@ -22,9 +22,11 @@ export const seriesService = {
    * @returns {Promise<Object>} API 응답
    */
   getDrafts(draftStatus = 'pending') {
-    const params = draftStatus ? { draft_status: draftStatus } : {};
-    // getDrafts 엔드포인트가 없으므로 임시로 list 사용
-    return apiClient.get(endpoints.series.list, params);
+    // 올바른 drafts 엔드포인트 사용
+    if (draftStatus && draftStatus !== 'pending') {
+      return apiClient.get(`${endpoints.series.drafts.replace('?draft_status=pending', '')}?draft_status=${draftStatus}`);
+    }
+    return apiClient.get(endpoints.series.drafts);
   },
 
   /**

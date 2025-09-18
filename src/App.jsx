@@ -3,7 +3,7 @@ import { BrowserRouter as Router, useNavigate, useLocation } from 'react-router-
 import './App.css';
 
 // 새로운 구조의 컴포넌트들
-import { AppProvider, ErrorBoundary, AppRoutes } from './app/index';
+import { AppProvider, ErrorBoundary, AppRoutes, useApp } from './app/index';
 
 import { SeriesDetailPage } from './features/dashboard';
 import { tokenUtils } from './shared/lib';
@@ -21,88 +21,46 @@ import iconAnalysis from './assets/icons/icon_analysis.svg';
 import iconSetting from './assets/icons/icon_setting.svg';
 import iconPlus from './assets/icons/icon_plus.svg';
 
+import MainLayout from './app/MainLayout';
+
 function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { state, actions } = useApp();
+  const { user, ui } = state;
+  const { activeTab, currentView } = ui;
 
-  
-  // 기본 상태
-  const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [currentView, setCurrentView] = useState({ type: 'tab', data: null });
+  // 로컬 상태
   const [showAuthModal, setShowAuthModal] = useState('login');
   const [dashboardCreateHandler, setDashboardCreateHandler] = useState(null);
 
-  
-
-  // 사용자 인증 상태 확인
+  // 사용자 인증 상태 확인 (컨텍스트 사용)
   useEffect(() => {
     const userData = localStorage.getItem('userData');
-    if (userData) {
+    if (userData && !user) {
       try {
         const parsedUserData = JSON.parse(userData);
-        setUser(parsedUserData);
+        actions.setUser(parsedUserData);
       } catch (error) {
         console.error('사용자 데이터 파싱 오류:', error);
         localStorage.removeItem('userData');
       }
     }
-  }, []);
+  }, [user, actions]);
 
-  // URL 경로에 따라 activeTab 설정
+  // URL 경로에 따라 activeTab 설정 (컨텍스트 사용)
   useEffect(() => {
     const path = location.pathname;
-    if (path === '/' || path === '/dashboard') {
-      setActiveTab('dashboard');
-    } else if (path === '/browse') {
-      setActiveTab('browse');
-    } else if (path === '/analysis') {
-      setActiveTab('analysis');
-    } else if (path === '/setting') {
-      setActiveTab('setting');
+    const currentTab = path.substring(1) || 'dashboard';
+    if (['dashboard', 'browse', 'analysis', 'setting'].includes(currentTab) && activeTab !== currentTab) {
+      actions.setActiveTab(currentTab);
     }
-  }, [location.pathname]);
+  }, [location.pathname, activeTab, actions]);
 
-  // 탭 전환 함수
-  const handleTabChange = (tabId) => {
-    // 같은 탭으로 전환 시도하면 무시
-    if (activeTab === tabId) {
-      return;
-    }
-    
-    setActiveTab(tabId);
-    switch (tabId) {
-      case 'dashboard':
-        navigate('/dashboard');
-        break;
-      case 'browse':
-        navigate('/browse');
-        break;
-      case 'analysis':
-        navigate('/analysis');
-        break;
-      case 'setting':
-        navigate('/setting');
-        break;
-      default:
-        navigate('/dashboard');
-    }
-  };
-
-  // 탭 정의
-  const tabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: iconDashboard },
-    { id: 'browse', label: 'Browse', icon: iconBrowser },
-    { id: 'analysis', label: 'Analysis', icon: iconAnalysis },
-    { id: 'setting', label: 'Setting', icon: iconSetting }
-  ];
-
-  // 로그인 성공 핸들러
+  // 로그인 성공 핸들러 (컨텍스트 사용)
   const handleLoginSuccess = (accessToken, userData) => {
-    // Access Token은 이미 tokenUtils에서 설정됨
-    // userData만 localStorage에 저장
     localStorage.setItem('userData', JSON.stringify(userData));
-    setUser(userData);
+    actions.setUser(userData);
   };
 
   // 인증 모드 전환
@@ -110,29 +68,19 @@ function AppContent() {
     setShowAuthModal(authType);
   };
 
-  // 로그아웃 핸들러
+  // 로그아웃 핸들러 (컨텍스트 사용)
   const handleLogout = () => {
     tokenUtils.clearAllTokens();
-    setUser(null);
+    actions.setUser(null);
   };
 
-  // 아이템 클릭 처리
+  // 아이템 클릭 처리 (컨텍스트 사용)
   const handleItemClick = (item) => {
-    if (item.type === 'series') {
-      // 시리즈 아이템인 경우 시리즈 상세 페이지로 이동
-      setCurrentView({ type: 'seriesDetail', data: item });
-    } else {
-      // 다른 아이템은 기존대로 상세 페이지로 이동
-      setCurrentView({ type: 'detail', data: item });
-    }
+    const viewType = item.type === 'series' ? 'seriesDetail' : 'detail';
+    actions.setCurrentView({ type: viewType, data: item });
   };
 
-  // 뒤로 가기
-  const handleBack = () => {
-    setCurrentView({ type: 'tab', data: null });
-  };
-
-  // 아이템 승인 처리 (새로운 훅 사용)
+  // 아이템 승인 처리
   const handleApprove = (item) => {
     console.log('승인:', item);
   };
@@ -172,87 +120,19 @@ function AppContent() {
     );
   }
 
-
   return (
-    <div className="app">
-      {/* Main Content */}
-      <div className={`app-container ${(currentView.type === 'detail' || currentView.type === 'seriesDetail') ? 'detail-view' : ''}`}>
-        {currentView.type === 'detail' ? (
-          <ItemDetail
-            item={currentView.data}
-            onBack={handleBack}
-            onApprove={handleApprove}
-            onFeedback={handleFeedback}
-          />
-        ) : currentView.type === 'seriesDetail' ? (
-          <SeriesDetailPage
-            seriesData={currentView.data}
-            onBack={handleBack}
-            isLoading={false}
-          />
-        ) : (
-          <div className="tabs-container">
-            <div className="tab-panel">
-              <main className="main-content">
-                <AppRoutes
-                  onItemClick={handleItemClick}
-                  onApprove={handleApprove}
-                  onFeedback={handleFeedback}
-                  user={user}
-                  onLogout={handleLogout}
-                  onCreateSeries={handleSetCreateHandler}
-                />
-              </main>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Floating Action Button - dashboard 페이지에서만 표시 */}
-      {activeTab === 'dashboard' && currentView.type === 'tab' && (
-        <FloatingButton
-          onClick={handleFloatingButtonClick}
-          icon={<img src={iconPlus} alt="새 시리즈 생성" />}
-          position="bottom-right"
-        />
-      )}
-
-      {/* Bottom Header */}
-      <footer className="bottom-header">
-        <div className="help-rotator">
-          <div className="help-carousel">
-            <div className="help-text">💡 탭을 클릭해서 이동</div>
-            <div className="help-text">🎯 항목을 클릭해서 자세히 보기</div>
-            <div className="help-text">⚡ 피드백으로 AI가 개선</div>
-            <div className="help-text">🚀 승인하면 다음 단계 생성</div>
-          </div>
-        </div>
-        
-        <div className="tab-indicator">
-          <div className="tab-dots">
-            {tabs.map((tab, index) => (
-              <div
-                key={tab.id}
-                className={`tab-item ${activeTab === tab.id ? 'active' : ''}`}
-                onClick={() => handleTabChange(tab.id)}
-                title={tab.label}
-              >
-                <div className="tab-icon">
-                  <img src={tab.icon} alt={tab.label} />
-                </div>
-                <span className="tab-label">{tab.label.toLowerCase()}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        <div className="header-right">
-          <span className="user-name">{user?.username ? `${user.username}님` : user?.nickname ? `${user.nickname}님` : `${user?.email}님`}</span>
-        </div>
-      </footer>
-    </div>
+    <MainLayout
+      handleFloatingButtonClick={handleFloatingButtonClick}
+      // AppRoutes가 컨텍스트를 사용하도록 리팩토링되면 아래 props도 제거 가능
+      onItemClick={handleItemClick}
+      onApprove={handleApprove}
+      onFeedback={handleFeedback}
+      onLogout={handleLogout}
+      onCreateSeries={handleSetCreateHandler}
+    />
   );
 }
+
 
 function App() {
   return (

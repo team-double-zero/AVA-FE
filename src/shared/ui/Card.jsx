@@ -1,9 +1,5 @@
 import React from 'react';
-import './Card.css';
 
-/**
- * 공용 카드 컴포넌트
- */
 const Card = ({
   children,
   className = '',
@@ -13,11 +9,17 @@ const Card = ({
   onClick,
   ...props
 }) => {
+  const baseStyles = 'bg-white border border-gray-200 rounded-lg relative';
+
+  const paddingStyles = padding ? 'p-6' : '';
+  const shadowStyles = shadow ? 'shadow-md' : '';
+  const hoverStyles = hover || onClick ? 'transition-shadow duration-200 ease-in-out cursor-pointer hover:shadow-lg' : '';
+
   const classes = [
-    'card',
-    padding ? 'card-padded' : '',
-    shadow ? 'card-shadow' : '',
-    hover || onClick ? 'card-hover' : '',
+    baseStyles,
+    paddingStyles,
+    shadowStyles,
+    hoverStyles,
     className
   ].filter(Boolean).join(' ');
 
@@ -34,21 +36,20 @@ const Card = ({
   );
 };
 
-// Card 하위 컴포넌트들
 Card.Header = ({ children, className = '', ...props }) => (
-  <div className={`card-header ${className}`} {...props}>
+  <div className={`border-b border-gray-200 pb-4 mb-4 ${className}`} {...props}>
     {children}
   </div>
 );
 
 Card.Body = ({ children, className = '', ...props }) => (
-  <div className={`card-body ${className}`} {...props}>
+  <div className={`${className}`} {...props}>
     {children}
   </div>
 );
 
 Card.Footer = ({ children, className = '', ...props }) => (
-  <div className={`card-footer ${className}`} {...props}>
+  <div className={`border-t border-gray-200 pt-4 mt-4 ${className}`} {...props}>
     {children}
   </div>
 );
