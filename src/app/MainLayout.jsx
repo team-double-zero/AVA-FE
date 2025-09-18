@@ -51,9 +51,9 @@ const MainLayout = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 bg-[length:400%_400%] animate-gradientWave relative touch-action-none select-none overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 bg-[length:400%_400%] animate-gradientWave relative touch-action-none select-none overflow-hidden">
       {/* Main Content */}
-      <div className={`w-full max-w-none mx-0 px-2 sm:px-5 pt-8 pb-10 h-[calc(100vh-40px)] overflow-hidden relative ${currentView.type === 'detail' || currentView.type === 'seriesDetail' ? 'overflow-y-auto overflow-x-hidden' : ''}`}>
+      <div className={`w-full max-w-none mx-0 px-2 sm:px-5 pt-6 pb-0 h-[calc(100vh-80px)] overflow-hidden relative ${currentView.type === 'detail' || currentView.type === 'seriesDetail' ? 'overflow-y-auto overflow-x-hidden' : ''}`}>
         {currentView.type === 'detail' ? (
           <ItemDetail
             item={currentView.data}
@@ -70,7 +70,7 @@ const MainLayout = ({
         ) : (
           <div className="flex w-full h-full will-change-auto touch-auto overflow-hidden">
             <div className="w-full h-full flex-shrink-0 overflow-hidden pr-0 touch-auto relative isolate rounded-2xl bg-white/25 backdrop-blur-xl border border-white/40 shadow-lg">
-              <main className="relative p-6 mx-2 sm:mx-0 min-h-[calc(100vh-16px)] h-full max-h-[calc(100%-16px)] overflow-y-auto touch-pan-x touch-pan-y select-text">
+              <main className="relative p-4 mx-2 sm:mx-0 h-full overflow-y-auto touch-pan-x touch-pan-y select-text" style={{maxHeight: 'calc(100vh)'}}>
                 <AppRoutes
                   onItemClick={onItemClick}
                   onApprove={onApprove}

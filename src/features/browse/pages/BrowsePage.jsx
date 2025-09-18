@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactJson from 'react-json-view';
 import { useApprovedData } from '../hooks';
+import { useScrollMonitor } from '../../../shared/ui/hooks';
 import iconSeries from '../../../assets/icons/icon_scenario.svg';
 import iconCharacter from '../../../assets/icons/icon_character.svg';
 import './BrowsePage.css';
@@ -16,6 +17,7 @@ const BrowsePage = () => {
     getSeriesCharacters
   } = useApprovedData();
 
+  const { scrollRef, scrollInfo } = useScrollMonitor({ debug: true });
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
@@ -192,7 +194,7 @@ const BrowsePage = () => {
   }
 
   return (
-    <div className="browse-container">
+    <div ref={scrollRef} className="browse-container">
       <div className="browse-layout">
         {/* 왼쪽 탐색기 영역 */}
         <div className="browse-explorer-section">
@@ -290,6 +292,25 @@ const BrowsePage = () => {
           {renderDetailView()}
         </div>
       </div>
+      
+      {/* 스크롤 디버그 정보 */}
+      {scrollInfo && (
+        <div className="fixed top-4 right-4 bg-black/90 text-white p-3 rounded-lg text-xs z-50 border border-white/20">
+          <div className="text-green-400 font-bold mb-2">📊 스크롤 상태</div>
+          <div>위치: {Math.round(scrollInfo.scrollTop)}px</div>
+          <div>화면: {scrollInfo.clientHeight}px</div>
+          <div>전체: {scrollInfo.scrollHeight}px</div>
+          <div>여백: {Math.round(scrollInfo.scrollHeight - scrollInfo.clientHeight)}px</div>
+          <div>진행률: {Math.round(scrollInfo.scrollPercentage)}%</div>
+          <div>하단까지: {Math.round(scrollInfo.scrollBottom)}px</div>
+          <div className={scrollInfo.isAtBottom ? 'text-green-400 font-bold' : 'text-red-400'}>
+            {scrollInfo.isAtBottom ? '✅ 끝까지 도달' : '❌ 더 스크롤 가능'}
+          </div>
+          <div className="text-gray-300 mt-1 text-xs">
+            여백비율: {Math.round((scrollInfo.scrollHeight - scrollInfo.clientHeight) / scrollInfo.scrollHeight * 100)}%
+          </div>
+        </div>
+      )}
     </div>
   );
 };
