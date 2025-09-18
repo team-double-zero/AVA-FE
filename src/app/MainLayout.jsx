@@ -69,7 +69,7 @@ const MainLayout = ({
           />
         ) : (
           <div className="flex w-full h-full will-change-auto touch-auto overflow-hidden">
-            <div className="w-full h-full flex-shrink-0 overflow-hidden pr-0 touch-auto relative isolate rounded-2xl bg-white/25 backdrop-blur-xl border border-white/40 shadow-lg before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1/2 before:rounded-t-2xl before:pointer-events-none before:bg-gradient-to-b before:from-white/15 before:to-white/5 after:content-[''] after:absolute after:inset-px after:rounded-[19px] after:pointer-events-none after:bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.1)_0%,transparent_50%),radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.08)_0%,transparent_50%)] after:opacity-80 media-reduced-motion:backdrop-blur-lg media-reduced-motion:saturate-130">
+            <div className="w-full h-full flex-shrink-0 overflow-hidden pr-0 touch-auto relative isolate rounded-2xl bg-white/25 backdrop-blur-xl border border-white/40 shadow-lg">
               <main className="relative p-6 mx-2 sm:mx-0 min-h-[calc(100vh-16px)] h-full max-h-[calc(100%-16px)] overflow-y-auto touch-pan-x touch-pan-y select-text">
                 <AppRoutes
                   onItemClick={onItemClick}
