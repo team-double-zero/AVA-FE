@@ -1,15 +1,14 @@
 /* Browse Container */
 .browse-container {
-  min-height: 100vh;
   background: transparent;
-  padding: 20px;
+  padding: 10px;
 }
 
 .browse-layout {
   display: grid;
   grid-template-columns: 400px 1fr;
   gap: 24px;
-  height: calc(100vh - 40px);
+  height: calc(100vh - 160px);
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -41,7 +40,7 @@
 
 /* 탐색기 헤더 */
 .browse-explorer-header {
-  padding: 20px;
+  padding: 15px;
   border-bottom: 2px solid rgba(233, 236, 239, 0.6);
   background: rgba(248, 249, 250, 0.1);
 }
@@ -86,7 +85,7 @@
 }
 
 .panel-header {
-  padding: 16px 20px;
+  padding: 12px 15px;
   background: rgba(248, 249, 250, 0.1);
   border-bottom: 1px solid rgba(233, 236, 239, 0.2);
 }
@@ -244,7 +243,7 @@
 
 /* 상세 페이지 헤더 */
 .browse-detail-header {
-  padding: 24px;
+  padding: 20px;
   border-bottom: 2px solid rgba(233, 236, 239, 0.6);
   position: relative;
   z-index: 1;
@@ -313,7 +312,7 @@
 
 /* 상세 페이지 본문 */
 .browse-detail-content {
-  padding: 24px;
+  padding: 20px;
   position: relative;
   z-index: 1;
 }

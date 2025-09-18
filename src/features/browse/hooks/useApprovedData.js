@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiClient, endpoints } from '../../../shared/api';
+import { config } from '../../../config';
 
 /**
  * 승인된 아이템 데이터를 관리하는 훅 (Browse 전용)
@@ -39,7 +40,7 @@ export const useApprovedData = () => {
       setError(null);
 
       // 개발 모드에서는 더미 데이터 사용
-      if (import.meta.env.VITE_DEV_MODE === 'true') {
+      if (config.isDevMode) {
         const dummySeries = [
           {
             id: 1,

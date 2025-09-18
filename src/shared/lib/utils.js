@@ -253,6 +253,47 @@ export const generateId = (prefix = '') => {
   return prefix ? `${prefix}_${timestamp}_${randomStr}` : `${timestamp}_${randomStr}`;
 };
 
+// 아이템 상태별 색상 반환
+export const getStatusColor = (status) => {
+  switch (status) {
+    case 'pending': return '#ff6b6b';
+    case 'review': return '#ffa726';
+    case 'revision': return '#ef5350';
+    case 'draft': return '#42a5f5';
+    default: return '#8370FE';
+  }
+};
+
+// 아이템 상태별 텍스트 반환
+export const getStatusText = (status) => {
+  switch (status) {
+    case 'pending': return '승인 대기';
+    case 'review': return '검토 중';
+    case 'revision': return '수정 요청';
+    case 'draft': return '초안';
+    case 'generating': return 'AI 생성 중';
+    default: return '대기';
+  }
+};
+
+// 작업 상태별 텍스트 반환
+export const getWorkStatusText = (workStatus) => {
+  switch (workStatus) {
+    case 'generating': return '🤖 생성 중';
+    case 'revision_requested': return '✏️ 수정 중';
+    default: return '🔄 작업 중';
+  }
+};
+
+// 작업 상태별 색상 반환
+export const getWorkStatusColor = (workStatus) => {
+  switch (workStatus) {
+    case 'generating': return '#17a2b8';
+    case 'revision_requested': return '#fd7e14';
+    default: return '#6c757d';
+  }
+};
+
 export default {
   debounce,
   throttle,

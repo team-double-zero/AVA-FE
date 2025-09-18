@@ -1,5 +1,6 @@
 import * as cookieUtils from './cookieUtils';
 import { endpoints } from '../api/endpoints';
+import { config } from '../../config';
 
 // Access Token을 메모리에 저장 (보안상 안전)
 let accessToken = null;
@@ -352,7 +353,7 @@ export const refreshAccessToken = async () => {
 // API 요청 래퍼 함수 (자동 토큰 갱신 포함)
 export const apiRequest = async (url, options = {}) => {
   // 개발 모드에서는 토큰 없이 요청
-  if (import.meta.env.VITE_DEV_MODE === 'true') {
+  if (config.isDevMode) {
     console.log('개발 모드: 토큰 없이 API 요청');
     return await fetch(url, {
       ...options,
