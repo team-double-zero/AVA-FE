@@ -21,7 +21,7 @@ export default defineConfig(({ command, mode }) => {
           manualChunks: {
             vendor: ['react', 'react-dom'],
             router: ['react-router-dom'],
-            ui: ['react-markdown', 'react-json-view']
+            ui: ['react-markdown', '@uiw/react-json-view']
           }
         }
       }
