@@ -25,9 +25,11 @@ class ApiClient {
 
       // 응답이 ok가 아닌 경우 에러 처리
       if (!response.ok) {
-        const error = new Error(`HTTP ${response.status}`);
+        const errorData = await response.json().catch(() => ({ message: response.statusText }));
+        const error = new Error(errorData.message || `HTTP ${response.status}`);
         error.status = response.status;
         error.response = response;
+        error.data = errorData;
         throw error;
       }
 

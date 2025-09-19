@@ -29,7 +29,6 @@ export const AppRoutes = ({
         path="/dashboard"
         element={
           <DashboardPage
-            itemsData={itemsData}
             onItemClick={onItemClick}
             user={user}
             onCreateSeries={onCreateSeries}
@@ -39,9 +38,7 @@ export const AppRoutes = ({
       <Route
         path="/dashboard/series/:seriesId"
         element={
-          <SeriesDetailPage
-            itemsData={itemsData}
-          />
+          <SeriesDetailPage />
         }
       />
       <Route

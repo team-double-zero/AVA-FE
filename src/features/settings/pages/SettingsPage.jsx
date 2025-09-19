@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '../Settings.css';
 
 const SettingsPage = ({ onLogout }) => {
   const [settings, setSettings] = useState({
@@ -31,43 +30,44 @@ const SettingsPage = ({ onLogout }) => {
   };
 
   const SettingSection = ({ title, icon, children }) => (
-    <div className="setting-section">
-      <div className="setting-header">
-        <span className="setting-icon">{icon}</span>
-        <h3 className="setting-title">{title}</h3>
+    <div className="bg-white rounded-2xl p-5 mb-4 border-2 border-gray-200 transition-all duration-300 hover:border-purple-300 hover:shadow-lg sm:p-4">
+      <div className="flex items-center gap-3 mb-5 pb-3 border-b-2 border-gray-100">
+        <span className="text-2xl">{icon}</span>
+        <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
       </div>
-      <div className="setting-content">
+      <div className="flex flex-col gap-5">
         {children}
       </div>
     </div>
   );
 
   const ToggleSwitch = ({ label, description, checked, onChange }) => (
-    <div className="toggle-item">
-      <div className="toggle-info">
-        <div className="toggle-label">{label}</div>
-        {description && <div className="toggle-description">{description}</div>}
+    <div className="flex justify-between items-center gap-4 p-4 bg-gray-50 rounded-xl transition-all duration-300 hover:bg-gray-100 sm:flex-col sm:items-start sm:gap-2">
+      <div className="flex-1">
+        <div className="text-base font-medium text-gray-800 mb-1">{label}</div>
+        {description && <div className="text-sm text-gray-600 leading-relaxed">{description}</div>}
       </div>
-      <label className="toggle-switch">
+      <label className="relative inline-block w-13 h-7 flex-shrink-0 sm:self-end">
         <input
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
+          className="opacity-0 w-0 h-0 peer"
         />
-        <span className="toggle-slider"></span>
+        <span className="absolute cursor-pointer inset-0 bg-gray-300 rounded-full transition-colors duration-300 peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-indigo-500 before:absolute before:content-[''] before:h-5 before:w-5 before:left-1 before:bottom-1 before:bg-white before:rounded-full before:transition-transform before:duration-300 peer-checked:before:translate-x-6 peer-hover:shadow-md"></span>
       </label>
     </div>
   );
 
   const NumberInput = ({ label, description, value, onChange, min, max }) => (
-    <div className="number-item">
-      <div className="number-info">
-        <div className="number-label">{label}</div>
-        {description && <div className="number-description">{description}</div>}
+    <div className="flex justify-between items-center gap-4 p-4 bg-gray-50 rounded-xl transition-all duration-300 hover:bg-gray-100 sm:flex-col sm:items-start sm:gap-2">
+      <div className="flex-1">
+        <div className="text-base font-medium text-gray-800 mb-1">{label}</div>
+        {description && <div className="text-sm text-gray-600 leading-relaxed">{description}</div>}
       </div>
       <input
         type="number"
-        className="number-input"
+        className="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-base text-center bg-white transition-all duration-300 focus:outline-none focus:border-purple-500 focus:shadow-md sm:self-end"
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value))}
         min={min}
@@ -77,13 +77,13 @@ const SettingsPage = ({ onLogout }) => {
   );
 
   return (
-    <div className="setting">
-      <div className="setting-page-header">
-        <h2 className="setting-page-title">설정</h2>
-        <p className="setting-page-subtitle">대시보드와 승인 프로세스를 개인화하세요</p>
+    <div className="w-full min-h-full h-auto pb-0">
+      <div className="mb-4 text-center">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2 sm:text-2xl">설정</h2>
+        <p className="text-lg text-gray-600 sm:text-base">대시보드와 승인 프로세스를 개인화하세요</p>
       </div>
 
-      <div className="setting-container">
+      <div className="max-w-3xl mx-auto">
         <SettingSection title="알림 설정" icon="🔔">
           <ToggleSwitch
             label="이메일 알림"
@@ -149,15 +149,15 @@ const SettingsPage = ({ onLogout }) => {
           />
         </SettingSection>
 
-        <div className="setting-actions">
-          <button className="save-button">
+        <div className="flex gap-4 justify-center mt-6 pt-4 border-t-2 border-gray-100 sm:flex-col">
+          <button className="px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2">
             💾 설정 저장
           </button>
-          <button className="reset-button">
+          <button className="px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl shadow-md border-2 border-gray-200 transition-all duration-300 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300 flex items-center justify-center gap-2">
             🔄 기본값으로 재설정
           </button>
           {onLogout && (
-            <button className="logout-button" onClick={onLogout}>
+            <button className="px-6 py-3 bg-red-500 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:bg-red-600 flex items-center justify-center gap-2" onClick={onLogout}>
               🚪 로그아웃
             </button>
           )}
