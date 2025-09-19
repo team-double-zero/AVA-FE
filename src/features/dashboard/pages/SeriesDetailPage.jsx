@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import ReactJson from 'react-json-view';
+import JsonView from '@uiw/react-json-view';
 import { useItemsData } from '../hooks';
 import iconVideo from '../../../assets/icons/icon_video.svg';
 import iconCharacter from '../../../assets/icons/icon_character.svg';
@@ -195,9 +195,8 @@ const JsonViewer = ({ title, data }) => (
   <div>
     <h3 className="text-lg font-semibold text-gray-700 mb-2">{title}</h3>
     <div className="bg-gray-50/50 backdrop-blur-sm rounded-lg p-4 border border-gray-200/50 shadow-inner-sm">
-      <ReactJson
-        src={data}
-        theme="rjv-default"
+      <JsonView
+        value={data}
         collapsed={false}
         collapseStringsAfterLength={100}
         enableClipboard={true}

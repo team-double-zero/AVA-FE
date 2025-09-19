@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactJson from 'react-json-view';
+import JsonView from '@uiw/react-json-view';
 import { useApprovedData } from '../hooks';
 import iconSeries from '../../../assets/icons/icon_scenario.svg';
 import iconCharacter from '../../../assets/icons/icon_character.svg';
@@ -90,9 +90,8 @@ const BrowsePage = () => {
                     'inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.05)',
                   marginTop: '16px'
                 }}>
-                  <ReactJson
-                    src={character}
-                    theme="rjv-default"
+                  <JsonView
+                    value={character}
                     collapsed={false}
                     collapseStringsAfterLength={100}
                     enableClipboard={true}
@@ -145,9 +144,8 @@ const BrowsePage = () => {
                     'inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.05)',
                   marginTop: '16px'
                 }}>
-                  <ReactJson
-                    src={series}
-                    theme="rjv-default"
+                  <JsonView
+                    value={series}
                     collapsed={false}
                     collapseStringsAfterLength={100}
                     enableClipboard={true}
