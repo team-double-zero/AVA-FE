@@ -30,7 +30,7 @@ echo "[2/7] 기존 빌드 및 캐시 정리"
 rm -rf build dist node_modules/.cache
 
 echo "[3/7] 의존성 설치 (legacy-peer-deps로 호환성 문제 해결)"
-if ! npm ci --legacy-peer-deps; then
+if ! npm ci; then
   echo "npm ci 실패 → npm install로 대체 진행"
   if ! npm install --legacy-peer-deps; then
     echo "의존성 설치 실패. package.json을 확인해주세요." >&2
