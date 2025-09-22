@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactJson from 'react-json-view';
 import { useItemsData } from '../hooks';
@@ -9,6 +9,10 @@ const SeriesDetailPage = () => {
   const { seriesId } = useParams();
   const navigate = useNavigate();
   const { itemsData, isLoading, error } = useItemsData();
+  const [isCharacterSectionCollapsed, setIsCharacterSectionCollapsed] = useState(false);
+  const [isSeriesDetailCollapsed, setIsSeriesDetailCollapsed] = useState(false);
+  const seriesDetailRef = useRef(null);
+  const characterSectionRef = useRef(null);
 
   const findSeries = () => {
     console.log('🔍 SeriesDetailPage - Finding series:', { seriesId, itemsData });
@@ -161,30 +165,68 @@ const SeriesDetailPage = () => {
 
       <main className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <section>
-          <h2 className="flex items-center gap-2 text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-white/30">
-            <img src={iconVideo} alt="시리즈" className="w-6 h-6" /> 시리즈 상세 정보
+          <h2 
+            className="flex items-center justify-between text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-white/30 cursor-pointer hover:text-purple-600 transition-colors duration-300"
+            onClick={() => setIsSeriesDetailCollapsed(!isSeriesDetailCollapsed)}
+          >
+            <div className="flex items-center gap-2">
+              <img src={iconVideo} alt="시리즈" className="w-6 h-6" /> 
+              시리즈 상세 정보
+            </div>
+            <span className="text-gray-600 transition-transform duration-300 transform-gpu text-lg" style={{ transform: isSeriesDetailCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)' }}>
+              ▼
+            </span>
           </h2>
-          <div className="space-y-6">
-            {series.draftData?.series && <JsonViewer title="시리즈 상세 정보" data={series.draftData.series} />}
-            {series.draftData?.metadata && <JsonViewer title="메타데이터" data={series.draftData.metadata} />}
+          
+          <div 
+            className="transition-all duration-500 overflow-hidden"
+            style={{ 
+              maxHeight: isSeriesDetailCollapsed ? '0px' : 'none',
+              opacity: isSeriesDetailCollapsed ? 0 : 1
+            }}
+          >
+            <div ref={seriesDetailRef} className="space-y-6">
+              {series.draftData?.series && <JsonViewer title="시리즈 상세 정보" data={series.draftData.series} />}
+              {series.draftData?.metadata && <JsonViewer title="메타데이터" data={series.draftData.metadata} />}
+            </div>
           </div>
         </section>
 
         <section>
-          <h2 className="flex items-center gap-2 text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-white/30">
-            <img src={iconCharacter} alt="캐릭터" className="w-6 h-6" /> 시리즈 캐릭터들 ({characters.length})
+          <h2 
+            className="flex items-center justify-between text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-white/30 cursor-pointer hover:text-purple-600 transition-colors duration-300"
+            onClick={() => setIsCharacterSectionCollapsed(!isCharacterSectionCollapsed)}
+          >
+            <div className="flex items-center gap-2">
+              <img src={iconCharacter} alt="캐릭터" className="w-6 h-6" /> 
+              시리즈 캐릭터들 ({characters.length})
+            </div>
+            <span className="text-gray-600 transition-transform duration-300 transform-gpu text-lg" style={{ transform: isCharacterSectionCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)' }}>
+              ▼
+            </span>
           </h2>
-          {characters.length > 0 ? (
-            <div className="space-y-4">
-              {characters.map((char) => <CharacterCard key={char.id} character={char} statusStyles={statusStyles} statusText={statusText} />)}
+          
+          <div 
+            className="transition-all duration-500 overflow-hidden"
+            style={{ 
+              maxHeight: isCharacterSectionCollapsed ? '0px' : 'none',
+              opacity: isCharacterSectionCollapsed ? 0 : 1
+            }}
+          >
+            <div ref={characterSectionRef}>
+              {characters.length > 0 ? (
+                <div className="space-y-4">
+                {characters.map((char) => <CharacterCard key={char.id} character={char} statusStyles={statusStyles} statusText={statusText} />)}
+              </div>
+                ) : (
+                  <div className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                    <img src={iconCharacter} alt="캐릭터" className="w-12 h-12 opacity-50 mx-auto mb-2" />
+                    <p className="text-gray-600">아직 등록된 캐릭터가 없습니다.</p>
+                    <p className="text-sm text-gray-500 mt-1">시리즈에 캐릭터를 추가해보세요.</p>
+                  </div>
+                )}
+              </div>
             </div>
-          ) : (
-            <div className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-              <img src={iconCharacter} alt="캐릭터" className="w-12 h-12 opacity-50 mx-auto mb-2" />
-              <p className="text-gray-600">아직 등록된 캐릭터가 없습니다.</p>
-              <p className="text-sm text-gray-500 mt-1">시리즈에 캐릭터를 추가해보세요.</p>
-            </div>
-          )}
         </section>
       </main>
     </DetailWrapper>
@@ -210,24 +252,102 @@ const JsonViewer = ({ title, data }) => (
   </div>
 );
 
-const CharacterCard = ({ character, statusStyles, statusText }) => (
-  <div className="relative isolate bg-white/10 backdrop-blur-lg border border-white/30 rounded-xl p-4 transition-all duration-300 hover:bg-white/20 hover:border-purple-300/50 hover:-translate-y-0.5 hover:shadow-xl">
-    <div className="flex items-start gap-4">
-      <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-lg font-bold text-white border-2 border-white/30 shadow-md">
-        {character.title ? character.title.charAt(0) : '?'}
-      </div>
-      <div className="flex-1">
-        <div className="flex justify-between items-start mb-2">
-          <h4 className="font-semibold text-gray-800 text-lg">{character.title}</h4>
-          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusStyles[character.status] || statusStyles.working}`}>
-            {statusText[character.status] || statusText.working}
-          </span>
+const CharacterCard = ({ character, statusStyles, statusText }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const contentRef = useRef(null);
+
+  return (
+    <div 
+      className="relative isolate bg-white/10 backdrop-blur-lg border border-white/30 rounded-xl p-4 transition-all duration-300 hover:bg-white/20 hover:border-purple-300/50 hover:-translate-y-0.5 hover:shadow-xl cursor-pointer select-none"
+      onClick={() => setIsExpanded(!isExpanded)}
+      title="클릭하여 캐릭터 상세 정보 보기"
+    >
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-lg font-bold text-white border-2 border-white/30 shadow-md">
+          {character.title ? character.title.charAt(0) : '?'}
         </div>
-        <p className="text-sm text-gray-600 mb-3">{character.description || '캐릭터 설명이 없습니다.'}</p>
-        {character.characterData && <JsonViewer title="캐릭터 상세" data={character.characterData} />}
+        <div className="flex-1">
+          <div className="flex justify-between items-start mb-2">
+            <h4 className="font-semibold text-gray-800 text-lg">{character.title}</h4>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusStyles[character.status] || statusStyles.working}`}>
+                {statusText[character.status] || statusText.working}
+              </span>
+              <span className="text-gray-600 transition-transform duration-300 transform-gpu" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                ▼
+              </span>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600 mb-3">{character.description || '캐릭터 설명이 없습니다.'}</p>
+          
+          {/* 접이식 상세 정보 */}
+          <div 
+            className="transition-all duration-300 overflow-hidden"
+            style={{ 
+              maxHeight: isExpanded ? 'none' : '0px',
+              opacity: isExpanded ? 1 : 0
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div ref={contentRef} className="mt-4 space-y-4">
+              {/* 기본 캐릭터 정보 */}
+              <div className="bg-gray-50/50 backdrop-blur-sm rounded-lg p-4 border border-gray-200/50 shadow-inner-sm">
+                <h4 className="text-sm font-semibold text-gray-700 mb-3">기본 정보</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  {character.display_name && (
+                    <div>
+                      <span className="font-medium text-gray-600">표시명:</span>
+                      <span className="ml-2 text-gray-800">{character.display_name}</span>
+                    </div>
+                  )}
+                  {character.name && character.name !== character.display_name && (
+                    <div>
+                      <span className="font-medium text-gray-600">이름:</span>
+                      <span className="ml-2 text-gray-800">{character.name}</span>
+                    </div>
+                  )}
+                  {character.role && (
+                    <div>
+                      <span className="font-medium text-gray-600">역할:</span>
+                      <span className="ml-2 text-gray-800">{character.role}</span>
+                    </div>
+                  )}
+                  {character.age && (
+                    <div>
+                      <span className="font-medium text-gray-600">나이:</span>
+                      <span className="ml-2 text-gray-800">{character.age}</span>
+                    </div>
+                  )}
+                  {character.gender && (
+                    <div>
+                      <span className="font-medium text-gray-600">성별:</span>
+                      <span className="ml-2 text-gray-800">{character.gender}</span>
+                    </div>
+                  )}
+                  {character.personality && (
+                    <div className="sm:col-span-2">
+                      <span className="font-medium text-gray-600">성격:</span>
+                      <span className="ml-2 text-gray-800">{character.personality}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 상세 데이터 (JSON) */}
+              {character.characterData && (
+                <JsonViewer title="원본 캐릭터 데이터" data={character.characterData} />
+              )}
+              
+              {/* 원본 캐릭터 객체 전체 (디버깅용) */}
+              {Object.keys(character).length > 7 && (
+                <JsonViewer title="전체 캐릭터 정보" data={character} />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default SeriesDetailPage;
