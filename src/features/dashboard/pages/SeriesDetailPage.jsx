@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactJson from 'react-json-view';
 import { useItemsData } from '../hooks';
+import { seriesService } from '../../../shared/api/seriesService';
 import iconVideo from '../../../assets/icons/icon_video.svg';
 import iconCharacter from '../../../assets/icons/icon_character.svg';
 
@@ -11,6 +12,9 @@ const SeriesDetailPage = () => {
   const { itemsData, isLoading, error } = useItemsData();
   const [isCharacterSectionCollapsed, setIsCharacterSectionCollapsed] = useState(false);
   const [isSeriesDetailCollapsed, setIsSeriesDetailCollapsed] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const seriesDetailRef = useRef(null);
   const characterSectionRef = useRef(null);
 
@@ -52,6 +56,59 @@ const SeriesDetailPage = () => {
   };
 
   const characters = getSeriesCharacters();
+
+  // 승인 처리 함수
+  const handleApprove = async () => {
+    if (!series?.id) {
+      alert('시리즈 정보를 찾을 수 없습니다.');
+      return;
+    }
+
+    if (!confirm('이 시리즈를 승인하시겠습니까?')) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      console.log('🔄 Approving draft with ID:', series.id);
+      await seriesService.approveDraft(series.id);
+      alert('시리즈가 성공적으로 승인되었습니다!');
+      navigate('/dashboard'); // 대시보드로 이동
+    } catch (error) {
+      console.error('❌ Approval failed:', error);
+      alert(`승인 중 오류가 발생했습니다: ${error.message || '알 수 없는 오류'}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 피드백 처리 함수
+  const handleFeedback = async () => {
+    if (!series?.id) {
+      alert('시리즈 정보를 찾을 수 없습니다.');
+      return;
+    }
+
+    if (!feedbackText.trim()) {
+      alert('피드백 내용을 입력해주세요.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      console.log('🔄 Sending feedback for draft ID:', series.id, 'Feedback:', feedbackText);
+      await seriesService.feedbackDraft(series.id, feedbackText);
+      alert('피드백이 성공적으로 전송되었습니다!');
+      setFeedbackText('');
+      setShowFeedbackModal(false);
+      navigate('/dashboard'); // 대시보드로 이동
+    } catch (error) {
+      console.error('❌ Feedback failed:', error);
+      alert(`피드백 전송 중 오류가 발생했습니다: ${error.message || '알 수 없는 오류'}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const statusStyles = {
     pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -229,6 +286,81 @@ const SeriesDetailPage = () => {
             </div>
         </section>
       </main>
+
+      {/* 승인/피드백 버튼 영역 */}
+      {series?.status === 'pending' && (
+        <div className="mt-8 pt-6 border-t-2 border-white/30">
+          <div className="flex gap-4 justify-center">
+            <button 
+              className={`px-8 py-4 bg-green-500 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2 min-w-[120px] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'}`}
+              onClick={handleApprove}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                  처리 중...
+                </>
+              ) : (
+                <>
+                  ✓ 승인
+                </>
+              )}
+            </button>
+            <button 
+              className={`px-8 py-4 bg-purple-500 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2 min-w-[120px] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-600'}`}
+              onClick={() => setShowFeedbackModal(true)}
+              disabled={isSubmitting}
+            >
+              💬 피드백
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 피드백 모달 */}
+      {showFeedbackModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-5">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowFeedbackModal(false)} />
+          <div className="relative isolate bg-white/25 backdrop-blur-xl border border-white/40 rounded-2xl p-8 w-full max-w-lg shadow-2xl transform transition-all duration-300 scale-100">
+            <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center">피드백 작성</h3>
+            <textarea
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              placeholder="시리즈 개선사항이나 수정 요청을 입력해주세요..."
+              rows={6}
+              className="w-full p-4 border-2 border-gray-200 rounded-lg text-base leading-relaxed resize-y mb-6 font-sans transition-colors duration-300 focus:outline-none focus:border-purple-500 focus:shadow-md"
+              disabled={isSubmitting}
+            />
+            <div className="flex gap-3 justify-end">
+              <button 
+                className="px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg border border-gray-200 transition-all duration-300 hover:bg-gray-200 min-w-[80px]" 
+                onClick={() => {
+                  setShowFeedbackModal(false);
+                  setFeedbackText('');
+                }}
+                disabled={isSubmitting}
+              >
+                취소
+              </button>
+              <button 
+                className={`px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg transition-all duration-300 hover:bg-purple-600 min-w-[80px] flex items-center justify-center gap-2 ${(!feedbackText.trim() || isSubmitting) ? 'opacity-60 cursor-not-allowed' : ''}`}
+                onClick={handleFeedback} 
+                disabled={!feedbackText.trim() || isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                    전송 중...
+                  </>
+                ) : (
+                  '피드백 전송'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </DetailWrapper>
   );
 };
