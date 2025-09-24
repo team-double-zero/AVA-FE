@@ -14,14 +14,40 @@ class ApiClient {
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
     
+    // 인증이 필요하지 않은 엔드포인트들
+    const publicEndpoints = [
+      '/api/v1/auth/login',
+      '/api/v1/auth/register',
+      '/api/v1/auth/resend-verification',
+      '/api/v1/health'
+    ];
+    
+    const isPublicEndpoint = publicEndpoints.some(publicEndpoint => endpoint.includes(publicEndpoint));
+    
     try {
-      const response = await tokenUtils.apiRequest(url, {
-        ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
-      });
+      let response;
+      
+      if (isPublicEndpoint) {
+        // 공개 엔드포인트는 토큰 없이 직접 요청
+        console.log('🔓 공개 엔드포인트 요청 (토큰 없음):', endpoint);
+        response = await fetch(url, {
+          ...options,
+          headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+          },
+        });
+      } else {
+        // 보호된 엔드포인트는 토큰 자동 관리 사용
+        console.log('🔒 보호된 엔드포인트 요청 (토큰 관리):', endpoint);
+        response = await tokenUtils.apiRequest(url, {
+          ...options,
+          headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+          },
+        });
+      }
 
       // 응답이 ok가 아닌 경우 에러 처리
       if (!response.ok) {

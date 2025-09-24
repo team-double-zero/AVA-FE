@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactJson from 'react-json-view';
 import { useItemsData } from '../hooks';
@@ -12,11 +12,10 @@ const SeriesDetailPage = () => {
   const { itemsData, isLoading, error } = useItemsData();
   const [isCharacterSectionCollapsed, setIsCharacterSectionCollapsed] = useState(false);
   const [isSeriesDetailCollapsed, setIsSeriesDetailCollapsed] = useState(false);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [feedbackText, setFeedbackText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const seriesDetailRef = useRef(null);
   const characterSectionRef = useRef(null);
+  const feedbackTextareaRef = useRef(null);
 
   const findSeries = () => {
     console.log('🔍 SeriesDetailPage - Finding series:', { seriesId, itemsData });
@@ -57,8 +56,9 @@ const SeriesDetailPage = () => {
 
   const characters = getSeriesCharacters();
 
+
   // 승인 처리 함수
-  const handleApprove = async () => {
+  const handleApprove = useCallback(async () => {
     if (!series?.id) {
       alert('시리즈 정보를 찾을 수 없습니다.');
       return;
@@ -80,35 +80,50 @@ const SeriesDetailPage = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [series?.id, navigate]);
 
   // 피드백 처리 함수
-  const handleFeedback = async () => {
+  const handleFeedback = useCallback(async () => {
     if (!series?.id) {
       alert('시리즈 정보를 찾을 수 없습니다.');
       return;
     }
 
+    // 피드백 버튼을 누를 때 텍스트 값을 가져옴
+    const feedbackText = feedbackTextareaRef.current?.value || '';
+    
     if (!feedbackText.trim()) {
       alert('피드백 내용을 입력해주세요.');
+      feedbackTextareaRef.current?.focus();
       return;
     }
 
     setIsSubmitting(true);
     try {
       console.log('🔄 Sending feedback for draft ID:', series.id, 'Feedback:', feedbackText);
-      await seriesService.feedbackDraft(series.id, feedbackText);
+      await seriesService.feedbackDraft(series.id, feedbackText.trim());
       alert('피드백이 성공적으로 전송되었습니다!');
-      setFeedbackText('');
-      setShowFeedbackModal(false);
-      navigate('/dashboard'); // 대시보드로 이동
+      
+      // 텍스트박스 비우기
+      if (feedbackTextareaRef.current) {
+        feedbackTextareaRef.current.value = '';
+      }
     } catch (error) {
       console.error('❌ Feedback failed:', error);
       alert(`피드백 전송 중 오류가 발생했습니다: ${error.message || '알 수 없는 오류'}`);
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [series?.id]);
+
+  // 섹션 토글 함수들 (리렌더링 최소화)
+  const toggleSeriesDetail = useCallback(() => {
+    setIsSeriesDetailCollapsed(prev => !prev);
+  }, []);
+
+  const toggleCharacterSection = useCallback(() => {
+    setIsCharacterSectionCollapsed(prev => !prev);
+  }, []);
 
   const statusStyles = {
     pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -224,7 +239,7 @@ const SeriesDetailPage = () => {
         <section>
           <h2 
             className="flex items-center justify-between text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-white/30 cursor-pointer hover:text-purple-600 transition-colors duration-300"
-            onClick={() => setIsSeriesDetailCollapsed(!isSeriesDetailCollapsed)}
+            onClick={toggleSeriesDetail}
           >
             <div className="flex items-center gap-2">
               <img src={iconVideo} alt="시리즈" className="w-6 h-6" /> 
@@ -252,7 +267,7 @@ const SeriesDetailPage = () => {
         <section>
           <h2 
             className="flex items-center justify-between text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-white/30 cursor-pointer hover:text-purple-600 transition-colors duration-300"
-            onClick={() => setIsCharacterSectionCollapsed(!isCharacterSectionCollapsed)}
+            onClick={toggleCharacterSection}
           >
             <div className="flex items-center gap-2">
               <img src={iconCharacter} alt="캐릭터" className="w-6 h-6" /> 
@@ -287,12 +302,12 @@ const SeriesDetailPage = () => {
         </section>
       </main>
 
-      {/* 승인/피드백 버튼 영역 */}
+      {/* 승인 버튼 영역 */}
       {series?.status === 'pending' && (
         <div className="mt-8 pt-6 border-t-2 border-white/30">
-          <div className="flex gap-4 justify-center">
+          <div className="flex justify-center">
             <button 
-              className={`px-8 py-4 bg-green-500 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2 min-w-[120px] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'}`}
+              className={`px-12 py-4 bg-green-500 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2 min-w-[160px] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'}`}
               onClick={handleApprove}
               disabled={isSubmitting}
             >
@@ -303,64 +318,57 @@ const SeriesDetailPage = () => {
                 </>
               ) : (
                 <>
-                  ✓ 승인
+                  ✓ 승인하기
                 </>
               )}
-            </button>
-            <button 
-              className={`px-8 py-4 bg-purple-500 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2 min-w-[120px] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-600'}`}
-              onClick={() => setShowFeedbackModal(true)}
-              disabled={isSubmitting}
-            >
-              💬 피드백
             </button>
           </div>
         </div>
       )}
 
-      {/* 피드백 모달 */}
-      {showFeedbackModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-5">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowFeedbackModal(false)} />
-          <div className="relative isolate bg-white/25 backdrop-blur-xl border border-white/40 rounded-2xl p-8 w-full max-w-lg shadow-2xl transform transition-all duration-300 scale-100">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center">피드백 작성</h3>
-            <textarea
-              value={feedbackText}
-              onChange={(e) => setFeedbackText(e.target.value)}
-              placeholder="시리즈 개선사항이나 수정 요청을 입력해주세요..."
-              rows={6}
-              className="w-full p-4 border-2 border-gray-200 rounded-lg text-base leading-relaxed resize-y mb-6 font-sans transition-colors duration-300 focus:outline-none focus:border-purple-500 focus:shadow-md"
-              disabled={isSubmitting}
-            />
-            <div className="flex gap-3 justify-end">
-              <button 
-                className="px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg border border-gray-200 transition-all duration-300 hover:bg-gray-200 min-w-[80px]" 
-                onClick={() => {
-                  setShowFeedbackModal(false);
-                  setFeedbackText('');
-                }}
-                disabled={isSubmitting}
-              >
-                취소
-              </button>
-              <button 
-                className={`px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg transition-all duration-300 hover:bg-purple-600 min-w-[80px] flex items-center justify-center gap-2 ${(!feedbackText.trim() || isSubmitting) ? 'opacity-60 cursor-not-allowed' : ''}`}
-                onClick={handleFeedback} 
-                disabled={!feedbackText.trim() || isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                    전송 중...
-                  </>
-                ) : (
-                  '피드백 전송'
-                )}
-              </button>
+      {/* 피드백 댓글 영역 */}
+      {series?.status === 'pending' && (
+        <div className="mt-8 pt-6 border-t-2 border-white/30">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            💬 피드백 작성
+          </h3>
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+            <div className="flex gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  👤
+                </div>
+              </div>
+              <div className="flex-1">
+                <textarea
+                  ref={feedbackTextareaRef}
+                  placeholder="시리즈에 대한 피드백이나 개선사항을 입력해주세요..."
+                  rows={4}
+                  className="w-full p-4 border-2 border-gray-200 rounded-lg text-base leading-relaxed resize-none mb-4 font-sans transition-colors duration-300 focus:outline-none focus:border-purple-500 focus:shadow-md"
+                  disabled={isSubmitting}
+                />
+                <div className="flex justify-end">
+                  <button 
+                    className={`px-6 py-2 bg-purple-500 text-white font-semibold rounded-lg transition-all duration-300 hover:bg-purple-600 flex items-center justify-center gap-2 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    onClick={handleFeedback} 
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                        전송 중...
+                      </>
+                    ) : (
+                      '피드백 전송'
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       )}
+
     </DetailWrapper>
   );
 };
@@ -384,14 +392,18 @@ const JsonViewer = ({ title, data }) => (
   </div>
 );
 
-const CharacterCard = ({ character, statusStyles, statusText }) => {
+const CharacterCard = React.memo(({ character, statusStyles, statusText }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef(null);
+
+  const toggleExpanded = useCallback(() => {
+    setIsExpanded(prev => !prev);
+  }, []);
 
   return (
     <div 
       className="relative isolate bg-white/10 backdrop-blur-lg border border-white/30 rounded-xl p-4 transition-all duration-300 hover:bg-white/20 hover:border-purple-300/50 hover:-translate-y-0.5 hover:shadow-xl cursor-pointer select-none"
-      onClick={() => setIsExpanded(!isExpanded)}
+      onClick={toggleExpanded}
       title="클릭하여 캐릭터 상세 정보 보기"
     >
       <div className="flex items-start gap-4">
@@ -480,6 +492,6 @@ const CharacterCard = ({ character, statusStyles, statusText }) => {
       </div>
     </div>
   );
-};
+});
 
 export default SeriesDetailPage;
