@@ -36,6 +36,27 @@ export const seriesService = {
   getApprovedSeries() {
     return apiClient.get(endpoints.series.list);
   },
+
+  /**
+   * 시리즈 초안 승인
+   * @param {number|string} draftId - 승인할 초안의 ID
+   * @returns {Promise<Object>} API 응답
+   */
+  approveDraft(draftId) {
+    return apiClient.post(endpoints.series.approveDraft(draftId));
+  },
+
+  /**
+   * 시리즈 초안 피드백
+   * @param {number|string} draftId - 피드백을 제공할 초안의 ID  
+   * @param {string} feedbackMessage - 피드백 내용
+   * @returns {Promise<Object>} API 응답
+   */
+  feedbackDraft(draftId, feedbackMessage) {
+    return apiClient.post(endpoints.series.feedbackDraft(draftId), {
+      feedback_message: feedbackMessage,
+    });
+  },
 };
 
 export default seriesService;

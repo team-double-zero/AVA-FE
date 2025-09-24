@@ -44,6 +44,21 @@ export const endpoints = {
      * 요청 바디: { user_message: string }
      */
     createDraft: '/api/v1/series-drafts?story_type=series',
+    /**
+     * 시리즈 초안 승인
+     * POST /api/v1/series-drafts/{draft_id}/approve
+     * bearer token (access token) 필요
+     * 경로 파라미터: draft_id (필수)
+     */
+    approveDraft: (draftId) => `/api/v1/series-drafts/${draftId}/approve`,
+    /**
+     * 시리즈 초안 피드백
+     * POST /api/v1/series-drafts/{draft_id}/feedback
+     * bearer token (access token) 필요
+     * 경로 파라미터: draft_id (필수)
+     * 요청 바디: { feedback_message: string }
+     */
+    feedbackDraft: (draftId) => `/api/v1/series-drafts/${draftId}/feedback`,
   },
 
   // 캐릭터 관련

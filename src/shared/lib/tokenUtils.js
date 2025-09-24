@@ -364,6 +364,18 @@ export const apiRequest = async (url, options = {}) => {
     });
   }
 
+  // 토큰 갱신 요청인 경우 특별 처리 (무한 루프 방지)
+  if (url.includes('/api/v1/auth/refresh')) {
+    console.log('🔄 토큰 갱신 요청 - 기존 토큰 사용');
+    return await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+  }
+
   // 토큰 초기화 중이면 대기
   if (isInitializing) {
     console.log('⏳ 토큰 초기화 중 - API 요청 대기');
