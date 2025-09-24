@@ -29,13 +29,11 @@ fi
 echo "[2/7] 기존 빌드 및 캐시 정리"
 rm -rf build dist node_modules/.cache
 
-echo "[3/7] 의존성 설치 (legacy-peer-deps로 호환성 문제 해결)"
-if ! npm ci; then
-  echo "npm ci 실패 → npm install로 대체 진행"
-  if ! npm install --legacy-peer-deps; then
-    echo "의존성 설치 실패. package.json을 확인해주세요." >&2
-    exit 1
-  fi
+echo "[3/7] 의존성 설치 (React 18 호환성을 위해 legacy-peer-deps 사용)"
+# React 18 호환성 문제로 npm ci 대신 npm install 사용
+if ! npm install --legacy-peer-deps; then
+  echo "의존성 설치 실패. package.json을 확인해주세요." >&2
+  exit 1
 fi
 
 echo "[4/7] 프로덕션 빌드 (Vite 빌드)"
